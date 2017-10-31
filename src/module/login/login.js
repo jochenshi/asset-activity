@@ -25,6 +25,7 @@ class Login extends Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div className="Login">
+                <div className="logo" />
                 <div className="login_content">
                     <h1 className="title">欢迎使用内部资产管理系统</h1>
                     <div>
