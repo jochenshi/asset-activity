@@ -9,6 +9,9 @@ const baseConfig = require('./webpack.base.conf')
 
 // __dirname返回的是当前被执行js所在的文件夹的绝对路径
 const config = merge(baseConfig, {
+    output: {
+        publicPath: '/'
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html'

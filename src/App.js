@@ -1,26 +1,74 @@
 import React, {Component} from 'react'
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link, Redirect} from 'react-router-dom'
 import './App.styl'
 import Login from './module/login/login'
 import LeftTree from './module/mainHome/mainHome'
 
-const Test = () => {
-    return (<div>test page</div>)
+const Info = () => {
+    return (<div>info</div>)
 };
 
-const Nopage = () => {
-    return (<div>no content</div>)
+const As = () => {
+    return (<div>asd</div>)
 };
+
+const Nopage = ({routes}) => {
+    console.log(routes);
+    return (
+        <div>
+            <h1>no content</h1>
+            <ul>
+                <li><Link to="/storeinfo/info">info</Link></li>
+            </ul>
+            {routes.map((route,i) => (
+                <RouteWithSubRoutes key={i} {...route}/>
+            ))}
+        </div>
+    )
+};
+
+const routes = [
+    {
+        path: '/login',
+        component: Login
+    },
+    {
+        path: '/storeinfo',
+        component: LeftTree,
+        routes: [
+            {
+                path: '/storeinfo/info',
+                component: Info
+            },
+            {
+                path: '/storeinfo/asd',
+                component: As
+            }
+        ]
+    }
+];
+
+
 
 class App extends Component {
     render() {
+
         return (
             <div className="App">
                 {/*<Login />*/}
-                <LeftTree></LeftTree>
-                {/*<Link to="/home">home</Link>
-                <Route exact path="/" component={Nopage}/>
-                <Route path="/home" component={Test} />*/}
+                {/*<LeftTree></LeftTree>*/}
+                {/*<Link to="/home">home</Link>*/}
+                {/*<Route exact path='/:id' render={({match}) => {
+                    console.log(match);
+                    return (
+                        flag ? (<Redirect to='/home'/>) : (<Redirect to="/login"/>)
+                    )
+                }}/>
+                <Route exact path="/login" component={Login}/>
+                <Route path="/home" component={LeftTree} />*/}
+                {routes.map((route, i) => (
+                    <RouteWithSubRoutes key={i} {...route}/>
+                ))}
             </div>
         )
     }

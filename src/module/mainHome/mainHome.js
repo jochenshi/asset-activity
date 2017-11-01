@@ -3,12 +3,23 @@ import {Layout, Menu} from 'antd'
 
 import './style.styl'
 
+import {} from '../../'
 import StoreInfo from '../inventory/info'
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
 
+const RouteWithSubRoutes = (route) => (
+    <Route path={route.path} render={(props) => (
+        <route.component {...props} routes={route.routes}/>
+    )}/>
+);
+
 class MainHome extends Component {
+    constructor (props) {
+        super(props);
+        console.log('props', props)
+    }
     render () {
         return (
             <Layout className="main_home">
@@ -41,7 +52,10 @@ class MainHome extends Component {
                     </Header>
                     <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
                         <div className="main_content" style={{flex: 1, backgroundColor: '#fff'}}>
-                            <StoreInfo></StoreInfo>
+                            {/*<StoreInfo></StoreInfo>*/}
+                            {this.props.routes.map((route,i) => (
+                                <RouteWithSubRoutes key={i} {...route}/>
+                            ))}
                         </div>
                     </Content>
                 </Layout>
