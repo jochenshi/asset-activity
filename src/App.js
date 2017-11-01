@@ -10,7 +10,7 @@ const Info = () => {
 };
 
 const As = () => {
-    return (<div>testpage</div>)
+    return (<div>ddd</div>)
 };
 
 const Nopage = ({routes}) => {
