@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Layout, Menu} from 'antd'
+import {Link} from 'react-router-dom'
 
 import './style.styl'
 
@@ -13,6 +14,11 @@ const {SubMenu, Item} = Menu;
 class MainHome extends Component {
     constructor (props) {
         super(props);
+        this.handleClick.bind(this)
+    }
+    handleClick (e) {
+        console.log(e);
+        console.log(this.props)
     }
     render () {
         return (
@@ -22,10 +28,11 @@ class MainHome extends Component {
                     <Menu theme="dark"
                           defaultOpenKeys={['store']}
                           defaultSelectedKeys={['store_info']}
+                          onClick={this.handleClick}
                           mode="inline">
                         <SubMenu key="store" title="库存">
-                            <Item key="store_info">库存信息</Item>
-                            <Item key="store_history">库存记录</Item>
+                            <Item key="store_info"><Link to='/storeinfo/info'>库存信息</Link></Item>
+                            <Item key="store_history"><Link to='/storeinfo/asd'>库存记录</Link></Item>
                         </SubMenu>
                         <SubMenu key="device" title="设备信息">
                             <Item key="device_machine">机器</Item>
@@ -47,9 +54,9 @@ class MainHome extends Component {
                     <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
                         <div className="main_content" style={{flex: 1, backgroundColor: '#fff'}}>
                             {/*<StoreInfo></StoreInfo>*/}
-                            {this.props.routes.map((route,i) => (
+                            {/*{this.props.routes.map((route,i) => (
                                 <RouteWithSubRoutes key={i} {...route}/>
-                            ))}
+                            ))}*/}
                         </div>
                     </Content>
                 </Layout>

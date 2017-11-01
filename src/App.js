@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import {BrowserRouter as Router, Route, Link, Redirect} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link, Redirect, Switch} from 'react-router-dom'
 import './App.styl'
 import Login from './module/login/login'
 import LeftTree from './module/mainHome/mainHome'
+import StoreInfo from './module/inventory/info'
 import {RouteWithSubRoutes} from './common/component'
 
 const Info = () => {
@@ -39,7 +40,7 @@ const routes = [
         routes: [
             {
                 path: '/storeinfo/info',
-                component: Info
+                component: StoreInfo
             },
             {
                 path: '/storeinfo/asd',
@@ -50,13 +51,17 @@ const routes = [
 ];
 
 class App extends Component {
+    constructor (props) {
+        super(props);
+    }
     render() {
         return (
-            <div className="App">
-                {/*<Login />*/}
-                {/*<LeftTree></LeftTree>*/}
-                {/*<Link to="/home">home</Link>*/}
-                {/*<Route exact path='/:id' render={({match}) => {
+            <Router>
+                <div className="App">
+                    {/*<Login />*/}
+                    {/*<LeftTree></LeftTree>*/}
+                    {/*<Link to="/home">home</Link>*/}
+                    {/*<Route exact path='/:id' render={({match}) => {
                     console.log(match);
                     return (
                         flag ? (<Redirect to='/home'/>) : (<Redirect to="/login"/>)
@@ -64,10 +69,16 @@ class App extends Component {
                 }}/>
                 <Route exact path="/login" component={Login}/>
                 <Route path="/home" component={LeftTree} />*/}
-                {routes.map((route, i) => (
-                    <RouteWithSubRoutes key={i} {...route}/>
-                ))}
-            </div>
+                    <Switch>
+                        <Route path='/storeinfo' component={LeftTree}/>
+                        <Redirect to='/storeinfo'/>
+                    </Switch>
+                    {/*https://css-tricks.com/react-router-4/*/}
+                    {/*{routes.map((route, i) => (
+                        <RouteWithSubRoutes key={i} {...route}/>
+                    ))}*/}
+                </div>
+            </Router>
         )
     }
 }

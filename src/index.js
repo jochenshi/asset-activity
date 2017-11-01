@@ -7,8 +7,6 @@ import App from './App'
 import './assets/icon/iconfont.css'
 
 ReactDom.render(
-    <Router>
-        <App></App>
-    </Router>
+    <App></App>
     , document.getElementById('root')
 );

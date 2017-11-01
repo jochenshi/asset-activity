@@ -20,26 +20,25 @@ class StoreInfo extends Component{
         }
         for (var i in keys) {
             if (data.hasOwnProperty(i)) {
-                items.push(<div><span>{keys[i]}</span><span>{data[i]}</span></div>);
+                items.push(<div key={i}><span>{keys[i]}</span><span>{data[i]}</span></div>);
             }
         }
+        return items;
     }
-    render ({routes}) {
-        console.log('routes',routes)
+    render () {
+        const testData = {name: 'host1', ip: '192.168.1.1', size: 20};
+        const testKey = {name: '名称', ip: 'IP地址', size: '大小'};
         //const showLabels = this.props.labels;
-        const showDatas = {};
-        var items = [];
-        for (var i in showDatas) {
-            items.push(<div>{showDatas[i]}</div>)
-        }
+        const items = this.handleData(testData, testKey);
+        console.log('items', items);
         return (
             <div>
                 <div className="detail_wrapper">
                     {items}
                 </div>
-                {this.props.routes.map((route, i) => (
+                {/*{this.props.routes.map((route, i) => (
                     <RouteWithSubRoutes key={i} {...route}/>
-                ))}
+                ))}*/}
             </div>
         )
     }
