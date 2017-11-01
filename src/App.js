@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Link, Redirect} from 'react-router-dom'
 import './App.styl'
 import Login from './module/login/login'
 import LeftTree from './module/mainHome/mainHome'
+import {RouteWithSubRoutes} from './common/component'
 
 const Info = () => {
     return (<div>info</div>)
@@ -48,11 +49,8 @@ const routes = [
     }
 ];
 
-
-
 class App extends Component {
     render() {
-
         return (
             <div className="App">
                 {/*<Login />*/}

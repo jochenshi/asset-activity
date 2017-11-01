@@ -3,17 +3,12 @@ import {Layout, Menu} from 'antd'
 
 import './style.styl'
 
-import {} from '../../'
+import {RouteWithSubRoutes} from '../../common/component'
 import StoreInfo from '../inventory/info'
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
 
-const RouteWithSubRoutes = (route) => (
-    <Route path={route.path} render={(props) => (
-        <route.component {...props} routes={route.routes}/>
-    )}/>
-);
 
 class MainHome extends Component {
     constructor (props) {
