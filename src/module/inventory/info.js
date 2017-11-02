@@ -1,6 +1,8 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
 
+import InventoryList from './inventoryList'
+
 const RouteWithSubRoutes = (route) => (
     <Route path={route.path} render={(props) => (
         <route.component {...props} routes={route.routes}/>
@@ -36,6 +38,7 @@ class StoreInfo extends Component{
                 <div className="detail_wrapper">
                     {items}
                 </div>
+                <InventoryList/>
                 {/*{this.props.routes.map((route, i) => (
                     <RouteWithSubRoutes key={i} {...route}/>
                 ))}*/}
