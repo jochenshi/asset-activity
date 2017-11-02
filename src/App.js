@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {BrowserRouter as Router, Route, Link, Redirect, Switch} from 'react-router-dom'
 import './App.styl'
 import Login from './module/login/login'
-import LeftTree from './module/mainHome/mainHome'
+import MainHome from './module/mainHome/mainHome'
 import StoreInfo from './module/inventory/info'
 import {RouteWithSubRoutes} from './common/component'
 
@@ -29,7 +29,7 @@ const Nopage = ({routes}) => {
     )
 };
 
-const routes = [
+/*const routes = [
     {
         path: '/login',
         component: Login
@@ -48,16 +48,26 @@ const routes = [
             }
         ]
     }
-];
+];*/
+
+/*class AuthorizedRoute extends Component {
+    compomentWillMount () {}
+    render () {
+        return (
+            <Route render={}/>
+        )
+    }
+}*/
 
 class App extends Component {
     constructor (props) {
         super(props);
     }
     render() {
+        console.log(this.props);
         return (
             <Router>
-                <div className="App">
+                {/*<div className="App">*/}
                     {/*<Login />*/}
                     {/*<LeftTree></LeftTree>*/}
                     {/*<Link to="/home">home</Link>*/}
@@ -69,15 +79,16 @@ class App extends Component {
                 }}/>
                 <Route exact path="/login" component={Login}/>
                 <Route path="/home" component={LeftTree} />*/}
-                    <Switch>
-                        <Route path='/storeinfo' component={LeftTree}/>
-                        <Redirect to='/storeinfo'/>
-                    </Switch>
+                <Switch>
+                    <Route path='/storeinfo' component={MainHome}/>
+                    <Route path="/login" component={Login} />
+                    <Redirect to='/storeinfo'/>
+                </Switch>
                     {/*https://css-tricks.com/react-router-4/*/}
                     {/*{routes.map((route, i) => (
                         <RouteWithSubRoutes key={i} {...route}/>
                     ))}*/}
-                </div>
+                {/*</div>*/}
             </Router>
         )
     }

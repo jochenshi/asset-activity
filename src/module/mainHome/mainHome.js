@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Layout, Menu} from 'antd'
-import {Link} from 'react-router-dom'
+import {Link, Route, Redirect, Switch} from 'react-router-dom'
 
 import './style.styl'
 
@@ -53,6 +53,10 @@ class MainHome extends Component {
                     </Header>
                     <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
                         <div className="main_content" style={{flex: 1, backgroundColor: '#fff'}}>
+                            <Switch>
+                                <Route path={`${this.props.match.path}/info`} component={StoreInfo}/>
+                                <Redirect to={`${this.props.match.path}/info`}/>
+                            </Switch>
                             {/*<StoreInfo></StoreInfo>*/}
                             {/*{this.props.routes.map((route,i) => (
                                 <RouteWithSubRoutes key={i} {...route}/>

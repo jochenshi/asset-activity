@@ -32,7 +32,7 @@ class StoreInfo extends Component{
         const items = this.handleData(testData, testKey);
         console.log('items', items);
         return (
-            <div>
+            <div className="info">
                 <div className="detail_wrapper">
                     {items}
                 </div>
