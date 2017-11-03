@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config=config/webpack.dev.config.js --history-api-fallback --port 3000",
-    "build": "webpack --config=config/webpack.dev.config.js"
+    "build": "webpack --config=config/webpack.pro.conf.js"
   },
   "author": "jochenshi",
   "license": "ISC",

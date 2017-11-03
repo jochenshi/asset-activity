@@ -28,7 +28,7 @@ class Login extends Component {
                 <div className="logo" />
                 <div className="login_content">
                     <h1 className="title">欢迎使用内部资产管理系统</h1>
-                    <div>
+                    <div className="input_area">
                         <Form onSubmit={this.handleSubmit}>
                             <FormItem>
                                 {getFieldDecorator('username', {

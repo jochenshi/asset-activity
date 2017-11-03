@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Table } from 'antd'
+import { Table, Button } from 'antd'
+
+import './style.styl'
 
 const testData = [
     {
@@ -37,28 +39,20 @@ const titles = [
         dataIndex: 'type'
     },
     {
-        title: 'S/N号',
-        dataIndex: 'serialNo'
-    },
-    {
-        title: '研发部编号',
-        dataIndex: 'rdNumber'
-    },
-    {
         title: '型号',
         dataIndex: 'model'
-    },
-    {
-        title: '大小',
-        key: 'size'
     },
     {
         title: '可用数量',
         dataIndex: 'availableNum'
     },
     {
-        title: '总数',
+        title: '库存数量',
         dataIndex: 'totalNum'
+    },
+    {
+        title: '故障数',
+        dataIndex: 'faultNum'
     }
 ];
 
@@ -72,8 +66,12 @@ class InventoryList extends Component {
             onChange: this.onSelectChange
         };
         return (
-            <div>
-                <Table columns={titles} dataSource={testData} rowSelection={rowSelection}/>
+            <div className="inventory_list">
+                <div className="table_operations">
+                    <Button>添加</Button>
+                    <Button>刷新</Button>
+                </div>
+                <Table columns={titles} dataSource={testData}/>
             </div>
         )
     }

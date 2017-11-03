@@ -80,9 +80,9 @@ class App extends Component {
                 <Route exact path="/login" component={Login}/>
                 <Route path="/home" component={LeftTree} />*/}
                 <Switch>
-                    <Route path='/storeinfo' component={MainHome}/>
+                    <Route path='/auth/main' component={MainHome}/>
                     <Route path="/login" component={Login} />
-                    <Redirect to='/storeinfo'/>
+                    <Redirect to='/auth/main'/>
                 </Switch>
                     {/*https://css-tricks.com/react-router-4/*/}
                     {/*{routes.map((route, i) => (

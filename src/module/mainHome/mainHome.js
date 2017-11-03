@@ -6,19 +6,39 @@ import './style.styl'
 
 import {RouteWithSubRoutes} from '../../common/component'
 import StoreInfo from '../inventory/info'
+import InventoryHistory from '../inventory/inventoryHistory/inventoryHistory'
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
 
-
 class MainHome extends Component {
     constructor (props) {
         super(props);
-        this.handleClick.bind(this)
+        console.log('routers',this.props.match);
+        this.handleClicks = this.handleClick.bind(this);
+        this.state = {
+            selectNav: 'storeInfo'
+        }
+    }
+    setDefaultSelect () {
+
     }
     handleClick (e) {
-        console.log(e);
-        console.log(this.props)
+        console.log('e',e);
+        console.log('props',this.props);
+        this.setState({
+            selectNav: e.key
+        })
+    }
+    changeSelect (data) {
+        const nowPath = data.location.pathname.split(data.match.path + '/');
+        const nowSelect = nowPath[1].split('/')[0];
+        this.setState({
+            selectNav: nowSelect
+        });
+    }
+    componentDidMount () {
+        this.changeSelect(this.props);
     }
     render () {
         return (
@@ -27,12 +47,13 @@ class MainHome extends Component {
                     <div className="logo" />
                     <Menu theme="dark"
                           defaultOpenKeys={['store']}
-                          defaultSelectedKeys={['store_info']}
-                          onClick={this.handleClick}
+                          defaultSelectedKeys={['storeInfo']}
+                          selectedKeys={[this.state.selectNav]}
+                          onClick={this.handleClicks}
                           mode="inline">
                         <SubMenu key="store" title="库存">
-                            <Item key="store_info"><Link to='/storeinfo/info'>库存信息</Link></Item>
-                            <Item key="store_history"><Link to='/storeinfo/asd'>库存记录</Link></Item>
+                            <Item key="storeInfo"><Link to='/auth/main/storeInfo'>库存信息</Link></Item>
+                            <Item key="storeHistory"><Link to='/auth/main/storeHistory' key="storeHistory">库存记录</Link></Item>
                         </SubMenu>
                         <SubMenu key="device" title="设备信息">
                             <Item key="device_machine">机器</Item>
@@ -54,10 +75,10 @@ class MainHome extends Component {
                     <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
                         <div className="main_content" style={{flex: 1, backgroundColor: '#fff'}}>
                             <Switch>
-                                <Route path={`${this.props.match.path}/info`} component={StoreInfo}/>
-                                <Redirect to={`${this.props.match.path}/info`}/>
+                                <Route path={`${this.props.match.path}/storeInfo`} component={StoreInfo}/>
+                                <Route path={`${this.props.match.path}/storeHistory`} component={InventoryHistory}/>
+                                <Redirect to={`${this.props.match.path}/storeInfo`}/>
                             </Switch>
-                            {/*<StoreInfo></StoreInfo>*/}
                             {/*{this.props.routes.map((route,i) => (
                                 <RouteWithSubRoutes key={i} {...route}/>
                             ))}*/}

@@ -1,7 +1,8 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
 
-import InventoryList from './inventoryList'
+import InventoryList from './inventoryList/inventoryList'
+import './style.styl'
 
 const RouteWithSubRoutes = (route) => (
     <Route path={route.path} render={(props) => (
@@ -12,7 +13,7 @@ const RouteWithSubRoutes = (route) => (
 class StoreInfo extends Component{
     constructor (props) {
         super(props);
-        console.log('props',props)
+        //console.log('props',props)
     }
     handleData (data, keys) {
         let items = [];
@@ -33,10 +34,20 @@ class StoreInfo extends Component{
         //const showLabels = this.props.labels;
         const items = this.handleData(testData, testKey);
         console.log('items', items);
+        const total = 2;
         return (
             <div className="info">
                 <div className="detail_wrapper">
-                    {items}
+                    <div className="servers">
+                        <span className="label">服务器</span>
+                        <span className="num">2</span>
+                        /{total}
+                    </div>
+                    <div className="disks">
+                        <span className="label">磁盘</span>
+                        <span className="num">2</span>
+                        /{total}
+                    </div>
                 </div>
                 <InventoryList/>
                 {/*{this.props.routes.map((route, i) => (
