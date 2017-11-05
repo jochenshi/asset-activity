@@ -4,9 +4,15 @@ import {Link, Route, Redirect, Switch} from 'react-router-dom'
 
 import './style.styl'
 
-import {RouteWithSubRoutes} from '../../common/component'
+//import {RouteWithSubRoutes, AuthRoute} from '../../common/component'
 import StoreInfo from '../inventory/info'
 import InventoryHistory from '../inventory/inventoryHistory/inventoryHistory'
+import DeviceMachine from '../device/machine/machine'
+import DeviceEquip from '../device/equip/equip'
+import UseHistory from '../device/history/useHistory'
+import UserManage from '../usermanage/user'
+import HealthRecord from '../healthRecord/healthRecord'
+import OperateRecord from '../operateRecord/operateRecord'
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
@@ -31,6 +37,8 @@ class MainHome extends Component {
         })
     }
     changeSelect (data) {
+        console.log(data);
+        if (data.location.pathname === data.match.path) return;
         const nowPath = data.location.pathname.split(data.match.path + '/');
         const nowSelect = nowPath[1].split('/')[0];
         this.setState({
@@ -38,7 +46,7 @@ class MainHome extends Component {
         });
     }
     componentDidMount () {
-        this.changeSelect(this.props);
+        this.props && this.changeSelect(this.props);
     }
     render () {
         return (
@@ -56,13 +64,13 @@ class MainHome extends Component {
                             <Item key="storeHistory"><Link to='/auth/main/storeHistory' key="storeHistory">库存记录</Link></Item>
                         </SubMenu>
                         <SubMenu key="device" title="设备信息">
-                            <Item key="device_machine">机器</Item>
-                            <Item key="device_equip">配件</Item>
-                            <Item key="device_lend_return_history">领用/归还记录</Item>
+                            <Item key="deviceMachine"><Link to='/auth/main/deviceMachine'>机器</Link></Item>
+                            <Item key="deviceEquip"><Link to='/auth/main/deviceEquip'>配件</Link></Item>
+                            <Item key="deviceUseHistory"><Link to='/auth/main/deviceUseHistory'>领用/归还记录</Link></Item>
                         </SubMenu>
-                        <Item key="user_manage">用户管理</Item>
-                        <Item key="health_history">健康记录</Item>
-                        <Item key="operate_history">操作记录</Item>
+                        <Item key="userManage"><Link to='/auth/main/userManage'>用户管理</Link></Item>
+                        <Item key="healthRecord"><Link to='/auth/main/healthRecord'>健康记录</Link></Item>
+                        <Item key="operateRecord"><Link to='/auth/main/operateRecord'>操作记录</Link></Item>
                     </Menu>
                 </Sider>
                 <Layout>
@@ -77,6 +85,14 @@ class MainHome extends Component {
                             <Switch>
                                 <Route path={`${this.props.match.path}/storeInfo`} component={StoreInfo}/>
                                 <Route path={`${this.props.match.path}/storeHistory`} component={InventoryHistory}/>
+                                <Route path={`${this.props.match.path}/deviceMachine`} component={DeviceMachine}/>
+                                <Route path={`${this.props.match.path}/deviceEquip`} component={DeviceEquip}/>
+                                <Route path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
+                                <Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
+                                <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>
+                                {/*<AuthRoute path={`${this.props.match.path}/userManage`} component={UserManage}/>
+                                <AurhRoute path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}
+                                <Route path={`${this.props.match.path}/operateRecord`} component={OperateRecord}/>
                                 <Redirect to={`${this.props.match.path}/storeInfo`}/>
                             </Switch>
                             {/*{this.props.routes.map((route,i) => (
