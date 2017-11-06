@@ -14,6 +14,7 @@ const RouteWithSubRoutes = (route) => (
     render () {
         return ()
     }
+
 }*/
 
 // one customize route component used to check route authority
