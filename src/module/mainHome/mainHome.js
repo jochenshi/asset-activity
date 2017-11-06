@@ -4,7 +4,7 @@ import {Link, Route, Redirect, Switch} from 'react-router-dom'
 
 import './style.styl'
 
-//import {RouteWithSubRoutes, AuthRoute} from '../../common/component'
+import {RouteWithSubRoutes, AuthRoute} from '../../common/component'
 import StoreInfo from '../inventory/info'
 import InventoryHistory from '../inventory/inventoryHistory/inventoryHistory'
 import DeviceMachine from '../device/machine/machine'
@@ -83,16 +83,16 @@ class MainHome extends Component {
                     <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
                         <div className="main_content" style={{flex: 1, backgroundColor: '#fff'}}>
                             <Switch>
-                                <Route path={`${this.props.match.path}/storeInfo`} component={StoreInfo}/>
-                                <Route path={`${this.props.match.path}/storeHistory`} component={InventoryHistory}/>
-                                <Route path={`${this.props.match.path}/deviceMachine`} component={DeviceMachine}/>
-                                <Route path={`${this.props.match.path}/deviceEquip`} component={DeviceEquip}/>
-                                <Route path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
-                                <Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
-                                <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>
-                                {/*<AuthRoute path={`${this.props.match.path}/userManage`} component={UserManage}/>
-                                <AurhRoute path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}
-                                <Route path={`${this.props.match.path}/operateRecord`} component={OperateRecord}/>
+                                <AuthRoute path={`${this.props.match.path}/storeInfo`} component={StoreInfo}/>
+                                <AuthRoute path={`${this.props.match.path}/storeHistory`} component={InventoryHistory}/>
+                                <AuthRoute path={`${this.props.match.path}/deviceMachine`} component={DeviceMachine}/>
+                                <AuthRoute path={`${this.props.match.path}/deviceEquip`} component={DeviceEquip}/>
+                                <AuthRoute path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
+                                {/*<Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
+                                <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}
+                                <AuthRoute path={`${this.props.match.path}/userManage`} component={UserManage}/>
+                                <AuthRoute path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>
+                                <AuthRoute path={`${this.props.match.path}/operateRecord`} component={OperateRecord}/>
                                 <Redirect to={`${this.props.match.path}/storeInfo`}/>
                             </Switch>
                             {/*{this.props.routes.map((route,i) => (
