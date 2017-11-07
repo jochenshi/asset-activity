@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Button } from 'antd'
 
+import AddInventory from './addInventory'
 import './style.styl'
 
 const testData = [
@@ -69,6 +70,7 @@ class InventoryList extends Component {
             <div className="inventory_list">
                 <div className="table_operations">
                     <Button>添加</Button>
+                    {/*<AddInventory/>*/}
                     <Button>刷新</Button>
                 </div>
                 <Table columns={titles} dataSource={testData}/>

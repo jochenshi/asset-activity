@@ -28,7 +28,7 @@ const config = {
                 loader: 'babel-loader',
                 include: [APP_DIR],
                 query: {
-                    presets: ['react','env', 'stage-3']
+                    presets: ['react','env','stage-3','stage-0']
                 }
             },
             {
