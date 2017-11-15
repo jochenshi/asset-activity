@@ -40,10 +40,14 @@ const config = {
                     use: ['css-loader?-autoprefixer', 'stylus-loader']
                 })
             },
-            {
+            /*{
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
                 include: [path.join(__dirname, '../node_modules/antd'), path.join(__dirname, '../src/assets/')]
+            },*/
+            {
+                test: /.css$/, 
+                loaders: 'style-loader!css-loader'
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\\?.*)?$/,
