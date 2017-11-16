@@ -24,6 +24,7 @@ module.exports = {
                 ignoreRestSiblings: true,
             },
         ],
-        'no-console': 0
+        'no-console': 0,
+        "no-mixed-spaces-and-tabs": 0
     }
 }
