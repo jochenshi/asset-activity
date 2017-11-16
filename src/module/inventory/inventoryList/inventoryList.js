@@ -57,6 +57,12 @@ const titles = [
     }
 ];
 
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  }
+};
+
 class InventoryList extends Component {
     constructor (props) {
         super(props);
@@ -73,7 +79,7 @@ class InventoryList extends Component {
                     {/*<AddInventory/>*/}
                     <Button>刷新</Button>
                 </div>
-                <Table columns={titles} dataSource={testData}/>
+                <Table rowSelection={rowSelection} columns={titles} dataSource={testData}/>
             </div>
         )
     }
