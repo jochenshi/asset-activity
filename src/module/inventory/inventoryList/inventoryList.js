@@ -57,11 +57,11 @@ const titles = [
     }
 ];
 
-const rowSelection = {
+/*const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
   }
-};
+};*/
 
 class InventoryList extends Component {
     constructor (props) {
