@@ -13,6 +13,7 @@ import UseHistory from '../device/history/useHistory'
 import UserManage from '../usermanage/user'
 import HealthRecord from '../healthRecord/healthRecord'
 import OperateRecord from '../operateRecord/operateRecord'
+import OptionSet from '../setting/optionSet/optionSet'
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
@@ -27,7 +28,7 @@ class MainHome extends Component {
         }
     }
     setDefaultSelect () {
-
+        
     }
     handleClick (e) {
         console.log('e',e);
@@ -71,6 +72,9 @@ class MainHome extends Component {
                         <Item key="userManage"><Link to='/auth/main/userManage'>用户管理</Link></Item>
                         <Item key="healthRecord"><Link to='/auth/main/healthRecord'>健康记录</Link></Item>
                         <Item key="operateRecord"><Link to='/auth/main/operateRecord'>操作记录</Link></Item>
+                        <SubMenu key="setting" title="高级设置">
+                            <Item key="optionSet"><Link to="/auth/main/optionSet">选项设置</Link></Item>
+                        </SubMenu>
                     </Menu>
                 </Sider>
                 <Layout>
@@ -93,6 +97,7 @@ class MainHome extends Component {
                                 <AuthRoute path={`${this.props.match.path}/userManage`} component={UserManage}/>
                                 <AuthRoute path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>
                                 <AuthRoute path={`${this.props.match.path}/operateRecord`} component={OperateRecord}/>
+                                <AuthRoute path={`${this.props.match.path}/optionSet`} component={OptionSet}/>
                                 <Redirect to={`${this.props.match.path}/storeInfo`}/>
                             </Switch>
                             {/*{this.props.routes.map((route,i) => (
