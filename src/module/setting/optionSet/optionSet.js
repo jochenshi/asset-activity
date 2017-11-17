@@ -11,9 +11,9 @@ const sidebar = (
 	<ul>
         {parentdata.map((post) =>
 			<li>
-				<span contentEditable={true}>{post.code}</span>
-				<span contentEditable={true}>{post.name}</span>
-				{ post.code ? <span><a>保存</a><i>|</i><a>删除</a><i>|</i><a>查看</a></span> : <span><a>保存</a></span> }
+				{ post.code ? <span>{post.code}</span> : <span  contentEditable={true}></span> }
+                { post.name ? <span>{post.name}</span> : <span  contentEditable={true}></span> }
+				{ post.code ? <span><a>查看</a></span> : <span><a>保存</a></span> }
 			</li>
         )}
 	</ul>
