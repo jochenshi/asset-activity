@@ -1,26 +1,38 @@
 import React, {Component} from 'react'
 import './optionSet.styl'
-
-const parentdata = [
-	{ code : 'S0001', name : '类型'},
-    { code : 'S0002', name : '品牌'},
-	{ }
-]
-
-const sidebar = (
-	<ul>
-        {parentdata.map((post) =>
-			<li>
-				{ post.code ? <span>{post.code}</span> : <span  contentEditable={true}></span> }
-                { post.name ? <span>{post.name}</span> : <span  contentEditable={true}></span> }
-				{ post.code ? <span><a>查看</a></span> : <span><a>保存</a></span> }
-			</li>
-        )}
-	</ul>
-);
-
+import axios from 'axios'
 
 class OptionSet extends Component {
+	parentdata = 
+	[
+		{ code : 'S0001', name : '类型'},
+    	{ code : 'S0002', name : '品牌'},
+    	{ }
+	]
+	
+	saveParentClick(code,e){
+		let spans = this.refs[code].children;
+		let v_code = spans[0].innerText;
+		let v_name = spans[1].innerText;
+		console.log(this.refs);
+		var d_error = this.refs['parent_error']
+		console.log(v_code,v_name);
+		if(!v_code || !v_name){
+			d_error.innerText = '代号或名称不能为空';
+		}else{
+			d_error.innerText = '';
+		}
+		axios.get('http://localhost:8088/am/select/verifySelect?code='+v_code+'&name='+v_name)
+		.then((res)=>{
+
+		})
+		.catch((err)=>{
+			console.log(err);
+		});
+	}
+	saveClick(e){
+		console.log(this,e);
+	}
     render () {
         return (
             <div className="select-manager">
@@ -32,8 +44,17 @@ class OptionSet extends Component {
 						<span>操作</span>
             		</header>
             		<div>
-						{sidebar}
+						<ul>
+	        {this.parentdata.map((post) =>
+				<li key={post.code || 'add'} ref={post.code||'add'}>
+					{ post.code ? <span>{post.code}</span> : <span contentEditable={true}></span> }
+	                { post.name ? <span>{post.name}</span> : <span contentEditable={true}></span> }
+					{ post.code ? <span><a>查看</a></span> : <span><a onClick={this.saveParentClick.bind(this,post.code||'add')}>保存</a></span> }
+				</li>
+	        )}
+		</ul>
             		</div>
+            		<p ref={'parent_error'} className="error-message"></p>
             	</aside>
             	<section className="select-child">
 					<header>
@@ -41,12 +62,12 @@ class OptionSet extends Component {
 						<span>选项值</span>
 						<span>操作</span>
 					</header>
-					<div>
+					<div ref={'select_child'}>
 						<ul>
 							<li>
 								<span contentEditable={true}></span>
 								<span contentEditable={true}></span>
-								<span><a>保存</a><i>|</i><a>删除</a></span>
+								<span><a onClick={this.saveClick}>保存</a><i>|</i><a>删除</a></span>
 							</li>
 						</ul>
 					</div>
