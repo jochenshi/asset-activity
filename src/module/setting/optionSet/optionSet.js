@@ -29,7 +29,7 @@ class OptionSet extends Component {
 		axios.get('/am/select')
 		.then((res)=>{
 			if(res.data && res.data){
-				let parent = [], verifyStr = [], selIndex = 0, children = [];
+				let parent = [], verifyStr = [], selIndex = 0, children = [], nextCode = '';
 				res.data.forEach((item) => {
 					let index = verifyStr.indexOf(item.code);
 					if(index < 0){
@@ -37,30 +37,72 @@ class OptionSet extends Component {
 						parent.push({code : item.code, name : item.name, children : []});
 						index = verifyStr.length - 1;
 					}
-					parent[index].children.push({ text : item.text, value : item.value});
+					parent[index].children.push({ id : item.id, text : item.text, value : item.value});
 				});
-				if(!parent.length){
-					parent = [{ children : [] }];
+
+				if(!parent.length || !this.curCode || verifyStr.indexOf(this.curCode) < 0){
 					this.setCurSelect('','');
 				}else{
-					if(!this.curCode || verifyStr.indexOf(this.curCode) < 0){
-						this.curCode = verifyStr[0];
-					}
 					selIndex = verifyStr.indexOf(this.curCode);
 					this.curName = parent[selIndex]['name'];
-					parent.push({children: []});
 					children = parent[selIndex]['children'].map((item)=>item);
 					children.push({});
 				}
+
+				nextCode = this.generateNextCode(verifyStr);
+
+				if(nextCode!=='full'){
+					parent.push({children: []});
+				}
+
 				this.setState({
 					parentdata : parent,
 					childrendata : children
 				});
+
+				if(nextCode!=='full'){
+					this.refs['addP'].childNodes[0].innerText = this.generateNextCode(verifyStr);
+				} 
 			}
 		})
 		.catch((err)=>{
 			this.refs['parent_error'].innerText = err.error || err.message;
 		});
+	}
+
+	/*自动生成下一个code*/
+	generateNextCode(codes){
+		let nextCode = '', value = 0;
+		if(!codes.length){
+			nextCode = 'S0001';
+		}else{
+			let length = codes.sort().length;
+			while(length){
+				let code = codes[codes.length - length];
+				let num = parseInt(code.match(/[1-9]\d*/)[0]);
+				value++;
+				if(value!=num){
+					break;
+				}
+				if(value==9999){
+					nextCode = 'full';
+					break;
+				}
+				length--;
+				if(!length) value++;
+			}
+		}
+		if(!nextCode){
+			let len = 4 - value.toString().length;
+			nextCode += 'S';
+			while(len){
+				nextCode += '0';
+				len--;
+			}
+			nextCode += value;
+		}
+		
+		return nextCode;
 	}
 	
 	/*点击选择项父标识的保存按钮*/
@@ -80,6 +122,7 @@ class OptionSet extends Component {
 			});
 			this.toggleSelectedClass(this.curCode,code);
 			this.setCurSelect(v_code,v_name);
+			this.refs['addC'].childNodes[0].focus();
 		})
 		.catch((err)=>{
 			d_error.innerText = err.error || err.message;
@@ -110,7 +153,7 @@ class OptionSet extends Component {
 		var d_error = this.refs['child_error']
 		console.log(v_text,v_value);
 		if(!this.verifySelectItem(v_text,v_value,d_error)) return;
-		axios.post('/am/select/add',{
+		axios.post('/am/select',{
 			text: v_text,
 			value: v_value,
 			code: this.curCode,
@@ -151,9 +194,9 @@ class OptionSet extends Component {
 
 		this.clearErrorDom();
 
-		this.setCurSelect(code,parent['name']);
-
 		this.toggleSelectedClass(this.curCode,code);
+
+		this.setCurSelect(code,parent['name']);
 	}
 
 	/*切换被选择的条目样式*/
@@ -183,30 +226,49 @@ class OptionSet extends Component {
 	}
 
 	/*删除某选择项的某条值*/
-	deleteItemClick(value,e){
-		axios.post('/am/select/delete',{
-			code: this.curCode,
-			value: value
-		})
+	deleteItemClick(id,e){
+		axios.delete('/am/select/'+id)
 		.then((res)=>{
 			this.getSelectData();
 		})
 		.catch((err)=>{
 			this.refs['child_error'].innerText = err.error || err.message;
-		})
+		});
 	}
 
 	/*删除某选择项的所有条目*/
 	deleteSelect(code,e){
-		axios.post('/am/select/delete',{
-			code: this.curCode
-		})
+		axios.delete('/am/select?code='+code)
 		.then((res)=>{
 			this.getSelectData();
 		})
 		.catch((err)=>{
 			this.refs['child_error'].innerText = err.error || err.message;
+		});
+	}
+
+	/*更新某条选择条目*/
+	updateSelectItem(id,e){
+		let spans = this.refs['select_'+id].childNodes;
+		let v_text = spans[0].innerText;
+		let v_value = spans[1].innerText;
+		axios.put('/am/select',{
+			id: id,
+			code: this.curCode,
+			name: this.curName,
+			value: v_value,
+			text: v_text
 		})
+		.then((res)=>{
+			this.getSelectData();
+		})
+		.catch((err)=>{
+			let txt = '';
+			if(err.code === 13000){
+				txt = '值未更改或已存在相同值';
+			}
+			this.refs['child_error'].innerText = txt || err.message;
+		});
 	}
 
     render () {
@@ -241,10 +303,10 @@ class OptionSet extends Component {
 					<div ref={'select_child'}>
 						<ul>
 						{this.state.childrendata.map((post) => 
-							<li key={post.value || 'addC'}  ref={post.value||'addC'}>
+							<li key={post.id || 'addC'}  ref={post.id ? ('select_' + post.id) : 'addC'}>
 								{ post.text ? <span contentEditable={true}>{post.text}</span> : <span contentEditable={true}></span> }
 	                			{ post.value ? <span contentEditable={true}>{post.value}</span> : <span contentEditable={true}></span> }
-								{ post.value ? <span><a>保存</a><i>|</i><a onClick={this.deleteItemClick.bind(this,post.value)}>删除</a></span> : <span><a onClick={this.saveClick.bind(this,post.value||'addC')}>保存</a></span> }
+								{ post.value ? <span><a onClick={this.updateSelectItem.bind(this,post.id)}>保存</a><i>|</i><a onClick={this.deleteItemClick.bind(this,post.id)}>删除</a></span> : <span><a onClick={this.saveClick.bind(this,post.value||'addC')}>保存</a></span> }
 							</li>
 						)}
 						</ul>
