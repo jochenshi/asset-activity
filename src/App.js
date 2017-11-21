@@ -5,6 +5,7 @@ import Login from './module/login/login'
 import MainHome from './module/mainHome/mainHome'
 import StoreInfo from './module/inventory/info'
 import {RouteWithSubRoutes} from './common/component'
+import axios from 'axios'
 
 const Info = () => {
     return (<div>info</div>)
@@ -28,6 +29,23 @@ const Nopage = ({routes}) => {
         </div>
     )
 };
+
+const initAxios = () => {
+    axios.interceptors.response.use(function (response) {  
+        // token 已过期，重定向到登录页面  
+        /*if (response.data.code == 4){  
+            localStorage.clear()  
+            router.replace({  
+                            path: '/signin',  
+                            query: {redirect: router.currentRoute.fullPath}  
+                        })  
+        }  */
+        return response.data;  
+    }, function (error) {  
+        // Do something with response error  
+        return Promise.reject(error.response.data)  
+    }) 
+}
 
 /*const routes = [
     {
@@ -62,6 +80,7 @@ const Nopage = ({routes}) => {
 class App extends Component {
     constructor (props) {
         super(props);
+        initAxios();
     }
     render() {
         console.log(this.props);
