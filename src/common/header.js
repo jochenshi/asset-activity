@@ -1,5 +1,5 @@
 import React,{ Component } from 'react'
-import {Link, Route, Redirect, Switch} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 class Header extends Component {
     title = '';
@@ -13,8 +13,8 @@ class Header extends Component {
     render () {
         return (
             <header className='header'>
-                <h1>{this.title || ''}</h1>
-                <span><Link to={this.backUrl}>返回</Link></span>
+                <span className="link"><Link to={this.backUrl}>返回</Link></span>
+                <span className="title">{this.title || ''}</span>
             </header>
         )
     }

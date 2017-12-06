@@ -1,6 +1,6 @@
 import React,{ Component } from 'react'
 import { Table, Button } from 'antd'
-import Header from '../../../common/header'
+import {Link} from 'react-router-dom'
 
 const testData = [
     {
@@ -86,10 +86,8 @@ class DeviceMachine extends Component {
         };
         return (
             <div className="list">
-            	<Header title={'机器列表'} backUrl={'/auth/main/optionSet'}/>
                 <div className="list_operations">
-                    <Button>添加</Button>
-                    {/*<AddInventory/>*/}
+                    <Button><Link to="/auth/main/addMachine">添加</Link></Button>
                     <Button>刷新</Button>
                 </div>
                 <Table rowSelection={rowSelection} columns={titles} dataSource={testData}/>
