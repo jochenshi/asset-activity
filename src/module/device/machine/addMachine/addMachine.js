@@ -1,6 +1,7 @@
 import React,{ Component } from 'react'
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
 import Header from '../../../../common/header'
+import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -17,11 +18,9 @@ class AddMachine extends Component {
     }
     render () {
         return (
-            <div className="form">
+            <div className="form-panel">
                 <Header title={'添加机器'} backUrl={'/auth/main/deviceMachine'}/>
-                <Form onSubmit={this.handleSubmit}>
-
-                </Form>
+                <BaseinfoMachineWrap/>
             </div>
         )
     }
