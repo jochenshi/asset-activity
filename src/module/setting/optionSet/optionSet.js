@@ -28,7 +28,7 @@ class OptionSet extends Component {
 	getSelectData(){
 		axios.get('/am/select')
 		.then((res)=>{
-			if(res.data && res.data){
+			if(res.data && res.data.length){
 				let parent = [], verifyStr = [], selIndex = 0, children = [], nextCode = '';
 				res.data.forEach((item) => {
 					let index = verifyStr.indexOf(item.code);
