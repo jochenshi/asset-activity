@@ -8,6 +8,7 @@ import {RouteWithSubRoutes, AuthRoute} from '../../common/component'
 import StoreInfo from '../inventory/info'
 import InventoryHistory from '../inventory/inventoryHistory/inventoryHistory'
 import DeviceMachine from '../device/machine/machine'
+import AddMachine from '../device/machine/addMachine/addMachine'
 import DeviceEquip from '../device/equip/equip'
 import UseHistory from '../device/history/useHistory'
 import UserManage from '../usermanage/user'
@@ -90,6 +91,7 @@ class MainHome extends Component {
                                 <AuthRoute path={`${this.props.match.path}/storeInfo`} component={StoreInfo}/>
                                 <AuthRoute path={`${this.props.match.path}/storeHistory`} component={InventoryHistory}/>
                                 <AuthRoute path={`${this.props.match.path}/deviceMachine`} component={DeviceMachine}/>
+                                <AuthRoute path={`${this.props.match.path}/addMachine`} component={AddMachine}/>
                                 <AuthRoute path={`${this.props.match.path}/deviceEquip`} component={DeviceEquip}/>
                                 <AuthRoute path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
                                 {/*<Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
