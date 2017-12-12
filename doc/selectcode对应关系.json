@@ -29,5 +29,13 @@
   },
   {
     "code" : "S0006","text":"机器品牌"
+  },
+  {
+    "code" : "S0007","text":"物资使用状态",
+    "type" : [
+      { "value": "normal","text":"所有物资都会有的状态"},
+      { "value": "nomachine","text":"只有配件和零件才会有的状态"},
+      { "value": "part","text":"只有零件才会有的状态"}
+    ]
   }
 ]

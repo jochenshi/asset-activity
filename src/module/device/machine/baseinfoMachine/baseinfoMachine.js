@@ -3,7 +3,9 @@
  */
 import React,{ Component } from 'react'
 import axios from 'axios'
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import {Link} from 'react-router-dom'
+import PropTypes from 'prop-types';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -13,6 +15,7 @@ const { TextArea } = Input;
 class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
+        this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
         this.state = {
             outInType : [],
             originObject : [],
@@ -24,6 +27,9 @@ class BaseinfoMachine extends Component {
         };
         this.getSelectData();
     }
+    // contextTypes = {
+    //     router: React.PropTypes.object
+    // }
     getSelectData(){
         axios.get('/am/select/machine')
         .then((res)=>{
@@ -45,10 +51,22 @@ class BaseinfoMachine extends Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
+        console.log(this);
+        console.log(this.context);
+        console.log(this.context.router)
+        this.context.router.history.replace(this.backUrl)
         /*this.props.form.validateFieldsAndScroll((err, values) => {
-         if (!err) {
-         console.log('Received values of form: ', values);
-         }
+             if (!err) {
+                console.log('Received values of form: ', values);
+             }
+             console.log(values);
+            axios.post('/am/machine',values)
+                .then((res)=>{
+                    browserHistory.push(this.backUrl);
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
          });*/
     }
     handleChange = (value) => {
@@ -73,6 +91,18 @@ class BaseinfoMachine extends Component {
                 sm: { span: 16 },
             },
         };
+        const tailFormItemLayout = {
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                    offset: 0,
+                },
+                sm: {
+                    span: 16,
+                    offset: 8,
+                },
+            },
+        };
         return (
             <div className="form">
                 <Form onSubmit={this.handleSubmit}>
@@ -90,6 +120,14 @@ class BaseinfoMachine extends Component {
                             >
                                 {this.generateOption(this.state.outInType)}
                             </Select>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label="DatePicker"
+                    >
+                        {getFieldDecorator('occurTime')(
+                            <DatePicker />
                         )}
                     </FormItem>
                     <FormItem
@@ -120,7 +158,11 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="来源描述"
                     >
-                        {getFieldDecorator('ascriptionDesc')(
+                        {getFieldDecorator('ascriptionDesc',{
+                            rules :[
+                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                            ]
+                        })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
                         )}
                     </FormItem>
@@ -142,7 +184,7 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="类型"
                     >
-                        {getFieldDecorator('targetObject',{
+                        {getFieldDecorator('type',{
                             rules : [{required: true, message: '必须选择一个类型。'}],
                             initValue : 'server'
                         })(
@@ -170,17 +212,93 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('fixedNumber',{
                             rules :[
-                                { pattern : /^\w+$/, message : '不能输入非法字符！' }
+                                { pattern : /^\w*$/, message : '不能输入非法字符！' }
                             ]
                         })(
                             <Input/>
                         )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label="S/N号"
+                    >
+                        {getFieldDecorator('serialNo',{
+                            rules :[
+                                { required: true, message: 'S/N号不能为空。'},
+                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                            ]
+                        })(
+                            <Input/>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label="规格型号"
+                    >
+                        {getFieldDecorator('model',{
+                            rules : [
+                                {required: true,message: '规格型号不能为空。'}
+                            ]
+                        })(
+                            <Select
+                                mode="combobox"
+                            >
+                                {this.generateOption(this.state.model)}
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label="品牌"
+                    >
+                        {getFieldDecorator('brand',{
+                            rules : [
+                                {required: true,message: '品牌不能为空。'}
+                            ]
+                        })(
+                            <Select
+                                mode="combobox"
+                            >
+                                {this.generateOption(this.state.brand)}
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label="位置"
+                    >
+                        {getFieldDecorator('location',{
+                            rules :[
+                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                            ]
+                        })(
+                            <Input/>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label="机器描述"
+                    >
+                        {getFieldDecorator('machineDesc',{
+                            rules :[
+                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                            ]
+                        })(
+                            <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
+                        )}
+                    </FormItem>
+                    <FormItem {...tailFormItemLayout}>
+                        <Button type="primary" htmlType="submit">确定</Button>
+                        <Button><Link to={this.backUrl}>取消</Link></Button>
                     </FormItem>
                 </Form>
             </div>
         )
     }
 }
+BaseinfoMachine.contextTypes = {
+    router: PropTypes.object
+};
 
 const BaseinfoMachineWrap = Form.create()(BaseinfoMachine);
 
