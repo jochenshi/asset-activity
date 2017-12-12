@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 import {Form, Input, Icon, Button, Checkbox} from 'antd';
+import axios from 'axios';
 import './login.styl'
 
 const FormItem = Form.Item;
@@ -15,6 +16,14 @@ class Login extends Component {
         console.log(this);
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                axios.post('/am/user/login', values)
+                    .then((msg) => {
+                        console.log('success', msg);
+                        window.location.href = window.location.href.split('/login')[0] + '/auth';
+                    })
+                    .catch((error) => {
+                        console.log('error', error)
+                    });
                 console.log(values);
             } else {
                 console.log(values)
@@ -31,9 +40,9 @@ class Login extends Component {
                     <div className="input_area">
                         <Form onSubmit={this.handleSubmit}>
                             <FormItem>
-                                {getFieldDecorator('username', {
-                                    rules: [{required: true, message: 'Please input your username'}]
-                                })(<Input prefix={<Icon type="user" style={{fontSize: 13}}/>} placeholder="username" />)}
+                                {getFieldDecorator('account', {
+                                    rules: [{required: true, message: 'Please input your account'}]
+                                })(<Input prefix={<Icon type="user" style={{fontSize: 13}}/>} placeholder="account" />)}
                             </FormItem>
                             <FormItem>
                                 {getFieldDecorator('password', {

@@ -19,7 +19,7 @@ const RouteWithSubRoutes = (route) => (
 
 // one customize route component used to check route authority
 const AuthRoute = ({component: Component, ...rest}) => {
-    let state = window.localStorage.aaa;
+    let state = window.localStorage.aaa = 1;
     // 0 represent not authentic, 1 represent authentic
     state ? state = Number(state) : state = false;
     return (
