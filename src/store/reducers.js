@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 
 const initState = {
-    isLogin: false
+    isLogin: false,
+    role: 'admin'
 };
 const userLoginReducer = (state = initState, action) => {
     if (action.type === 'TOGGLE_LOGIN') {

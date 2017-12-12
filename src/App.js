@@ -6,14 +6,8 @@ import MainHome from './module/mainHome/mainHome'
 import StoreInfo from './module/inventory/info'
 import {RouteWithSubRoutes} from './common/component'
 import axios from 'axios'
-
-const Info = () => {
-    return (<div>info</div>)
-};
-
-const As = () => {
-    return (<div>ddd</div>)
-};
+import store from './store/store'
+import { Provider, connect } from 'react-redux'
 
 const Nopage = ({routes}) => {
     console.log(routes);
@@ -45,37 +39,13 @@ const initAxios = () => {
         // Do something with response error  
         return Promise.reject(error.response.data)  
     }) 
-}
+};
 
-/*const routes = [
-    {
-        path: '/login',
-        component: Login
-    },
-    {
-        path: '/storeinfo',
-        component: LeftTree,
-        routes: [
-            {
-                path: '/storeinfo/info',
-                component: StoreInfo
-            },
-            {
-                path: '/storeinfo/asd',
-                component: As
-            }
-        ]
+const mapState = (state) => {
+    return {
+        loginState: state.userLoginState.isLogin
     }
-];*/
-
-/*class AuthorizedRoute extends Component {
-    compomentWillMount () {}
-    render () {
-        return (
-            <Route render={}/>
-        )
-    }
-}*/
+};
 
 class App extends Component {
     constructor (props) {
@@ -87,30 +57,30 @@ class App extends Component {
         return (
             <Router>
                 {/*<div className="App">*/}
-                    {/*<Login />*/}
-                    {/*<LeftTree></LeftTree>*/}
-                    {/*<Link to="/home">home</Link>*/}
-                    {/*<Route exact path='/:id' render={({match}) => {
-                    console.log(match);
-                    return (
-                        flag ? (<Redirect to='/home'/>) : (<Redirect to="/login"/>)
-                    )
-                }}/>
-                <Route exact path="/login" component={Login}/>
-                <Route path="/home" component={LeftTree} />*/}
+                {/*<Login />*/}
+                {/*<LeftTree></LeftTree>*/}
+                {/*<Link to="/home">home</Link>*/}
+                {/*<Route exact path='/:id' render={({match}) => {
+                console.log(match);
+                return (
+                    flag ? (<Redirect to='/home'/>) : (<Redirect to="/login"/>)
+                )
+            }}/>
+            <Route exact path="/login" component={Login}/>
+            <Route path="/home" component={LeftTree} />*/}
                 <Switch>
                     <Route path='/auth/main' component={MainHome}/>
                     <Route path="/login" component={Login} />
                     <Redirect to='/auth/main'/>
                 </Switch>
-                    {/*https://css-tricks.com/react-router-4/*/}
-                    {/*{routes.map((route, i) => (
-                        <RouteWithSubRoutes key={i} {...route}/>
-                    ))}*/}
+                {/*https://css-tricks.com/react-router-4/*/}
+                {/*{routes.map((route, i) => (
+                    <RouteWithSubRoutes key={i} {...route}/>
+                ))}*/}
                 {/*</div>*/}
             </Router>
         )
     }
 }
 
-export default App
+export default connect(mapState)(App)

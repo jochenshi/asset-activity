@@ -8,7 +8,7 @@ import './assets/icon/iconfont.css'
 import store from './store/store'
 import { toggleLogin } from './store/action'
 
-let unsubscribe = store.subscribe(() => {
+/*let unsubscribe = store.subscribe(() => {
     console.log('update', store.getState())
 });
 store.dispatch(toggleLogin(true));
@@ -17,7 +17,7 @@ store.dispatch(toggleLogin(2));
 store.dispatch(toggleLogin(3));
 
 unsubscribe();
-store.dispatch(toggleLogin(4));
+store.dispatch(toggleLogin(4));*/
 
 ReactDom.render(
     <Provider store={store}>
