@@ -3,8 +3,22 @@ import 'antd/dist/antd.css';
 import {Form, Input, Icon, Button, Checkbox} from 'antd';
 import axios from 'axios';
 import './login.styl'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types';
 
 const FormItem = Form.Item;
+
+const mapState = (state) => {
+    return {
+        loginState: state.userLoginState.isLogin
+    }
+};
+
+const mapDispatch = (dispatch, ownProps) => {
+    return {
+        changeLogin: () => {dispatch({type: 'TOGGLE_LOGIN', value: true})}
+    }
+};
 
 class Login extends Component {
     constructor (props) {
@@ -14,10 +28,14 @@ class Login extends Component {
     handleSubmit (e) {
         e.preventDefault();
         console.log(this);
+        let {changeLogin} = this.props;
+        changeLogin();
+        this.context.router.history.replace('/auth');
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 axios.post('/am/user/login', values)
                     .then((msg) => {
+                        changeLogin();
                         console.log('success', msg);
                         window.location.href = window.location.href.split('/login')[0] + '/auth';
                     })
@@ -64,6 +82,10 @@ class Login extends Component {
     }
 }
 
-const WrappedNormalLoginForm = Form.create()(Login);
+Login.contextTypes = {
+    router: PropTypes.object
+};
+
+const WrappedNormalLoginForm = Form.create()(connect(mapState, mapDispatch)(Login));
 
 export default WrappedNormalLoginForm
