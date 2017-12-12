@@ -1,0 +1,41 @@
+//自定义code默认从1000开始
+[
+  {
+    "code" : "S0001","text":"归属类型",
+    "type" : [
+      { "value" : "in", "text": "入库的归属类型"},
+      { "value" : "out", "text": "出库的归属类型"}
+    ]
+  },
+  {
+    "code" : "S0002","text":"归属来源",
+     "type" : [
+      { "value" : "in", "text": "入库时的来源"},
+      { "value" : "out", "text": "出库时的来源"}
+    ]
+  },
+  {
+    "code" : "S0003","text":"归属对象",
+    "type" : [
+      { "value" : "in", "text": "入库时的对象"},
+      { "value" : "out", "text": "出库时的对象"}
+    ]
+  },
+  {
+    "code" : "S0004","text":"机器类型"
+  },
+  {
+    "code" : "S0005","text":"机器规格型号"
+  },
+  {
+    "code" : "S0006","text":"机器品牌"
+  },
+  {
+    "code" : "S0007","text":"物资使用状态",
+    "type" : [
+      { "value": "normal","text":"所有物资都会有的状态"},
+      { "value": "nomachine","text":"只有配件和零件才会有的状态"},
+      { "value": "part","text":"只有零件才会有的状态"}
+    ]
+  }
+]
