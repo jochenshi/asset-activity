@@ -25,6 +25,7 @@ module.exports = {
             },
         ],
         'no-console': 0,
-        "no-mixed-spaces-and-tabs": 0
+        "no-mixed-spaces-and-tabs": 0,
+        "no-constant-condition": 0
     }
 }
