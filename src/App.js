@@ -8,21 +8,8 @@ import {RouteWithSubRoutes} from './common/component'
 import axios from 'axios'
 import store from './store/store'
 import { Provider, connect } from 'react-redux'
+import PropTypes from 'prop-types';
 
-const Nopage = ({routes}) => {
-    console.log(routes);
-    return (
-        <div>
-            <h1>no content</h1>
-            <ul>
-                <li><Link to="/storeinfo/info">info</Link></li>
-            </ul>
-            {routes.map((route,i) => (
-                <RouteWithSubRoutes key={i} {...route}/>
-            ))}
-        </div>
-    )
-};
 
 const initAxios = () => {
     axios.interceptors.response.use(function (response) {  
@@ -53,7 +40,8 @@ class App extends Component {
         initAxios();
     }
     render() {
-        console.log(this.props);
+        console.log('app props', this.props);
+        console.log(this.context);
         return (
             <Router>
                 {/*<div className="App">*/}

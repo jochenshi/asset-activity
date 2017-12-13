@@ -1,5 +1,28 @@
 .equip_content{
-  .equip_title{
-    display inline-block
+  .title_content{
+    margin 10px 10px 10px 10px
+    padding-left 10px
+    color #999
+    border-bottom 1px solid #e3e3e3
+    font-weight 400
+    .equip_title{
+      display inline-block
+      padding 0 15px
+      background #fff
+      font-size 16px
+      line-height 32px
+      cursor pointer
+      border solid transparent
+      &.selected{
+        position: relative
+        top 3px
+        border-color #e36209 #e1e4e8 transparent
+        border-width 3px 1px 1px
+      }
+    }
+  }
+  .table_content{
+    margin 0 20px
+    margin-top 20px
   }
 }
