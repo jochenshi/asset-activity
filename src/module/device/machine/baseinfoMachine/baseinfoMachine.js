@@ -16,6 +16,8 @@ class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
+        this.rdNumber = '';
+        this.rdbNumber = '';
         this.state = {
             outInType : [],
             originObject : [],
@@ -23,13 +25,36 @@ class BaseinfoMachine extends Component {
             type : [],
             model : [],
             brand : [],
-            prefixRdNumber : 'RD'
+            prefixRdNumber : 'RD',
+            rdNumber : '',
+            rdbNumber : ''
         };
         this.getSelectData();
+        this.getRdNumber();
     }
-    // contextTypes = {
-    //     router: React.PropTypes.object
-    // }
+    getRdNumber(){
+        axios.get('/am/machine/rdNumber')
+            .then((res)=>{
+                if(res.data){
+                    let rdNumber = (res.data.rdCount+1).toString();
+                    let i = 0,l = rdNumber.length;
+                    while(i<4 - l){
+                       rdNumber = '0'+ rdNumber;
+                        i++;
+                    }
+                    let rdbNumber = (res.data.rdbCount+1).toString();
+                    i = 0,l = rdbNumber.length;
+                    while(i<4 - l){
+                        rdbNumber = '0'+rdbNumber;
+                        i++;
+                    }
+                    this.setState({
+                        rdNumber : rdNumber,
+                        rdbNumber : rdbNumber
+                    });
+                }
+            })
+    }
     getSelectData(){
         axios.get('/am/select/machine')
         .then((res)=>{
@@ -51,23 +76,20 @@ class BaseinfoMachine extends Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this);
-        console.log(this.context);
-        console.log(this.context.router)
-        this.context.router.history.replace(this.backUrl)
-        /*this.props.form.validateFieldsAndScroll((err, values) => {
+        this.props.form.validateFieldsAndScroll((err, values) => {
              if (!err) {
                 console.log('Received values of form: ', values);
              }
              console.log(values);
+             values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
             axios.post('/am/machine',values)
                 .then((res)=>{
-                    browserHistory.push(this.backUrl);
+                    this.context.router.history.replace(this.backUrl)
                 })
                 .catch((err)=>{
                     console.log(err);
                 });
-         });*/
+         });
     }
     handleChange = (value) => {
         console.log(`Selected: ${value}`);
@@ -186,7 +208,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('type',{
                             rules : [{required: true, message: '必须选择一个类型。'}],
-                            initValue : 'server'
+                            initialValue : 'server'
                         })(
                             <Select>
                                 {this.generateOption(this.state.type)}
@@ -196,12 +218,14 @@ class BaseinfoMachine extends Component {
                     <FormItem
                         {...formItemLayout}
                         label="研发部编号"
+                        
                     >
                         {getFieldDecorator('rdNumber',{
                             rules :[
                                 { required : true, whitespace: true, message : '研发部编号不可为空。'},
                                 { pattern : /^[0-9]{4,}$/, message : '必须填写四位以上的数字。'}
-                            ]
+                            ],
+                            initialValue : this.state.prefixRdNumber === 'RD' ? this.state.rdNumber : this.state.rdbNumber
                         })(
                             <Input addonBefore={this.state.prefixRdNumber}/>
                         )}
