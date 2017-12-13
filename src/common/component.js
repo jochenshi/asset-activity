@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import {Route, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types';
+import {getCookie} from "./methods";
+
 
 const RouteWithSubRoutes = (route) => (
     <Route path={route.path} render={(props) => (
@@ -30,8 +33,8 @@ class routeAuth extends Component {
     }
     render () {
         console.log(111, this);
-        let {component: Component, loginState , ...rest} = this.props;
-        let a = 0;
+        let {component: Component, ...rest} = this.props;
+        let loginState = getCookie('am_user') || true;
         return (
             <Route {...rest} render={(props) => {
                 if (loginState) {
@@ -44,6 +47,9 @@ class routeAuth extends Component {
         )
     }
 }
+routeAuth.contextTypes = {
+    router: PropTypes.object
+};
 
 // one customize route component used to check route authority
 /*const AuthRoute = ({component: Component, ...rest}) => {

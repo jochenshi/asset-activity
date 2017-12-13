@@ -28,16 +28,15 @@ class Login extends Component {
     handleSubmit (e) {
         e.preventDefault();
         console.log(this);
-        let {changeLogin} = this.props;
-        changeLogin();
-        this.context.router.history.replace('/auth');
+        /*let {changeLogin} = this.props;
+        changeLogin();*/
+        //this.context.router.history.replace('/auth');
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 axios.post('/am/user/login', values)
                     .then((msg) => {
-                        changeLogin();
                         console.log('success', msg);
-                        window.location.href = window.location.href.split('/login')[0] + '/auth';
+                        this.context.router.history.replace('/auth');
                     })
                     .catch((error) => {
                         console.log('error', error)
