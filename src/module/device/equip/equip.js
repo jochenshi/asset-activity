@@ -11,17 +11,35 @@ import UseHistory from "../history/useHistory";
 class DeviceEquip extends Component {
     constructor (props) {
         super(props);
+        console.log('constructor');
         this.state = {
             selected: 'normal_equip'
         }
+    }
+    componentDidMount () {
+        console.log('did mount', this.props);
+        let match = this.props.match.path;
+        let pathname = this.props.location.pathname;
+        if (pathname === match) {
+            return
+        } else {
+            let nowUrl = pathname.substring(match.length + 1);
+            nowUrl = nowUrl === 'normalEquip' ? 'normal_equip' : 'supply_equip';
+            this.setState({
+                selected: nowUrl
+            })
+        }
+        //this.props.history.replace('/auth')
     }
     handleTitleClick  = (e) => {
         let target = e.target.getAttribute('data-value');
         if (target !== this.state.selected) {
             console.log('change selected');
+            let des = target === 'normal_equip' ? 'normalEquip' : 'supplyEquip';
             this.setState({
                 selected: target
-            })
+            });
+            this.props.history.replace('/auth/main/deviceEquip/' + des);
         }
     };
     render () {
@@ -41,8 +59,8 @@ class DeviceEquip extends Component {
         )
     }
 }
-DeviceEquip.contextTypes = {
+/*DeviceEquip.contextTypes = {
     router: PropTypes.object
-};
+};*/
 
 export default DeviceEquip
