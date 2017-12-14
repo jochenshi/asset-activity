@@ -1,6 +1,7 @@
 import React,{ Component } from 'react'
 import { Table, Button } from 'antd'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 const testData = [
     {
@@ -11,7 +12,6 @@ const testData = [
         type: 'service',
         ip: '192.168.232.10',
         model: 'xxxmodel',
-        healthState: 'healthState',
         cpu: 'xxxxxxxxx',
         useState: 'using',
         createUser: 'admin',
@@ -50,8 +50,8 @@ const titles = [
         dataIndex: 'model'
     },
     {
-        title: '健康状态',
-        dataIndex: 'healthState'
+        title: '品牌',
+        dataIndex: 'brand',
     },
     {
         title: 'CPU',
@@ -62,12 +62,16 @@ const titles = [
         dataIndex: 'useState'
     },
     {
-        title: '增加人',
+        title: '健康状态',
+        dataIndex: 'healthState'
+    },
+    {
+        title: '添加人',
         dataIndex: 'createUser'
     },
     {
-        title: '增加时间',
-        dataIndex: 'createTime'
+        title: '添加时间',
+        dataIndex: 'createdAt'
     },
     {
         title: '描述',
@@ -78,6 +82,23 @@ const titles = [
 class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
+        this.state = {
+            machineData : []
+        }
+        this.getMachineData();
+    }
+    getMachineData(){
+	    axios.get('/am/machine')
+        .then((res)=>{
+            if(res.data){
+                this.setState({
+                    machineData : res.data
+                })
+            }
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
     }
     onSelectChange () {}
     render () {
@@ -90,7 +111,7 @@ class DeviceMachine extends Component {
                     <Button><Link to="/auth/main/addMachine">添加</Link></Button>
                     <Button>刷新</Button>
                 </div>
-                <Table rowSelection={rowSelection} columns={titles} dataSource={testData}/>
+                <Table rowSelection={rowSelection} columns={titles} dataSource={this.state.machineData}/>
             </div>
         )
     }
