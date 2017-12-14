@@ -3,27 +3,13 @@ import { Table, Button } from 'antd'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 
-const testData = [
-    {
-    	serialNo: 'ABCDEFG',
-        name: '服务器1',
-        rdNumber: 'RD201701',
-        fixedNumber: '12345',
-        type: 'service',
-        ip: '192.168.232.10',
-        model: 'xxxmodel',
-        cpu: 'xxxxxxxxx',
-        useState: 'using',
-        createUser: 'admin',
-        createTime: '2017-12-02',
-        description: 'xxxxxxxxx'
-    }
-];
-
 const titles = [
     {
         title: 'S/N号',
-        dataIndex: 'serialNo'
+        dataIndex: 'serialNo',
+        render : (text,record) =>{
+            return <Link to={"auth/main/deviceMachine"+record.id}>{text}</Link>
+        }
     },
     {
         title: '名称',
@@ -39,7 +25,7 @@ const titles = [
     },
     {
     	title: '类型',
-    	dataIndex: 'type'
+    	dataIndex: 'typeText'
     },
     {
         title: 'IP',
@@ -59,15 +45,18 @@ const titles = [
     },
     {
         title: '使用状态',
-        dataIndex: 'useState'
+        dataIndex: 'useStateText'
     },
     {
         title: '健康状态',
-        dataIndex: 'healthState'
+        dataIndex: 'healthState',
+        render : (text,record) =>{
+            return text==='noRecord'?'无记录':text;
+        }
     },
     {
         title: '添加人',
-        dataIndex: 'createUser'
+        dataIndex: 'account'
     },
     {
         title: '添加时间',
@@ -88,9 +77,11 @@ class DeviceMachine extends Component {
         this.getMachineData();
     }
     getMachineData(){
-	    axios.get('/am/machine')
+	    axios.get('/am/machine?operate=deviceMachine')
         .then((res)=>{
             if(res.data){
+                console.log(res.data);
+                console.log(typeof res.data);
                 this.setState({
                     machineData : res.data
                 })

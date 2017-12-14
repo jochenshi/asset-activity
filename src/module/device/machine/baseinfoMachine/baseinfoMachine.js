@@ -25,6 +25,7 @@ class BaseinfoMachine extends Component {
             type : [],
             model : [],
             brand : [],
+            cpu : [],
             prefixRdNumber : 'RD',
             rdNumber : '',
             rdbNumber : ''
@@ -67,6 +68,7 @@ class BaseinfoMachine extends Component {
                     type : data['type'],
                     model : data['model'],
                     brand : data['brand'],
+                    cpu : data['cpu']
                 });
             }
         })
@@ -82,7 +84,7 @@ class BaseinfoMachine extends Component {
              }
              console.log(values);
              values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
-            axios.post('/am/machine',values)
+            axios.post('/am/machine?operate=addMachine',values)
                 .then((res)=>{
                     this.context.router.history.replace(this.backUrl)
                 })
@@ -182,7 +184,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('ascriptionDesc',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ]
                         })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
@@ -236,7 +238,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('fixedNumber',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符！' }
+                                { pattern : /^\S*$/, message : '不能输入非法字符！' }
                             ]
                         })(
                             <Input/>
@@ -249,7 +251,7 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('serialNo',{
                             rules :[
                                 { required: true, message: 'S/N号不能为空。'},
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ]
                         })(
                             <Input/>
@@ -289,11 +291,27 @@ class BaseinfoMachine extends Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
+                        label="CPU"
+                    >
+                        {getFieldDecorator('cpu',{
+                            rules : [
+                                {required: true,message: 'CPU不能为空。'}
+                            ]
+                        })(
+                            <Select
+                                mode="combobox"
+                            >
+                                {this.generateOption(this.state.cpu)}
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
                         label="位置"
                     >
                         {getFieldDecorator('location',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ]
                         })(
                             <Input/>
@@ -305,7 +323,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('machineDesc',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ]
                         })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
