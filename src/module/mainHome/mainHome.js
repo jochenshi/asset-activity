@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Layout, Menu} from 'antd'
 import {Link, Route, Redirect, Switch} from 'react-router-dom'
+import {connect} from 'react-redux'
 
 import './style.styl'
 
@@ -19,6 +20,12 @@ import OptionSet from '../setting/optionSet/optionSet'
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
 
+const mapState = (state) => {
+    return {
+        loginState: state.userLoginState.isLogin
+    }
+};
+
 class MainHome extends Component {
     constructor (props) {
         super(props);
@@ -31,6 +38,7 @@ class MainHome extends Component {
     setDefaultSelect () {
         
     }
+    checkLogin () {}
     handleClick (e) {
         console.log('e',e);
         console.log('props',this.props);
@@ -67,7 +75,7 @@ class MainHome extends Component {
                         </SubMenu>
                         <SubMenu key="device" title="设备信息">
                             <Item key="deviceMachine"><Link to='/auth/main/deviceMachine'>机器</Link></Item>
-                            <Item key="deviceEquip"><Link to='/auth/main/deviceEquip'>配件</Link></Item>
+                            <Item key="deviceEquip"><Link to='/auth/main/deviceEquip/normalEquip'>配件</Link></Item>
                             <Item key="deviceUseHistory"><Link to='/auth/main/deviceUseHistory'>领用/归还记录</Link></Item>
                         </SubMenu>
                         <Item key="userManage"><Link to='/auth/main/userManage'>用户管理</Link></Item>
@@ -113,4 +121,4 @@ class MainHome extends Component {
     }
 }
 
-export default MainHome
+export default connect(mapState)(MainHome)
