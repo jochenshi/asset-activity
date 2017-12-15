@@ -34,7 +34,7 @@ class routeAuth extends Component {
     render () {
         console.log(111, this);
         let {component: Component, ...rest} = this.props;
-        let loginState = getCookie('am_user') || false;
+        let loginState = getCookie('am_user') || true;
         return (
             <Route {...rest} render={(props) => {
                 if (loginState) {

@@ -8,7 +8,7 @@ class AddMachine extends Component {
         return (
             <div className="form-panel">
                 <Header title={'添加机器'} backUrl={this.backUrl}/>
-                <BaseinfoMachineWrap backUrl={this.backUrl}/>
+                <BaseinfoMachineWrap backUrl={this.backUrl} mode="add"/>
             </div>
         )
     }
