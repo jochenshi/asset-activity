@@ -18,7 +18,7 @@ class BaseinfoMachine extends Component {
         super(props);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
         this.mode = this.props.mode;
-        this.data = this.props.data || {};
+        // this.data = this.props.data || {};
         this.rdNumber = '';
         this.rdbNumber = '';
         this.state = {
@@ -29,9 +29,10 @@ class BaseinfoMachine extends Component {
             model : [],
             brand : [],
             cpu : [],
-            prefixRdNumber : this.data['outInType']==='borrow'?'RDB':'RD',
+            prefixRdNumber : this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
-            rdbNumber : ''
+            rdbNumber : '',
+            data : this.props.data || {}
         };
         this.getSelectData();
         if(this.mode === 'add'){
@@ -108,6 +109,12 @@ class BaseinfoMachine extends Component {
     generateOption(arr){
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }
+    /*componentWillUpdate (props ,state) {
+        console.log(props);
+        this.setState({
+            data : props.data
+        });
+    }*/
     render () {
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
@@ -132,7 +139,7 @@ class BaseinfoMachine extends Component {
                 },
             },
         };
-        let rdNumber = this.data['rdNumber'];
+        let rdNumber = this.state.data['rdNumber'];
         rdNumber = rdNumber && rdNumber.match(/\d+/g)[0];
         return (
             <div className="form">
@@ -144,7 +151,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('outInType',{
                             rules: [{ required : true, message : '必须选择来源类型。' }],
-                            initialValue : this.data['outInType']||'buyin',
+                            initialValue : this.state.data['outInType']||'buyin',
                             disabled : true
                         })(
                             <Select
@@ -159,9 +166,9 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="DatePicker"
                     >
-                        {getFieldDecorator('occurTime',{
-                            initialValue : this.data['occurTime'] || moment(new Date(), 'yyyy/MM/dd')
-                        })(
+                        {getFieldDecorator('occurTime',{/*{
+                            initialValue : this.state.data['occurTime'] || moment(new Date(), 'yyyy/MM/dd')
+                        }*/})(
                             <DatePicker />
                         )}
                     </FormItem>
@@ -170,7 +177,7 @@ class BaseinfoMachine extends Component {
                         label="来源对象"
                     >
                         {getFieldDecorator('originObject',{
-                            initialValue : this.data['originObject'] || ''
+                            initialValue : this.state.data['originObject'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -184,7 +191,7 @@ class BaseinfoMachine extends Component {
                         label="入库对象"
                     >
                         {getFieldDecorator('targetObject',{
-                            initialValue : this.data['targetObject'] || ''
+                            initialValue : this.state.data['targetObject'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -201,7 +208,7 @@ class BaseinfoMachine extends Component {
                             rules :[
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
-                            initialValue : this.data['ascriptionDesc'] || ''
+                            initialValue : this.state.data['ascriptionDesc'] || ''
                         })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
                         )}
@@ -216,7 +223,7 @@ class BaseinfoMachine extends Component {
                                 { required : true, whitespace: true, message : '名称不可为空。'},
                                 { pattern : /^[0-9a-zA-Z_-]+$/, message : '名称不能输入非法字符！'}
                             ],
-                            initialValue : this.data['name'] || ''
+                            initialValue : this.state.data['name'] || ''
                         })(
                             <Input/>
                         )}
@@ -227,7 +234,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('type',{
                             rules : [{required: true, message: '必须选择一个类型。'}],
-                            initialValue : this.data['type'] || 'server'
+                            initialValue : this.state.data['type'] || 'server'
                         })(
                             <Select>
                                 {this.generateOption(this.state.type)}
@@ -257,7 +264,7 @@ class BaseinfoMachine extends Component {
                             rules :[
                                 { pattern : /^\S*$/, message : '不能输入非法字符！' }
                             ],
-                            initialValue : this.data['fixedNumber'] || ''
+                            initialValue : this.state.data['fixedNumber'] || ''
                         })(
                             <Input/>
                         )}
@@ -271,7 +278,7 @@ class BaseinfoMachine extends Component {
                                 { required: true, message: 'S/N号不能为空。'},
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
-                            initialValue : this.data['serialNo'] || ''
+                            initialValue : this.state.data['serialNo'] || ''
                         })(
                             <Input/>
                         )}
@@ -284,7 +291,7 @@ class BaseinfoMachine extends Component {
                             rules : [
                                 {required: true,message: '规格型号不能为空。'}
                             ],
-                            initialValue : this.data['model'] || ''
+                            initialValue : this.state.data['model'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -301,7 +308,7 @@ class BaseinfoMachine extends Component {
                             rules : [
                                 {required: true,message: '品牌不能为空。'}
                             ],
-                            initialValue : this.data['brand'] || ''
+                            initialValue : this.state.data['brand'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -318,7 +325,7 @@ class BaseinfoMachine extends Component {
                             rules : [
                                 {required: true,message: 'CPU不能为空。'}
                             ],
-                            initialValue : this.data['cpu'] || ''
+                            initialValue : this.state.data['cpu'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -335,7 +342,7 @@ class BaseinfoMachine extends Component {
                             rules :[
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
-                            initialValue : this.data['location'] || ''
+                            initialValue : this.state.data['location'] || ''
                         })(
                             <Input/>
                         )}
@@ -348,7 +355,7 @@ class BaseinfoMachine extends Component {
                             rules :[
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
-                            initialValue : this.data['machineDesc'] || ''
+                            initialValue : this.state.data['machineDesc'] || ''
                         })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
                         )}
