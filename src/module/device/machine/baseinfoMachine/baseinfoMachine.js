@@ -18,7 +18,7 @@ class BaseinfoMachine extends Component {
         super(props);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
         this.mode = this.props.mode;
-        // this.data = this.props.data || {};
+        this.data = this.props.data || {};
         this.rdNumber = '';
         this.rdbNumber = '';
         this.state = {
@@ -32,7 +32,7 @@ class BaseinfoMachine extends Component {
             prefixRdNumber : this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
             rdbNumber : '',
-            data : this.props.data || {}
+            data : this.props.data
         };
         this.getSelectData();
         if(this.mode === 'add'){
@@ -90,13 +90,27 @@ class BaseinfoMachine extends Component {
              }
              console.log(values);
              values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
-            axios.post('/am/machine?operate=addMachine',values)
-                .then((res)=>{
-                    this.context.router.history.replace(this.backUrl)
-                })
-                .catch((err)=>{
-                    console.log(err);
-                });
+             if(this.mode === 'add'){
+                 axios.post('/am/machine?operate=addMachine',values)
+                     .then((res)=>{
+                         this.context.router.history.replace(this.backUrl)
+                     })
+                     .catch((err)=>{
+                         console.log(err);
+                     });
+             }else if(this.mode==='modify'){
+                 values['ascriptionId'] = this.state.data.ascriptionId;
+                 axios.put('/am/machine/'+this.state.data.id+'?operate=modifyMachine',values)
+                     .then((res)=>{
+                         console.log(res);
+                     })
+                     .catch((err)=>{
+                         console.log(err);
+                         this.setState({
+                             data : this.state.data
+                         });
+                     });
+             }
          });
     }
     handleChange = (value) => {
@@ -109,12 +123,13 @@ class BaseinfoMachine extends Component {
     generateOption(arr){
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }
-    /*componentWillUpdate (props ,state) {
+    componentWillReceiveProps (props ,state) {
         console.log(props);
         this.setState({
-            data : props.data
+            data: props.data,
+            prefixRdNumber : props.data['outInType']==='borrow'?'RDB':'RD',
         });
-    }*/
+    }
     render () {
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
@@ -166,9 +181,9 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="DatePicker"
                     >
-                        {getFieldDecorator('occurTime',{/*{
-                            initialValue : this.state.data['occurTime'] || moment(new Date(), 'yyyy/MM/dd')
-                        }*/})(
+                        {getFieldDecorator('occurTime',{
+                            initialValue : moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') || moment(new Date(), 'yyyy/MM/dd')
+                        })(
                             <DatePicker />
                         )}
                     </FormItem>

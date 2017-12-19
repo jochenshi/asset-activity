@@ -6,9 +6,15 @@ import {Link} from 'react-router-dom'
 import Header from '../../../../common/header'
 import axios from 'axios'
 import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
+import NormalEquip from '../../equip/normalEquip';
 
 class DetailMachine extends Component {
     backUrl = '/auth/main/deviceMachine';
+    baseTitles = [
+        { label : '创建人', key : 'account'},
+        { label : '使用状态', key : 'useStateText'},
+        { label : '创建时间', key : 'createdAt'},
+    ];
     constructor (props) {
         super(props);
         this.id = props.match.params.id;
@@ -39,9 +45,21 @@ class DetailMachine extends Component {
                 <Header title={'机器详情'} backUrl={this.backUrl}/>
                 <div className="form">
                     <h1 className="form-field-title">基本信息</h1>
-                    <ul></ul>
+                    <ul className="detail_list">
+                        {this.baseTitles.map((item)=>{
+                            return <li key={item.key}><label>{item.label}<i>:</i></label><span>{this.state.data[item.key]}</span></li>
+                        })}
+                    </ul>
                 </div>
                 <BaseinfoMachineWrap backUrl={this.backUrl} mode="modify" data={this.state.data}/>
+                <hr />
+                <div className="form">
+                    <h1 className="form-field-title">配件信息</h1>
+                </div>
+                <NormalEquip machineId={this.id} equipType={"netcard"}/>
+                <NormalEquip machineId={this.id} equipType={"netcard"}/>
+                <NormalEquip machineId={this.id} equipType={"memory"}/>
+                {/*<Divider />*/}
             </div>
         )
     }
