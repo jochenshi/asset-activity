@@ -7,6 +7,7 @@ import Header from '../../../../common/header'
 import axios from 'axios'
 import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
 import NormalEquip from '../../equip/normalEquip';
+import AddressMachineWrap from '../addressMachine/addressMachine';
 
 class DetailMachine extends Component {
     backUrl = '/auth/main/deviceMachine';
@@ -54,12 +55,20 @@ class DetailMachine extends Component {
                 <BaseinfoMachineWrap backUrl={this.backUrl} mode="modify" data={this.state.data}/>
                 <hr />
                 <div className="form">
+                    <h1 className="form-field-title">地址信息</h1>
+                </div>
+                <AddressMachineWrap machineId={this.id} type="ip"/>
+                <AddressMachineWrap machineId={this.id} type="ipmi"/>
+                <hr />
+                <div className="form">
                     <h1 className="form-field-title">配件信息</h1>
                 </div>
+                <h2>硬盘</h2>
+                <NormalEquip machineId={this.id} equipType={"disk"}/>
+                <h2>网卡</h2>
                 <NormalEquip machineId={this.id} equipType={"netcard"}/>
-                <NormalEquip machineId={this.id} equipType={"netcard"}/>
+                <h2>内存</h2>
                 <NormalEquip machineId={this.id} equipType={"memory"}/>
-                {/*<Divider />*/}
             </div>
         )
     }

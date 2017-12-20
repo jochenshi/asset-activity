@@ -32,7 +32,7 @@ class BaseinfoMachine extends Component {
             prefixRdNumber : this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
             rdbNumber : '',
-            data : this.props.data
+            data : this.props.data || {}
         };
         this.getSelectData();
         if(this.mode === 'add'){
@@ -167,7 +167,6 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('outInType',{
                             rules: [{ required : true, message : '必须选择来源类型。' }],
                             initialValue : this.state.data['outInType']||'buyin',
-                            disabled : true
                         })(
                             <Select
                                 onChange={this.handleChange}
