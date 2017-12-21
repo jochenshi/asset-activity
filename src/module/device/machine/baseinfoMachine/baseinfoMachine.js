@@ -18,7 +18,7 @@ class BaseinfoMachine extends Component {
         super(props);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
         this.mode = this.props.mode;
-        this.data = this.props.data || {};
+        // this.data = this.props.data || {};
         this.rdNumber = '';
         this.rdbNumber = '';
         this.state = {
@@ -29,7 +29,7 @@ class BaseinfoMachine extends Component {
             model : [],
             brand : [],
             cpu : [],
-            prefixRdNumber : this.props.data['outInType']==='borrow'?'RDB':'RD',
+            prefixRdNumber : this.props.data && this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
             rdbNumber : '',
             data : this.props.data || {}
@@ -85,8 +85,9 @@ class BaseinfoMachine extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-             if (!err) {
+             if (err) {
                 console.log('Received values of form: ', values);
+                return;
              }
              console.log(values);
              values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
