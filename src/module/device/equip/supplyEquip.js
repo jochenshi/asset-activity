@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Table} from 'antd'
+import {Table, Button} from 'antd'
 
 
 const titles = [
@@ -42,7 +42,7 @@ class SupplyEquip extends Component {
         return (
             <div>
                 <div className="tableArea">
-                    <Table columns={titles} dataSource={data}></Table>
+                    <Table columns={titles} dataSource={data}/>
                 </div>
             </div>
         )

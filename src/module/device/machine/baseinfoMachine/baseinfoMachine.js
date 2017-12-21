@@ -113,14 +113,14 @@ class BaseinfoMachine extends Component {
                      });
              }
          });
-    }
+    };
     handleChange = (value) => {
         console.log(`Selected: ${value}`);
         value = value==='borrow'?'RDB':'RD';
         this.setState({
             prefixRdNumber : value
         })
-    }
+    };
     generateOption(arr){
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }
