@@ -77,27 +77,27 @@ class BaseinfoMachine extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-             if (!err) {
-                console.log('Received values of form: ', values);
-             }
-             console.log(values);
-             values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
+            if (!err) {
+            console.log('Received values of form: ', values);
+            }
+            console.log(values);
+            values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
             axios.post('/am/machine',values)
-                .then((res)=>{
-                    this.context.router.history.replace(this.backUrl)
-                })
-                .catch((err)=>{
-                    console.log(err);
-                });
+            .then((res)=>{
+                this.context.router.history.replace(this.backUrl)
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
          });
-    }
+    };
     handleChange = (value) => {
         console.log(`Selected: ${value}`);
         value = value==='borrow'?'RDB':'RD';
         this.setState({
             prefixRdNumber : value
         })
-    }
+    };
     generateOption(arr){
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }

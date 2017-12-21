@@ -47,17 +47,23 @@ const titles = [
 const data = [];
 
 class NormalEquip extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            titles: titles
+        }
+    }
     render () {
         return (
             <div>
                 <div className="button_area">
-                    <Button className="assign_add">添加</Button>
+                    <Button className="assign_add" onClick={ () => {this.props.history.replace('/auth/main/addNormal')}}>添加</Button>
                     <Button className="assign_equip">分配</Button>
                     <Button className="return_equip">归还</Button>
                     <Button className="apply_equip">申请</Button>
                 </div>
                 <div className="table_area">
-                    <Table columns={titles} dataSource={data}></Table>
+                    <Table columns={this.state.titles} dataSource={data} />
                 </div>
             </div>
         )

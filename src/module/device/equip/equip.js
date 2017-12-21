@@ -1,12 +1,14 @@
 import React,{ Component } from 'react';
-import NormalEquip from './normalEquip';
-import SupplyEquip from './supplyEquip'
-import {Switch} from 'react-router-dom';
+import {Switch, Redirect} from 'react-router-dom';
 import {AuthRoute} from "../../../common/component";
 import PropTypes from 'prop-types';
 
+import NormalEquip from './normalEquip';
+import SupplyEquip from './supplyEquip'
+import AddNormal from './addNormal/addNormal'
 import './equip.styl';
 import UseHistory from "../history/useHistory";
+
 
 class DeviceEquip extends Component {
     constructor (props) {
@@ -53,6 +55,7 @@ class DeviceEquip extends Component {
                     <Switch>
                         <AuthRoute path={`${this.props.match.path}/normalEquip`} component={NormalEquip}/>
                         <AuthRoute path={`${this.props.match.path}/supplyEquip`} component={SupplyEquip}/>
+                        <Redirect to={`${this.props.match.path}/normalEquip`}/>
                     </Switch>
                 </div>
             </div>
