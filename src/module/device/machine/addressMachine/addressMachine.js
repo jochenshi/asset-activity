@@ -2,7 +2,8 @@
  * Created by admin on 2017/12/20.
  */
 import React,{ Component } from 'react'
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button } from 'antd'
+import axios from 'axios'
 
 const FormItem = Form.Item;
 
@@ -14,9 +15,54 @@ class AddressMachine extends Component {
         this.state = {
             data : {}
         }
+        this.getAddressData();
     }
     handleSubmit = (e) => {
         e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if(err){
+                return;
+            }
+            values['machineId'] = this.machineId;
+            values['type'] = this.type;
+            if(!this.state.data.id){
+                axios.post('/am/address?operate=addAddress',values)
+                    .then((res)=>{
+                        console.log(res);
+                        this.setState({
+                            data: res.data
+                        })
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                    });
+            }else{
+                values['id'] = this.state.data.id;
+                axios.put('/am/address?operate=modifyAddress',values)
+                    .then((res)=>{
+                        console.log(res);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        this.setState({
+                            data : this.state.data
+                        });
+                    });
+            }
+        })
+    }
+    getAddressData = () => {
+        axios.get('/am/address/?operate=adress&machineId='+this.machineId+'&type='+this.type)
+            .then((res)=>{
+                if(res.data){
+                    this.setState({
+                        data : res.data
+                    })
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
     }
     render () {
         const { getFieldDecorator } = this.props.form;
@@ -62,11 +108,11 @@ class AddressMachine extends Component {
                         {...formItemLayout}
                         label="用户名"
                     >
-                        {getFieldDecorator('userName',{
+                        {getFieldDecorator('username',{
                             rules :[
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
-                            initialValue : this.state.data['userName'] || ''
+                            initialValue : this.state.data['username'] || ''
                         })(
                             <Input />
                         )}
@@ -81,7 +127,7 @@ class AddressMachine extends Component {
                             ],
                             initialValue : this.state.data['password'] || ''
                         })(
-                            <Input type={'password'} />
+                            <Input />
                         )}
                     </FormItem>
                     <FormItem {...tailFormItemLayout}>

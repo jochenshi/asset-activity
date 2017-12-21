@@ -28,8 +28,6 @@ class DetailMachine extends Component {
         axios.get('/am/machine/'+this.id+'?operate=deviceMachine')
             .then((res)=>{
                 if(res.data){
-                    console.log(res.data);
-                    console.log(typeof res.data);
                     this.setState({
                         data : res.data
                     })
