@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {Button, Table} from 'antd'
+import {Button, Table} from 'antd';
+
+import axios from 'axios';
 
 
 const titles = [
@@ -50,8 +52,30 @@ class NormalEquip extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            titles: titles
+            titles: titles,
+            tableData: []
+        };
+    }
+    componentDidMount () {
+        //this.getTableData();
+    }
+    getTableData () {
+        let  dataType = this.props.type, urlType = 'all',tArray = ['cpu','disk','netcard'];
+        console.log('equip component', dataType);
+        if (tArray.indexOf(urlType) > -1) {
+            urlType = dataType
         }
+        axios.get('/am/equip/normalEquip', {
+            params: {
+                type: urlType
+            }
+        }).then((data) => {
+            data.data.length && this.setState({
+                tableData: data.data
+            })
+        }).catch((err) => {
+
+        })
     }
     render () {
         return (

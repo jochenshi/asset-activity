@@ -32,13 +32,12 @@ class routeAuth extends Component {
         super(props);
     }
     render () {
-        console.log(111, this);
         let {component: Component, ...rest} = this.props;
         let loginState = getCookie('am_user') || true;
         return (
             <Route {...rest} render={(props) => {
                 if (loginState) {
-                    return <Component {...props}/>
+                    return <Component {...props} {...rest}/>
                 } else {
                     alert('not login');
                     return <Redirect to='/login'/>
