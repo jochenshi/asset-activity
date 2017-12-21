@@ -6,6 +6,7 @@ import axios from 'axios'
 import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -16,6 +17,8 @@ class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
+        this.mode = this.props.mode;
+        this.data = this.props.data || {};
         this.rdNumber = '';
         this.rdbNumber = '';
         this.state = {
@@ -25,12 +28,16 @@ class BaseinfoMachine extends Component {
             type : [],
             model : [],
             brand : [],
-            prefixRdNumber : 'RD',
+            cpu : [],
+            prefixRdNumber : this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
-            rdbNumber : ''
+            rdbNumber : '',
+            data : this.props.data || {}
         };
         this.getSelectData();
-        this.getRdNumber();
+        if(this.mode === 'add'){
+            this.getRdNumber();
+        }
     }
     getRdNumber(){
         axios.get('/am/machine/rdNumber')
@@ -67,6 +74,7 @@ class BaseinfoMachine extends Component {
                     type : data['type'],
                     model : data['model'],
                     brand : data['brand'],
+                    cpu : data['cpu']
                 });
             }
         })
@@ -77,18 +85,32 @@ class BaseinfoMachine extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-            console.log('Received values of form: ', values);
-            }
-            console.log(values);
-            values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
-            axios.post('/am/machine',values)
-            .then((res)=>{
-                this.context.router.history.replace(this.backUrl)
-            })
-            .catch((err)=>{
-                console.log(err);
-            });
+             if (!err) {
+                console.log('Received values of form: ', values);
+             }
+             console.log(values);
+             values['rdNumber'] = this.state.prefixRdNumber + values['rdNumber'];
+             if(this.mode === 'add'){
+                 axios.post('/am/machine?operate=addMachine',values)
+                     .then((res)=>{
+                         this.context.router.history.replace(this.backUrl)
+                     })
+                     .catch((err)=>{
+                         console.log(err);
+                     });
+             }else if(this.mode==='modify'){
+                 values['ascriptionId'] = this.state.data.ascriptionId;
+                 axios.put('/am/machine/'+this.state.data.id+'?operate=modifyMachine',values)
+                     .then((res)=>{
+                         console.log(res);
+                     })
+                     .catch((err)=>{
+                         console.log(err);
+                         this.setState({
+                             data : this.state.data
+                         });
+                     });
+             }
          });
     };
     handleChange = (value) => {
@@ -100,6 +122,13 @@ class BaseinfoMachine extends Component {
     };
     generateOption(arr){
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
+    }
+    componentWillReceiveProps (props ,state) {
+        console.log(props);
+        this.setState({
+            data: props.data,
+            prefixRdNumber : props.data['outInType']==='borrow'?'RDB':'RD',
+        });
     }
     render () {
         const { getFieldDecorator } = this.props.form;
@@ -125,6 +154,8 @@ class BaseinfoMachine extends Component {
                 },
             },
         };
+        let rdNumber = this.state.data['rdNumber'];
+        rdNumber = rdNumber && rdNumber.match(/\d+/g)[0];
         return (
             <div className="form">
                 <Form onSubmit={this.handleSubmit}>
@@ -135,10 +166,11 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('outInType',{
                             rules: [{ required : true, message : '必须选择来源类型。' }],
-                            initialValue : 'buyin'
+                            initialValue : this.state.data['outInType']||'buyin',
                         })(
                             <Select
                                 onChange={this.handleChange}
+                                disabled={this.mode!=='add'}
                             >
                                 {this.generateOption(this.state.outInType)}
                             </Select>
@@ -148,7 +180,9 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="DatePicker"
                     >
-                        {getFieldDecorator('occurTime')(
+                        {getFieldDecorator('occurTime',{
+                            initialValue : moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') || moment(new Date(), 'yyyy/MM/dd')
+                        })(
                             <DatePicker />
                         )}
                     </FormItem>
@@ -156,7 +190,9 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="来源对象"
                     >
-                        {getFieldDecorator('originObject')(
+                        {getFieldDecorator('originObject',{
+                            initialValue : this.state.data['originObject'] || ''
+                        })(
                             <Select
                                 mode="combobox"
                             >
@@ -168,7 +204,9 @@ class BaseinfoMachine extends Component {
                         {...formItemLayout}
                         label="入库对象"
                     >
-                        {getFieldDecorator('targetObject')(
+                        {getFieldDecorator('targetObject',{
+                            initialValue : this.state.data['targetObject'] || ''
+                        })(
                             <Select
                                 mode="combobox"
                             >
@@ -182,8 +220,9 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('ascriptionDesc',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
-                            ]
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
+                            ],
+                            initialValue : this.state.data['ascriptionDesc'] || ''
                         })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
                         )}
@@ -197,7 +236,8 @@ class BaseinfoMachine extends Component {
                             rules :[
                                 { required : true, whitespace: true, message : '名称不可为空。'},
                                 { pattern : /^[0-9a-zA-Z_-]+$/, message : '名称不能输入非法字符！'}
-                            ]
+                            ],
+                            initialValue : this.state.data['name'] || ''
                         })(
                             <Input/>
                         )}
@@ -208,7 +248,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('type',{
                             rules : [{required: true, message: '必须选择一个类型。'}],
-                            initialValue : 'server'
+                            initialValue : this.state.data['type'] || 'server'
                         })(
                             <Select>
                                 {this.generateOption(this.state.type)}
@@ -225,9 +265,9 @@ class BaseinfoMachine extends Component {
                                 { required : true, whitespace: true, message : '研发部编号不可为空。'},
                                 { pattern : /^[0-9]{4,}$/, message : '必须填写四位以上的数字。'}
                             ],
-                            initialValue : this.state.prefixRdNumber === 'RD' ? this.state.rdNumber : this.state.rdbNumber
+                            initialValue : rdNumber || (this.state.prefixRdNumber === 'RD' ? this.state.rdNumber : this.state.rdbNumber)
                         })(
-                            <Input addonBefore={this.state.prefixRdNumber}/>
+                            <Input addonBefore={this.state.prefixRdNumber} disabled={this.mode!=='add'}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -236,8 +276,9 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('fixedNumber',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符！' }
-                            ]
+                                { pattern : /^\S*$/, message : '不能输入非法字符！' }
+                            ],
+                            initialValue : this.state.data['fixedNumber'] || ''
                         })(
                             <Input/>
                         )}
@@ -249,8 +290,9 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('serialNo',{
                             rules :[
                                 { required: true, message: 'S/N号不能为空。'},
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
-                            ]
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
+                            ],
+                            initialValue : this.state.data['serialNo'] || ''
                         })(
                             <Input/>
                         )}
@@ -262,7 +304,8 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('model',{
                             rules : [
                                 {required: true,message: '规格型号不能为空。'}
-                            ]
+                            ],
+                            initialValue : this.state.data['model'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -278,7 +321,8 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('brand',{
                             rules : [
                                 {required: true,message: '品牌不能为空。'}
-                            ]
+                            ],
+                            initialValue : this.state.data['brand'] || ''
                         })(
                             <Select
                                 mode="combobox"
@@ -289,12 +333,30 @@ class BaseinfoMachine extends Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
+                        label="CPU"
+                    >
+                        {getFieldDecorator('cpu',{
+                            rules : [
+                                {required: true,message: 'CPU不能为空。'}
+                            ],
+                            initialValue : this.state.data['cpu'] || ''
+                        })(
+                            <Select
+                                mode="combobox"
+                            >
+                                {this.generateOption(this.state.cpu)}
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
                         label="位置"
                     >
                         {getFieldDecorator('location',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
-                            ]
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
+                            ],
+                            initialValue : this.state.data['location'] || ''
                         })(
                             <Input/>
                         )}
@@ -305,15 +367,16 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('machineDesc',{
                             rules :[
-                                { pattern : /^\w*$/, message : '不能输入非法字符。' }
-                            ]
+                                { pattern : /^\S*$/, message : '不能输入非法字符。' }
+                            ],
+                            initialValue : this.state.data['machineDesc'] || ''
                         })(
                             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
                         )}
                     </FormItem>
                     <FormItem {...tailFormItemLayout}>
                         <Button type="primary" htmlType="submit">确定</Button>
-                        <Button><Link to={this.backUrl}>取消</Link></Button>
+                        {this.mode==='add'&&<Button><Link to={this.backUrl}>取消</Link></Button>}
                     </FormItem>
                 </Form>
             </div>

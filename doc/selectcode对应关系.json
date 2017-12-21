@@ -37,5 +37,8 @@
       { "value": "nomachine","text":"只有配件和零件才会有的状态"},
       { "value": "part","text":"只有零件才会有的状态"}
     ]
-  }
+  },
+  {
+    "code" : "S0009","text":"CPU"
+  },
 ]

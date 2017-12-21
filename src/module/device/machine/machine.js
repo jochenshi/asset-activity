@@ -1,29 +1,33 @@
 import React,{ Component } from 'react'
 import { Table, Button } from 'antd'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
+import TitleOption from '../../../common/titleOption'
 
-const testData = [
+const defaultData = [
     {
-    	serialNo: 'ABCDEFG',
-        name: '服务器1',
-        rdNumber: 'RD201701',
-        fixedNumber: '12345',
-        type: 'service',
-        ip: '192.168.232.10',
-        model: 'xxxmodel',
-        healthState: 'healthState',
-        cpu: 'xxxxxxxxx',
-        useState: 'using',
-        createUser: 'admin',
-        createTime: '2017-12-02',
-        description: 'xxxxxxxxx'
+        id: 1,
+        serialNo : 'aaaaaa',
+        name : 'aaaaaa',
+        rdNumber : 'aaaaaa',
+        fixedNumber : 'aaaaaa',
+        typeText : 'aaaaaa',
+        ip : 'aaaaaa',
+        model : 'aaaaaa',
+        brand : 'aaaaaa',
+        cpu : 'aaaaaa',
+        useStateText : 'aaaaaa',
+        healthState : 'aaaaaa',
     }
-];
+]
 
 const titles = [
     {
         title: 'S/N号',
-        dataIndex: 'serialNo'
+        dataIndex: 'serialNo',
+        render : (text,record) =>{
+            return <Link to={"/auth/main/deviceMachine/"+record.id}>{text}</Link>
+        }
     },
     {
         title: '名称',
@@ -35,23 +39,25 @@ const titles = [
     },
     {
         title: '固定资产编号',
-        dataIndex: 'fixedNumber'
+        dataIndex: 'fixedNumber',
+        display: false
     },
     {
     	title: '类型',
-    	dataIndex: 'type'
+    	dataIndex: 'typeText'
     },
     {
         title: 'IP',
-        dataIndex: 'ip'
+        dataIndex: 'ip',
+        display: false
     },
     {
         title: '型号',
         dataIndex: 'model'
     },
     {
-        title: '健康状态',
-        dataIndex: 'healthState'
+        title: '品牌',
+        dataIndex: 'brand',
     },
     {
         title: 'CPU',
@@ -59,15 +65,23 @@ const titles = [
     },
     {
         title: '使用状态',
-        dataIndex: 'useState'
+        dataIndex: 'useStateText'
     },
     {
-        title: '增加人',
-        dataIndex: 'createUser'
+        title: '健康状态',
+        dataIndex: 'healthState',
+        render : (text,record) =>{
+            return text==='noRecord'?'无记录':text;
+        }
     },
     {
-        title: '增加时间',
-        dataIndex: 'createTime'
+        title: '添加人',
+        dataIndex: 'account',
+        display: false
+    },
+    {
+        title: '添加时间',
+        dataIndex: 'createdAt'
     },
     {
         title: '描述',
@@ -78,6 +92,31 @@ const titles = [
 class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
+        this.state = {
+            machineData : defaultData,
+            titles : titles
+        }
+        this.getMachineData();
+    }
+    getMachineData(){
+	    axios.get('/am/machine?operate=deviceMachine')
+        .then((res)=>{
+            if(res.data){
+                console.log(res.data);
+                console.log(typeof res.data);
+                this.setState({
+                    machineData : res.data
+                })
+            }
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
+    onTreeChange = (titles)=>{
+        this.setState({
+            titles : titles
+        })
     }
     onSelectChange () {}
     render () {
@@ -89,8 +128,9 @@ class DeviceMachine extends Component {
                 <div className="list_operations">
                     <Button><Link to="/auth/main/addMachine">添加</Link></Button>
                     <Button>刷新</Button>
+                    <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
-                <Table rowSelection={rowSelection} columns={titles} dataSource={testData}/>
+                <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.machineData}/>
             </div>
         )
     }
