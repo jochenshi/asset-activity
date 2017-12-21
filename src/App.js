@@ -9,6 +9,7 @@ import axios from 'axios'
 import store from './store/store'
 import { Provider, connect } from 'react-redux'
 import PropTypes from 'prop-types';
+import { message } from 'antd';
 
 
 const initAxios = () => {
@@ -21,9 +22,14 @@ const initAxios = () => {
                             query: {redirect: router.currentRoute.fullPath}  
                         })  
         }  */
+        console.log(JSON.stringify(response));
+        if(response.config.method!=='get'){
+            message.success(response.data.msg);
+        }
         return response.data;  
     }, function (error) {  
-        // Do something with response error  
+        // Do something with response error
+        message.error(error.response.data['error']);
         return Promise.reject(error.response.data)  
     }) 
 };
