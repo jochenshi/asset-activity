@@ -2,13 +2,31 @@ import React,{ Component } from 'react'
 import { Table, Button } from 'antd'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
+import TitleOption from '../../../common/titleOption'
+
+const defaultData = [
+    {
+        id: 1,
+        serialNo : 'aaaaaa',
+        name : 'aaaaaa',
+        rdNumber : 'aaaaaa',
+        fixedNumber : 'aaaaaa',
+        typeText : 'aaaaaa',
+        ip : 'aaaaaa',
+        model : 'aaaaaa',
+        brand : 'aaaaaa',
+        cpu : 'aaaaaa',
+        useStateText : 'aaaaaa',
+        healthState : 'aaaaaa',
+    }
+]
 
 const titles = [
     {
         title: 'S/N号',
         dataIndex: 'serialNo',
         render : (text,record) =>{
-            return <Link to={"auth/main/deviceMachine"+record.id}>{text}</Link>
+            return <Link to={"/auth/main/deviceMachine/"+record.id}>{text}</Link>
         }
     },
     {
@@ -21,7 +39,8 @@ const titles = [
     },
     {
         title: '固定资产编号',
-        dataIndex: 'fixedNumber'
+        dataIndex: 'fixedNumber',
+        display: false
     },
     {
     	title: '类型',
@@ -29,7 +48,8 @@ const titles = [
     },
     {
         title: 'IP',
-        dataIndex: 'ip'
+        dataIndex: 'ip',
+        display: false
     },
     {
         title: '型号',
@@ -56,7 +76,8 @@ const titles = [
     },
     {
         title: '添加人',
-        dataIndex: 'account'
+        dataIndex: 'account',
+        display: false
     },
     {
         title: '添加时间',
@@ -72,7 +93,8 @@ class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
         this.state = {
-            machineData : []
+            machineData : defaultData,
+            titles : titles
         }
         this.getMachineData();
     }
@@ -91,6 +113,11 @@ class DeviceMachine extends Component {
             console.log(err);
         })
     }
+    onTreeChange = (titles)=>{
+        this.setState({
+            titles : titles
+        })
+    }
     onSelectChange () {}
     render () {
         const rowSelection = {
@@ -101,8 +128,9 @@ class DeviceMachine extends Component {
                 <div className="list_operations">
                     <Button><Link to="/auth/main/addMachine">添加</Link></Button>
                     <Button>刷新</Button>
+                    <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
-                <Table rowSelection={rowSelection} columns={titles} dataSource={this.state.machineData}/>
+                <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.machineData}/>
             </div>
         )
     }

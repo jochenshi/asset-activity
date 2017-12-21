@@ -8,25 +8,55 @@ const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 class TitleOption extends Component {
     constructor (props) {
         super(props);
-        this.data = this.props.data;
+        this.data = {};
+        this.backTitle = this.props.onChange || ((titles) => {console.log(titles)});
+        let value = [];
+        this.props.data.forEach((item)=>{
+            this.data[item.dataIndex] = item;
+            if(item.display!==false) {
+                value.push(item.dataIndex);
+            }
+        });
+        this.refreshTitle(value);
         this.state = {
-
+            value : value
         }
+        this.treeData = this.props.data.map((item)=>{
+            return {
+                label : item.title,
+                value : item.dataIndex,
+                key : item.dataIndex
+            }
+        });
     }
-    onChange(){}
+    onChange = (value)=>{
+        console.log('onChange ', value, arguments);
+        this.setState({ value });
+        this.refreshTitle(value);
+    }
+    refreshTitle =(value)=>{
+        let newTitles = value.map((item)=>{
+            return this.data[item];
+        })
+        this.backTitle(newTitles);
+    }
     render () {
         const tProps = {
-            treeData,
+            treeData: this.treeData,
             value: this.state.value,
             onChange: this.onChange,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
-            searchPlaceholder: 'Please select',
+            searchPlaceholder: '请选择',
+            dropdownMatchSelectWidth : false,
             style: {
-                width: 300,
+                width: 80,
             },
         };
-        return <TreeSelect {...tProps} />;
+        return<div className="list_title">
+            <TreeSelect {...tProps} />
+            <span className="list_title_text">选择展示列</span>
+        </div>;
     }
 }
 
