@@ -1,0 +1,3 @@
+machineId   机器ID            字符串
+type        需要的配件类型    字符串
+operations  所需权限          保存字符串的数组
