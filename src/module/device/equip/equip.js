@@ -53,8 +53,8 @@ class DeviceEquip extends Component {
                 </h1>
                 <div className="table_content">
                     <Switch>
-                        <AuthRoute path={`${this.props.match.path}/normalEquip`} component={NormalEquip}/>
-                        <AuthRoute path={`${this.props.match.path}/supplyEquip`} component={SupplyEquip}/>
+                        <AuthRoute path={`${this.props.match.path}/normalEquip`} type={'all'} component={NormalEquip}/>
+                        <AuthRoute path={`${this.props.match.path}/supplyEquip`} data={'all'} component={SupplyEquip}/>
                         <Redirect to={`${this.props.match.path}/normalEquip`}/>
                     </Switch>
                 </div>
