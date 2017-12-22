@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {Button, Table} from 'antd'
+import {Button, Table} from 'antd';
+
+import axios from 'axios';
 
 
 const titles = [
@@ -47,17 +49,45 @@ const titles = [
 const data = [];
 
 class NormalEquip extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            titles: titles,
+            tableData: []
+        };
+    }
+    componentDidMount () {
+        //this.getTableData();
+    }
+    getTableData () {
+        let  dataType = this.props.type, urlType = 'all',tArray = ['cpu','disk','netcard'];
+        console.log('equip component', dataType);
+        if (tArray.indexOf(urlType) > -1) {
+            urlType = dataType
+        }
+        axios.get('/am/equip/normalEquip', {
+            params: {
+                type: urlType
+            }
+        }).then((data) => {
+            data.data.length && this.setState({
+                tableData: data.data
+            })
+        }).catch((err) => {
+
+        })
+    }
     render () {
         return (
             <div>
                 <div className="button_area">
-                    <Button className="assign_add">添加</Button>
+                    <Button className="assign_add" onClick={ () => {this.props.history.replace('/auth/main/addNormal')}}>添加</Button>
                     <Button className="assign_equip">分配</Button>
                     <Button className="return_equip">归还</Button>
                     <Button className="apply_equip">申请</Button>
                 </div>
                 <div className="table_area">
-                    <Table columns={titles} dataSource={data}></Table>
+                    <Table columns={this.state.titles} dataSource={data} />
                 </div>
             </div>
         )
