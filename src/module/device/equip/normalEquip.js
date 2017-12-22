@@ -48,6 +48,9 @@ const titles = [
 ];
 const data = [];
 
+
+//可接收的prop
+//machineId = ''表示获取该机器下的配件,type = ''获取的配件的类型,operations = []用户需要的操作
 class NormalEquip extends Component {
     constructor (props) {
         super(props);
@@ -59,6 +62,7 @@ class NormalEquip extends Component {
     componentDidMount () {
         //this.getTableData();
     }
+    //根据传入的prop里面的
     getTableData () {
         let  dataType = this.props.type, urlType = 'all',tArray = ['cpu','disk','netcard'];
         console.log('equip component', dataType);
