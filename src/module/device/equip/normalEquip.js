@@ -64,7 +64,10 @@ class NormalEquip extends Component {
     }
     //根据传入的prop里面的
     getTableData () {
-        let  dataType = this.props.type, urlType = 'all',tArray = ['cpu','disk','netcard'];
+        let dataType = this.props.type,
+            machineId = this.props.machineId,
+            urlType = 'all',
+            tArray = ['cpu','disk','netcard'];
         console.log('equip component', dataType);
         if (tArray.indexOf(urlType) > -1) {
             urlType = dataType
