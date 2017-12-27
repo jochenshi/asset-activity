@@ -67,10 +67,12 @@ class NormalEquip extends Component {
         let dataType = this.props.type,
             machineId = this.props.machineId,
             urlType = 'all',
-            tArray = ['cpu','disk','netcard'];
+            tArray = ['memory','disk','netcard'];
         console.log('equip component', dataType);
         if (tArray.indexOf(urlType) > -1) {
             urlType = dataType
+        } else {
+            urlType = 'all'
         }
         axios.get('/am/equip/normalEquip', {
             params: {

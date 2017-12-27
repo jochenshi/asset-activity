@@ -29,6 +29,7 @@ const initAxios = () => {
         return response.data;  
     }, function (error) {  
         // Do something with response error
+        console.log('get error',error);
         message.error(error.response.data['error']);
         return Promise.reject(error.response.data)  
     }) 
