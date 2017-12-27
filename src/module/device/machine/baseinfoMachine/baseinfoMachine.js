@@ -14,6 +14,12 @@ const AutoCompleteOption = AutoComplete.Option;
 const { TextArea } = Input;
 const confirm = Modal.confirm;
 
+const auth = [
+    'deviceMachine',
+    'modifyMachine',
+    'address'
+]
+
 class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
