@@ -29,6 +29,7 @@ class BaseinfoMachine extends Component {
             model : [],
             brand : [],
             cpu : [],
+            location : [],
             prefixRdNumber : this.props.data && this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
             rdbNumber : '',
@@ -74,7 +75,8 @@ class BaseinfoMachine extends Component {
                     type : data['type'],
                     model : data['model'],
                     brand : data['brand'],
-                    cpu : data['cpu']
+                    cpu : data['cpu'],
+                    location : data['location']
                 });
             }
         })
@@ -127,8 +129,8 @@ class BaseinfoMachine extends Component {
     componentWillReceiveProps (props ,state) {
         console.log(props);
         this.setState({
-            data: props.data,
-            prefixRdNumber : props.data['outInType']==='borrow'?'RDB':'RD',
+            data: props.data || {},
+            prefixRdNumber : props.data && props.data['outInType']==='borrow'?'RDB':'RD',
         });
     }
     render () {
@@ -155,7 +157,7 @@ class BaseinfoMachine extends Component {
                 },
             },
         };
-        let rdNumber = this.state.data['rdNumber'];
+        let rdNumber = this.state.data ? this.state.data['rdNumber'] : '';
         rdNumber = rdNumber && rdNumber.match(/\d+/g)[0];
         return (
             <div className="form">
@@ -182,7 +184,7 @@ class BaseinfoMachine extends Component {
                         label="DatePicker"
                     >
                         {getFieldDecorator('occurTime',{
-                            initialValue : moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') || moment(new Date(), 'yyyy/MM/dd')
+                            initialValue : this.state.data['occurTime'] ? moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') : moment(new Date(), 'yyyy/MM/dd')
                         })(
                             <DatePicker />
                         )}
@@ -359,7 +361,11 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['location'] || ''
                         })(
-                            <Input/>
+                            <Select
+                                mode="combobox"
+                            >
+                                {this.generateOption(this.state.location)}
+                            </Select>
                         )}
                     </FormItem>
                     <FormItem
