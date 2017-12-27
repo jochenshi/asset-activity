@@ -3,7 +3,7 @@
  */
 import React,{ Component } from 'react'
 import axios from 'axios'
-import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Modal } from 'antd';
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -12,6 +12,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
 const { TextArea } = Input;
+const confirm = Modal.confirm;
 
 class BaseinfoMachine extends Component {
     constructor (props){
@@ -96,7 +97,7 @@ class BaseinfoMachine extends Component {
              if(this.mode === 'add'){
                  axios.post('/am/machine?operate=addMachine',values)
                      .then((res)=>{
-                         this.context.router.history.replace(this.backUrl)
+                         this.addConfirm(res.data.id);
                      })
                      .catch((err)=>{
                          console.log(err);
@@ -116,6 +117,21 @@ class BaseinfoMachine extends Component {
              }
          });
     };
+    addConfirm = (id)=>{
+        confirm({
+            title: '想到详情页面继续添加机器的配置信息吗？',
+            content: '确认进入详情页面，取消回到列表页面。通过点击列表上的机器S/N号，仍然可以进入详情页面。',
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => {
+                this.context.router.history.replace(this.backUrl+'/'+id);
+            },
+            onCancel: () => {
+                this.context.router.history.replace(this.backUrl);
+            },
+        });
+
+    }
     handleChange = (value) => {
         console.log(`Selected: ${value}`);
         value = value==='borrow'?'RDB':'RD';
@@ -127,11 +143,13 @@ class BaseinfoMachine extends Component {
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }
     componentWillReceiveProps (props ,state) {
-        console.log(props);
-        this.setState({
-            data: props.data || {},
-            prefixRdNumber : props.data && props.data['outInType']==='borrow'?'RDB':'RD',
-        });
+        if(props.data){
+            let state = {
+                data : props.data || {}
+            }
+            state['prefixRdNumber'] = props.data['outInType']==='borrow'?'RDB':'RD'
+            this.setState(state);
+        }
     }
     render () {
         const { getFieldDecorator } = this.props.form;
