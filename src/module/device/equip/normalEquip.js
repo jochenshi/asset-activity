@@ -60,7 +60,7 @@ class NormalEquip extends Component {
         };
     }
     componentDidMount () {
-        //this.getTableData();
+        this.getTableData();
     }
     //根据传入的prop里面的
     getTableData () {
@@ -96,7 +96,7 @@ class NormalEquip extends Component {
                     <Button className="apply_equip">申请</Button>
                 </div>
                 <div className="table_area">
-                    <Table columns={this.state.titles} dataSource={data} />
+                    <Table columns={this.state.titles} dataSource={this.state.tableData} />
                 </div>
             </div>
         )
