@@ -15,7 +15,7 @@ const titles = [
     },
     {
         title: '类型',
-        dataIndex: 'type'
+        dataIndex: 'type_text'
     },
     {
         title: '型号',
