@@ -69,14 +69,17 @@ class NormalEquip extends Component {
             urlType = 'all',
             tArray = ['memory','disk','netcard'];
         console.log('equip component', dataType);
-        if (tArray.indexOf(urlType) > -1) {
+        //根据从prop传进来的dataType来决定获取数据的类型是什么
+        if (tArray.indexOf(dataType) > -1) {
             urlType = dataType
         } else {
             urlType = 'all'
         }
+        //根据传进来的machineId来判断是获取某个机器下的配件信息还是获取全部的配件信息
         axios.get('/am/equip/normalEquip', {
             params: {
-                type: urlType
+                type: urlType,
+                machineId: machineId
             }
         }).then((data) => {
             data.data.length && this.setState({
