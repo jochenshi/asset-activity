@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom'
 import Header from '../../../../common/header'
 import axios from 'axios'
 import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
-import NormalEquip from '../../equip/normalEquip';
+import NormalEquip from '../../equip/normalEquip/normalEquip';
 import AddressMachineWrap from '../addressMachine/addressMachine';
 
 class DetailMachine extends Component {

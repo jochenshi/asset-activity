@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Header from '../../../../common/header';
+import Header from '../../../../../common/header';
 import NormalForm from './addNormalForm'
 
 //添加普通配件的添加页面
