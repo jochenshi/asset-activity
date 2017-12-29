@@ -3,6 +3,8 @@ import {Button, Table} from 'antd';
 
 import axios from 'axios';
 
+import './normalEquip.styl'
+
 
 const titles = [
     {
@@ -15,7 +17,7 @@ const titles = [
     },
     {
         title: '类型',
-        dataIndex: 'type_text'
+        dataIndex: 'equipType'
     },
     {
         title: '型号',
@@ -25,13 +27,13 @@ const titles = [
         title: '品牌',
         dataIndex: 'brand'
     },
-    {
-        title: '大小',
-        dataIndex: 'size'
-    },
+    // {
+    //     title: '大小',
+    //     dataIndex: 'size'
+    // },
     {
         title: '当前使用状态',
-        dataIndex: 'useState'
+        dataIndex: 'equipUseState'
     },
     {
         title: '新增人',
@@ -90,16 +92,22 @@ class NormalEquip extends Component {
         })
     }
     render () {
+        const rowSelection = {
+            onChange: (rowKeys, rows) => {
+                console.log('select');
+                console.log(rowKeys, rows)
+            }
+        };
         return (
-            <div>
+            <div className="normal_render">
                 <div className="button_area">
                     <Button className="assign_add" onClick={ () => {this.props.history.replace('/auth/main/addNormal')}}>添加</Button>
                     <Button className="assign_equip">分配</Button>
                     <Button className="return_equip">归还</Button>
-                    <Button className="apply_equip">申请</Button>
+                    {/*<Button className="apply_equip">申请</Button>*/}
                 </div>
                 <div className="table_area">
-                    <Table columns={this.state.titles} dataSource={this.state.tableData} />
+                    <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.tableData} />
                 </div>
             </div>
         )
