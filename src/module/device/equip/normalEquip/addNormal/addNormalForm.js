@@ -20,7 +20,7 @@ class FormArea extends Component {
             model: [],
             origin: []
         };
-        console.log('constructor')
+        console.log('addnormal constructor', props)
     }
     componentDidMount () {
         this.getSelectOption();
@@ -65,7 +65,7 @@ class FormArea extends Component {
                 console.log(subData);
                 axios.post('/am/equip/normalEquip?operate=addEquip',subData)
                     .then((msg) => {
-
+                        this.props.history.replace('/auth/main/deviceMachine');
                     })
                     .catch()
             }
@@ -198,7 +198,7 @@ class FormArea extends Component {
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                     <Button type='primary' htmlType='submit'>确认</Button>
-                    <Button style={{marginLeft: 8}} onClick={() => {console.log('cancel', this.props)}}>取消</Button>
+                    <Button style={{marginLeft: 8}} onClick={() => {this.props.history.replace('/auth/main/deviceEquip/normalEquip')}}>取消</Button>
                 </FormItem>
             </Form>
         )

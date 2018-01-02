@@ -17,7 +17,7 @@ import UserManage from '../usermanage/user'
 import HealthRecord from '../healthRecord/healthRecord'
 import OperateRecord from '../operateRecord/operateRecord'
 import OptionSet from '../setting/optionSet/optionSet'
-import AddNormal from "../device/equip/addNormal/addNormal";
+import AddNormal from "../device/equip/normalEquip/addNormal/addNormal";
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;

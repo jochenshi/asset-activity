@@ -3,9 +3,9 @@ import {Switch, Redirect} from 'react-router-dom';
 import {AuthRoute} from "../../../common/component";
 import PropTypes from 'prop-types';
 
-import NormalEquip from './normalEquip';
+import NormalEquip from './normalEquip/normalEquip';
 import SupplyEquip from './supplyEquip'
-import AddNormal from './addNormal/addNormal'
+import AddNormal from './normalEquip/addNormal/addNormal'
 import './equip.styl';
 import UseHistory from "../history/useHistory";
 
