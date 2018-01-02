@@ -4,6 +4,8 @@ import {Link, Route, Redirect, Switch} from 'react-router-dom'
 import {connect} from 'react-redux'
 import axios from 'axios';
 
+import {updateAuthority} from '../../store/action'
+
 import './style.styl'
 
 import {RouteWithSubRoutes, AuthRoute} from '../../common/component'
@@ -30,6 +32,12 @@ const mapState = (state) => {
     }
 };
 
+const mapDispatch = (dispatch, ownprops) => {
+    return {
+        disAuthority: (arg) => dispatch(updateAuthority(arg))
+    }
+};
+
 class MainHome extends Component {
     constructor (props) {
         super(props);
@@ -37,7 +45,7 @@ class MainHome extends Component {
         this.handleClicks = this.handleClick.bind(this);
         this.state = {
             selectNav: 'storeInfo'
-        }
+        };
         this.getAuthority();
     }
     setDefaultSelect () {
@@ -47,8 +55,10 @@ class MainHome extends Component {
     getAuthority () {
         axios.get('/am/authority').then((val) => {
             console.log(val);
+            this.props.disAuthority(val.data)
         }).catch(err => {
-            console.log('err', err)
+            console.log('err', err);
+            this.props.disAuthority([])
         })
     }
     handleClick (e) {
@@ -135,4 +145,4 @@ class MainHome extends Component {
     }
 }
 
-export default connect(mapState)(MainHome)
+export default connect(mapState, mapDispatch)(MainHome)
