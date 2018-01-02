@@ -168,6 +168,10 @@ class BaseinfoMachine extends Component {
             state['prefixRdNumber'] = props.data['outInType']==='borrow'?'RDB':'RD'
             this.setState(state);
         }
+        /*if (next.authority && next.authority.length) {
+            let resAuth = getAuthority(next.authority, fixedAuth, this.props.passAuth);
+            this.auth = resAuth;
+        }*/
     }
     render () {
         const { getFieldDecorator } = this.props.form;
