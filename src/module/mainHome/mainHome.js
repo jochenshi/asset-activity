@@ -2,6 +2,9 @@ import React, {Component} from 'react'
 import {Layout, Menu} from 'antd'
 import {Link, Route, Redirect, Switch} from 'react-router-dom'
 import {connect} from 'react-redux'
+import axios from 'axios';
+
+import {updateAuthority} from '../../store/action'
 
 import './style.styl'
 
@@ -24,7 +27,14 @@ const {SubMenu, Item} = Menu;
 
 const mapState = (state) => {
     return {
-        loginState: state.userLoginState.isLogin
+        loginState: state.userLoginState.isLogin,
+        authority: state.authArray.authority
+    }
+};
+
+const mapDispatch = (dispatch, ownprops) => {
+    return {
+        disAuthority: (arg) => dispatch(updateAuthority(arg))
     }
 };
 
@@ -35,12 +45,22 @@ class MainHome extends Component {
         this.handleClicks = this.handleClick.bind(this);
         this.state = {
             selectNav: 'storeInfo'
-        }
+        };
+        this.getAuthority();
     }
     setDefaultSelect () {
         
     }
     checkLogin () {}
+    getAuthority () {
+        axios.get('/am/authority').then((val) => {
+            console.log(val);
+            this.props.disAuthority(val.data)
+        }).catch(err => {
+            console.log('err', err);
+            this.props.disAuthority([])
+        })
+    }
     handleClick (e) {
         console.log('e',e);
         console.log('props',this.props);
@@ -125,4 +145,4 @@ class MainHome extends Component {
     }
 }
 
-export default connect(mapState)(MainHome)
+export default connect(mapState, mapDispatch)(MainHome)

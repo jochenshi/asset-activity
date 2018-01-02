@@ -1,8 +1,9 @@
 import { combineReducers, createStore } from 'redux'
-import userLoginReducer from './reducers'
+import {userLoginReducer, authReducer} from './reducers'
 
 const reducers = combineReducers({
-    userLoginState: userLoginReducer
+    userLoginState: userLoginReducer,
+    authArray: authReducer
 });
 
 const store = createStore(reducers);

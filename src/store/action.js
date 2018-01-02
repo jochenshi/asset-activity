@@ -1,8 +1,18 @@
 const TOGGLE_LOGIN = 'TOGGLE_LOGIN';
+const UPDATE_AUTHORITY = 'UPDATE_AUTHORITY';
 
-export function toggleLogin(value) {
+const toggleLogin = (value) => {
     return {
         type: TOGGLE_LOGIN,
         value
     }
-}
+};
+
+const updateAuthority = (value) => {
+    return {
+        type: UPDATE_AUTHORITY,
+        value
+    }
+};
+
+export {toggleLogin, updateAuthority}
