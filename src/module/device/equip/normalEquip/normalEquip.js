@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
+import {Link}  from 'react-router-dom'
 
 import {Button, Table} from 'antd';
 import axios from 'axios';
@@ -11,7 +12,10 @@ import {getAuthority} from '../../../../common/methods'
 const titles = [
     {
         title: 'S/N号',
-        dataIndex: 'serialNo'
+        dataIndex: 'serialNo',
+        render: (text, record) => {
+            return <Link to={'/auth/main/deviceEquip/normalEquip/' + record.id}>{text}</Link>
+        }
     },
     {
         title: '名称',
@@ -68,16 +72,18 @@ class NormalEquip extends Component {
         //let resAuth = getAuthority(props.authority, fixedAuth, this.props.passAuth);
         this.state = {
             titles: titles,
-            tableData: [],
-            authority: {}
+            tableData: []
+            //authority: {}
         };
+        this.authority = this.generateAuthority();
         console.log('normal', props);
     }
     componentDidMount () {
         this.getTableData();
+        //this.getAuthority();
         //this.generateAuthority()
     }
-    componentWillReceiveProps (next) {
+    /*componentWillReceiveProps (next) {
         console.log('new props', next);
         //在获取到相应的合适的props再触发相关更新
         if (next.authority && next.authority.length) {
@@ -86,6 +92,13 @@ class NormalEquip extends Component {
                 authority: resAuth
             })
         }
+    }*/
+    generateAuthority () {
+        let resAuth = getAuthority(this.props.authority, fixedAuth, this.props.passAuth);
+        /*this.setState({
+            authority: resAuth
+        })*/
+        return resAuth
     }
     //根据传入的prop里面的
     getTableData () {
@@ -116,13 +129,13 @@ class NormalEquip extends Component {
     }
     generateButton () {
         let arr = [];
-        // let authority = this.state.authority;
-        if (Object.getOwnPropertyNames(this.state.authority).length) {
-            console.log(this.state.authority);
-            if (this.state.authority['addNormalEquip']) {
+        let authority = this.authority;
+        if (Object.getOwnPropertyNames(authority).length) {
+            console.log(authority);
+            if (authority['addNormalEquip']) {
                 arr.push(<Button key={'addNormalEquip'} className="assign_add" onClick={ () => {this.props.history.push('/auth/main/addNormal')}}>添加</Button>)
             }
-            if (this.state.authority['assignNormalEquip']) {
+            if (authority['assignNormalEquip']) {
                 arr.push(<Button key='assignNormalEquip' className="assign_equip">分配</Button>)
             }
 
