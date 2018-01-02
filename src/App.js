@@ -37,7 +37,8 @@ const initAxios = () => {
 
 const mapState = (state) => {
     return {
-        loginState: state.userLoginState.isLogin
+        loginState: state.userLoginState.isLogin,
+        authority: state.authArray.authority
     }
 };
 

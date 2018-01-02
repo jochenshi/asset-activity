@@ -27,10 +27,10 @@ const titles = [
         title: '剩余数量',
         dataIndex: 'remainNumber'
     },
-    {
+/*    {
         title: '当前使用状态',
         dataIndex: 'useState'
-    },
+    },*/
     {
         title: '描述',
         dataIndex: 'description'

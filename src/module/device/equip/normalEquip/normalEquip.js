@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
-import {Button, Table} from 'antd';
+import {connect} from 'react-redux'
 
+import {Button, Table} from 'antd';
 import axios from 'axios';
 
 import './normalEquip.styl'
+
+import {getAuthority} from '../../../../common/methods'
 
 
 const titles = [
@@ -49,7 +52,14 @@ const titles = [
     }
 ];
 const data = [];
+const fixedAuth = ['addNormalequip', 'assignNormalEquip', 'refreshNormalEquip'];
 
+const mapState = (state) => {
+    return {
+        loginState: state.userLoginState.isLogin,
+        authority: state.authArray.authority
+    }
+};
 
 //可接收的prop
 //machineId = ''表示获取该机器下的配件,type = ''获取的配件的类型,operations = []用户需要的操作
@@ -58,8 +68,10 @@ class NormalEquip extends Component {
         super(props);
         this.state = {
             titles: titles,
-            tableData: []
+            tableData: [],
+            authority: {}
         };
+        this.generateAuthority();
     }
     componentDidMount () {
         this.getTableData();
@@ -91,6 +103,22 @@ class NormalEquip extends Component {
 
         })
     }
+    //获取满足本组件的相关权限
+    generateAuthority () {
+        let propAuth = this.props.authority;
+        let resAuth = getAuthority(propAuth, fixedAuth, this.props.passAuth);
+        this.setState({
+            authority: resAuth
+        })
+    }
+    generateButton () {
+        let arr = [];
+        let authority = this.state.authority;
+        if (Object.getOwnPropertyNames(authority).length) {
+            console.log(authority)
+        }
+        return arr;
+    }
     render () {
         const rowSelection = {
             onChange: (rowKeys, rows) => {
@@ -114,4 +142,4 @@ class NormalEquip extends Component {
     }
 }
 
-export default NormalEquip
+export default connect(mapState)(NormalEquip)

@@ -26,4 +26,23 @@ const getCookie = (name) => {
     }
 };
 
-export {handleData, getCookie}
+//判断获取权限的方法
+const getAuthority = (all = [], stable = [], pass = []) => {
+    let ret = {};
+    if (pass.length && all.length && stable.length) {
+        stable.forEach((val) => {
+            if (all.includes(val) && pass.includes(val)) {
+                ret[val] = true
+            } else {
+                ret[val] = false
+            }
+        });
+    } else {
+        stable.forEach((val) => {
+            ret[val] = false;
+        })
+    }
+    return ret;
+};
+
+export {handleData, getCookie, getAuthority}

@@ -4,7 +4,7 @@ import {AuthRoute} from "../../../common/component";
 import PropTypes from 'prop-types';
 
 import NormalEquip from './normalEquip/normalEquip';
-import SupplyEquip from './supplyEquip'
+import SupplyEquip from './supplyEquip/supplyEquip'
 import AddNormal from './normalEquip/addNormal/addNormal'
 import './equip.styl';
 import UseHistory from "../history/useHistory";
