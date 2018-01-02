@@ -53,7 +53,7 @@ class OptionSet extends Component {
 		let spans = this.refs[value].children;
 		let v_text = spans[0].innerText;
 		let v_value = spans[1].innerText;
-		let v_type = spans[3].innerText;
+		let v_type = spans[2].innerText;
 		var d_error = this.refs['child_error']
 		console.log(v_text,v_value);
 		if(!this.verifySelectItem(v_text,v_value,d_error)) return;
@@ -66,7 +66,7 @@ class OptionSet extends Component {
 		})
 		.then((res)=>{
 			this.clearAddDom();
-			this.getSelectData();
+			this.showChildren(this.curCode,this.curName);
 		})
 		.catch((err)=>{
 			d_error.innerText = err.error || err.message;
@@ -79,8 +79,8 @@ class OptionSet extends Component {
 		if(!text || !value){
 			error.innerText = '展示值或实际值不能为空';
 			flag = false;
-		}else if(!new RegExp(/^[_a-z][_a-zA-Z0-9]*$/).test(value)){
-			error.innerText = '实际值只能包含数字、字母或下划线，不能以数字和大写字母开头';
+		}else if(!new RegExp(/^\S+$/).test(value)){
+			error.innerText = '不能输入不可见字符';
 			flag = false;
 		}else{
 			error.innerText = '';
@@ -90,7 +90,7 @@ class OptionSet extends Component {
 
 	/*查看某类选项的所有可选项*/
 	showChildren(code,name,e){
-        axios.get('/am/select/'+code)
+        axios.get('/am/select/code?code='+code)
             .then((res)=>{
                 if(res.data){
                     let children = res.data;
@@ -114,7 +114,9 @@ class OptionSet extends Component {
 	/*切换被选择的条目样式*/
 	toggleSelectedClass(ocode,tcode){
 		let d_selected = this.refs[ocode];
-		d_selected.classList.remove(this.selectedClass);
+		if(d_selected){
+            d_selected.classList.remove(this.selectedClass);
+		}
 		this.refs[tcode].classList.add(this.selectedClass);
 	}
 
@@ -123,7 +125,7 @@ class OptionSet extends Component {
 		let d_cspans = this.refs['addC'].childNodes;
 		d_cspans[0].innerText = '';
 		d_cspans[1].innerText = '';
-        d_cspans[3].innerText = '';
+        d_cspans[2].innerText = '';
 	}
 	/*清空报错信息的文字*/
 	clearErrorDom(){
@@ -206,10 +208,11 @@ class OptionSet extends Component {
 	                			{ post.value ? <span contentEditable={true}>{post.value}</span> : <span contentEditable={true}></span> }
                                 { post.type ? <span contentEditable={true}>{post.type}</span> : <span contentEditable={true}></span> }
 								{ post.value ?
-									<span><a onClick={this.updateSelectItem.bind(this,post.id)}>保存</a>
+									(<span><a onClick={this.updateSelectItem.bind(this,post.id)}>保存</a>
 										{ post.delable ? <i>|</i> : '' }
-										{ post.delable ? <a onClick={this.deleteItemClick.bind(this,post.id)}>删除</a>:'' }</span> :
-									<span><a onClick={this.saveClick.bind(this,post.value||'addC')}>保存</a></span> }
+										{ post.delable ? <a onClick={this.deleteItemClick.bind(this,post.id)}>删除</a>:'' }
+									</span>) :
+									(<span><a onClick={this.saveClick.bind(this,post.value||'addC')}>保存</a></span>) }
 							</li>
 						)}
 						</ul>

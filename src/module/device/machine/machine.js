@@ -89,6 +89,11 @@ const titles = [
     }
 ];
 
+const auth = [
+    'deviceMachine',
+    'addMachine'
+]
+
 class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
@@ -102,8 +107,6 @@ class DeviceMachine extends Component {
 	    axios.get('/am/machine?operate=deviceMachine')
         .then((res)=>{
             if(res.data){
-                console.log(res.data);
-                console.log(typeof res.data);
                 this.setState({
                     machineData : res.data
                 })
