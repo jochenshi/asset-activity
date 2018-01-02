@@ -97,6 +97,7 @@ const auth = [
 class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
+        this.auth = {};
         this.state = {
             machineData : defaultData,
             titles : titles
