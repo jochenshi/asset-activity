@@ -3,7 +3,7 @@
  */
 import React,{ Component } from 'react'
 import axios from 'axios'
-import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Modal } from 'antd';
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -12,6 +12,13 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
 const { TextArea } = Input;
+const confirm = Modal.confirm;
+
+const auth = [
+    'deviceMachine',
+    'modifyMachine',
+    'address'
+]
 
 class BaseinfoMachine extends Component {
     constructor (props){
@@ -29,6 +36,7 @@ class BaseinfoMachine extends Component {
             model : [],
             brand : [],
             cpu : [],
+            location : [],
             prefixRdNumber : this.props.data && this.props.data['outInType']==='borrow'?'RDB':'RD',
             rdNumber : '',
             rdbNumber : '',
@@ -74,7 +82,8 @@ class BaseinfoMachine extends Component {
                     type : data['type'],
                     model : data['model'],
                     brand : data['brand'],
-                    cpu : data['cpu']
+                    cpu : data['cpu'],
+                    location : data['location']
                 });
             }
         })
@@ -94,7 +103,7 @@ class BaseinfoMachine extends Component {
              if(this.mode === 'add'){
                  axios.post('/am/machine?operate=addMachine',values)
                      .then((res)=>{
-                         this.context.router.history.replace(this.backUrl)
+                         this.addConfirm(res.data.id);
                      })
                      .catch((err)=>{
                          console.log(err);
@@ -114,6 +123,21 @@ class BaseinfoMachine extends Component {
              }
          });
     };
+    addConfirm = (id)=>{
+        confirm({
+            title: '想到详情页面继续添加机器的配置信息吗？',
+            content: '确认进入详情页面，取消回到列表页面。通过点击列表上的机器S/N号，仍然可以进入详情页面。',
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => {
+                this.context.router.history.replace(this.backUrl+'/'+id);
+            },
+            onCancel: () => {
+                this.context.router.history.replace(this.backUrl);
+            },
+        });
+
+    }
     handleChange = (value) => {
         console.log(`Selected: ${value}`);
         value = value==='borrow'?'RDB':'RD';
@@ -125,11 +149,13 @@ class BaseinfoMachine extends Component {
         return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }
     componentWillReceiveProps (props ,state) {
-        console.log(props);
-        this.setState({
-            data: props.data,
-            prefixRdNumber : props.data['outInType']==='borrow'?'RDB':'RD',
-        });
+        if(props.data){
+            let state = {
+                data : props.data || {}
+            }
+            state['prefixRdNumber'] = props.data['outInType']==='borrow'?'RDB':'RD'
+            this.setState(state);
+        }
     }
     render () {
         const { getFieldDecorator } = this.props.form;
@@ -155,7 +181,7 @@ class BaseinfoMachine extends Component {
                 },
             },
         };
-        let rdNumber = this.state.data['rdNumber'];
+        let rdNumber = this.state.data ? this.state.data['rdNumber'] : '';
         rdNumber = rdNumber && rdNumber.match(/\d+/g)[0];
         return (
             <div className="form">
@@ -182,7 +208,7 @@ class BaseinfoMachine extends Component {
                         label="DatePicker"
                     >
                         {getFieldDecorator('occurTime',{
-                            initialValue : moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') || moment(new Date(), 'yyyy/MM/dd')
+                            initialValue : this.state.data['occurTime'] ? moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') : moment(new Date(), 'yyyy/MM/dd')
                         })(
                             <DatePicker />
                         )}
@@ -359,7 +385,11 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['location'] || ''
                         })(
-                            <Input/>
+                            <Select
+                                mode="combobox"
+                            >
+                                {this.generateOption(this.state.location)}
+                            </Select>
                         )}
                     </FormItem>
                     <FormItem
