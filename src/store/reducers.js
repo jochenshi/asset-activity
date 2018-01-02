@@ -11,4 +11,14 @@ const userLoginReducer = (state = initState, action) => {
     return state
 };
 
-export default userLoginReducer
+const initAuth = {
+    authority: []
+};
+const authReducer = (state = initAuth, action) => {
+    if (action.type === 'UPDATE_AUTHORITY') {
+        return Object.assign({}, state, {authority: action.value})
+    }
+    return state
+};
+
+export {userLoginReducer, authReducer}

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Layout, Menu} from 'antd'
 import {Link, Route, Redirect, Switch} from 'react-router-dom'
 import {connect} from 'react-redux'
+import axios from 'axios';
 
 import './style.styl'
 
@@ -24,7 +25,8 @@ const {SubMenu, Item} = Menu;
 
 const mapState = (state) => {
     return {
-        loginState: state.userLoginState.isLogin
+        loginState: state.userLoginState.isLogin,
+        authority: state.authArray.authority
     }
 };
 
@@ -36,11 +38,19 @@ class MainHome extends Component {
         this.state = {
             selectNav: 'storeInfo'
         }
+        this.getAuthority();
     }
     setDefaultSelect () {
         
     }
     checkLogin () {}
+    getAuthority () {
+        axios.get('/am/authority').then((val) => {
+            console.log(val);
+        }).catch(err => {
+            console.log('err', err)
+        })
+    }
     handleClick (e) {
         console.log('e',e);
         console.log('props',this.props);
