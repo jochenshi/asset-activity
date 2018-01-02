@@ -5,8 +5,10 @@ import React,{ Component } from 'react'
 import axios from 'axios'
 import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Modal } from 'antd';
 import {Link} from 'react-router-dom'
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import PropTypes from 'prop-types'
+import moment from 'moment'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../../common/methods'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -17,14 +19,23 @@ const confirm = Modal.confirm;
 const auth = [
     'deviceMachine',
     'modifyMachine',
-    'address'
+    'addMachine'
 ]
+
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
 
 class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
         this.mode = this.props.mode;
+        this.disabled = false;
+        this.disabled = this.mode==='modify' && !this.auth['modifyMachine'];
         // this.data = this.props.data || {};
         this.rdNumber = '';
         this.rdbNumber = '';
@@ -93,6 +104,7 @@ class BaseinfoMachine extends Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
+        if(this.disabled) return;
         this.props.form.validateFieldsAndScroll((err, values) => {
              if (err) {
                 console.log('Received values of form: ', values);
@@ -156,6 +168,10 @@ class BaseinfoMachine extends Component {
             state['prefixRdNumber'] = props.data['outInType']==='borrow'?'RDB':'RD'
             this.setState(state);
         }
+        /*if (next.authority && next.authority.length) {
+            let resAuth = getAuthority(next.authority, fixedAuth, this.props.passAuth);
+            this.auth = resAuth;
+        }*/
     }
     render () {
         const { getFieldDecorator } = this.props.form;
@@ -183,6 +199,16 @@ class BaseinfoMachine extends Component {
         };
         let rdNumber = this.state.data ? this.state.data['rdNumber'] : '';
         rdNumber = rdNumber && rdNumber.match(/\d+/g)[0];
+        if(this.mode==='add' && !this.auth['addMachine']){
+            return (
+                <p>没有添加机器的权限！</p>
+            )
+        }
+        if(this.mode==='modify'&& !this.auth['deviceMachine']){
+            return (
+                <p>没有查看机器详情的权限！</p>
+            )
+        }
         return (
             <div className="form">
                 <Form onSubmit={this.handleSubmit}>
@@ -197,7 +223,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 onChange={this.handleChange}
-                                disabled={this.mode!=='add'}
+                                disabled={this.disabled && this.mode!=='add'}
                             >
                                 {this.generateOption(this.state.outInType)}
                             </Select>
@@ -210,7 +236,7 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('occurTime',{
                             initialValue : this.state.data['occurTime'] ? moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') : moment(new Date(), 'yyyy/MM/dd')
                         })(
-                            <DatePicker />
+                            <DatePicker disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -222,6 +248,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 mode="combobox"
+                                disabled={this.disabled}
                             >
                                 {this.generateOption(this.state.originObject)}
                             </Select>
@@ -236,6 +263,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 mode="combobox"
+                                disabled={this.disabled}
                             >
                                 {this.generateOption(this.state.targetObject)}
                             </Select>
@@ -251,7 +279,7 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['ascriptionDesc'] || ''
                         })(
-                            <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
+                            <TextArea autosize={{ minRows: 2, maxRows: 6 }} disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <h1 className="form-field-title">机器信息</h1>
@@ -266,7 +294,7 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['name'] || ''
                         })(
-                            <Input/>
+                            <Input disabled={this.disabled} />
                         )}
                     </FormItem>
                     <FormItem
@@ -277,7 +305,9 @@ class BaseinfoMachine extends Component {
                             rules : [{required: true, message: '必须选择一个类型。'}],
                             initialValue : this.state.data['type'] || 'server'
                         })(
-                            <Select>
+                            <Select
+                                disabled={this.disabled}
+                            >
                                 {this.generateOption(this.state.type)}
                             </Select>
                         )}
@@ -294,7 +324,7 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : rdNumber || (this.state.prefixRdNumber === 'RD' ? this.state.rdNumber : this.state.rdbNumber)
                         })(
-                            <Input addonBefore={this.state.prefixRdNumber} disabled={this.mode!=='add'}/>
+                            <Input addonBefore={this.state.prefixRdNumber} disabled={this.disabled && this.mode!=='add'}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -307,7 +337,7 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['fixedNumber'] || ''
                         })(
-                            <Input/>
+                            <Input disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -321,7 +351,7 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['serialNo'] || ''
                         })(
-                            <Input/>
+                            <Input disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -336,6 +366,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 mode="combobox"
+                                disabled={this.disabled}
                             >
                                 {this.generateOption(this.state.model)}
                             </Select>
@@ -353,6 +384,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 mode="combobox"
+                                disabled={this.disabled}
                             >
                                 {this.generateOption(this.state.brand)}
                             </Select>
@@ -370,6 +402,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 mode="combobox"
+                                disabled={this.disabled}
                             >
                                 {this.generateOption(this.state.cpu)}
                             </Select>
@@ -387,6 +420,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 mode="combobox"
+                                disabled={this.disabled}
                             >
                                 {this.generateOption(this.state.location)}
                             </Select>
@@ -402,11 +436,11 @@ class BaseinfoMachine extends Component {
                             ],
                             initialValue : this.state.data['machineDesc'] || ''
                         })(
-                            <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
+                            <TextArea autosize={{ minRows: 2, maxRows: 6 }} disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">确定</Button>
+                        <Button type="primary" htmlType="submit" disabled={this.disabled}>确定</Button>
                         {this.mode==='add'&&<Button><Link to={this.backUrl}>取消</Link></Button>}
                     </FormItem>
                 </Form>
@@ -420,4 +454,4 @@ BaseinfoMachine.contextTypes = {
 
 const BaseinfoMachineWrap = Form.create()(BaseinfoMachine);
 
-export default BaseinfoMachineWrap
+export default connect(mapState)(BaseinfoMachineWrap)

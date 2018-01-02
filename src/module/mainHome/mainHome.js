@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {Layout, Menu} from 'antd'
 import {Link, Route, Redirect, Switch} from 'react-router-dom'
 import {connect} from 'react-redux'
-import axios from 'axios';
+import axios from 'axios'
+import {withRouter} from 'react-router'
 
 import {updateAuthority} from '../../store/action'
 
@@ -44,7 +45,8 @@ class MainHome extends Component {
         console.log('routers',this.props.match);
         this.handleClicks = this.handleClick.bind(this);
         this.state = {
-            selectNav: 'storeInfo'
+            selectNav: 'storeInfo',
+            auth : false
         };
 
     }
@@ -60,6 +62,9 @@ class MainHome extends Component {
         axios.get('/am/authority').then((val) => {
             console.log(val);
             this.props.disAuthority(val.data)
+            this.setState({
+                auth : true
+            });
         }).catch(err => {
             console.log('err', err);
             this.props.disAuthority([])
@@ -119,7 +124,7 @@ class MainHome extends Component {
                             <i className="iconfont icon-logout"></i>
                         </div>
                     </Header>
-                    <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
+                    {this.state.auth ? <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>
                         <div className="main_content" style={{flex: 1, backgroundColor: '#fff'}}>
                             <Switch>
                                 <AuthRoute path={`${this.props.match.path}/storeInfo`} component={StoreInfo}/>
@@ -142,7 +147,7 @@ class MainHome extends Component {
                                 <RouteWithSubRoutes key={i} {...route}/>
                             ))}*/}
                         </div>
-                    </Content>
+                    </Content>:''}
                 </Layout>
             </Layout>
         )
