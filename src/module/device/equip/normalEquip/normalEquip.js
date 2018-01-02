@@ -8,7 +8,6 @@ import './normalEquip.styl'
 
 import {getAuthority} from '../../../../common/methods'
 
-
 const titles = [
     {
         title: 'S/N号',
