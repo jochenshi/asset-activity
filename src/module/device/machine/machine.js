@@ -3,6 +3,8 @@ import { Table, Button } from 'antd'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 import TitleOption from '../../../common/titleOption'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../common/methods'
 
 const defaultData = [
     {
@@ -94,10 +96,16 @@ const auth = [
     'addMachine'
 ]
 
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
+
 class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
-        this.auth = {};
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
         this.state = {
             machineData : defaultData,
             titles : titles
@@ -140,4 +148,4 @@ class DeviceMachine extends Component {
     }
 }
 
-export default DeviceMachine
+export default connect(mapState)(DeviceMachine)
