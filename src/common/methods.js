@@ -26,10 +26,19 @@ const getCookie = (name) => {
     }
 };
 
-//判断获取权限的方法
-const getAuthority = (all = [], stable = [], pass = []) => {
+//判断获取权限的方法,pass不传则取all与stable的交集，否则依据pass进行相关判断
+const getAuthority = (all = [], stable = [], pass) => {
     let ret = {};
-    if (pass.length && all.length && stable.length) {
+    if (all.length && stable.length) {
+        if (pass) {
+            if (Object.prototype.toString.call(pass) !== '[object Array]') {
+                let aa = [];
+                aa.push(pass);
+                pass = aa;
+            }
+        } else {
+            pass = stable;
+        }
         stable.forEach((val) => {
             if (all.includes(val) && pass.includes(val)) {
                 ret[val] = true
