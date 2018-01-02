@@ -46,11 +46,15 @@ class MainHome extends Component {
         this.state = {
             selectNav: 'storeInfo'
         };
-        this.getAuthority();
+
     }
     setDefaultSelect () {
         
     }
+    componentWillMount () {
+        this.getAuthority();
+    }
+
     checkLogin () {}
     getAuthority () {
         axios.get('/am/authority').then((val) => {
