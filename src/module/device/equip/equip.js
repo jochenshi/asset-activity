@@ -33,6 +33,19 @@ class DeviceEquip extends Component {
         }
         //this.props.history.replace('/auth')
     }
+    componentWillReceiveProps (aa) {
+        console.log('will',aa);
+        let match = aa.match.path;
+        let pathname = aa.location.pathname;
+        let nowUrl = pathname.substring(match.length + 1);
+        console.log('now', nowUrl)
+        nowUrl = nowUrl === 'normalEquip' ? 'normal_equip' : 'supply_equip';
+        console.log('will', nowUrl);
+        this.setState({
+            selected: nowUrl
+        })
+    }
+
     handleTitleClick  = (e) => {
         let target = e.target.getAttribute('data-value');
         if (target !== this.state.selected) {
@@ -41,7 +54,7 @@ class DeviceEquip extends Component {
             this.setState({
                 selected: target
             });
-            this.props.history.replace('/auth/main/deviceEquip/' + des);
+            this.props.history.push('/auth/main/deviceEquip/' + des);
         }
     };
     render () {

@@ -120,16 +120,14 @@ class NormalEquip extends Component {
         if (Object.getOwnPropertyNames(this.state.authority).length) {
             console.log(this.state.authority);
             if (this.state.authority['addNormalEquip']) {
-                arr.push(<Button key={'addNormalEquip'} className="assign_add" onClick={ () => {this.props.history.replace('/auth/main/addNormal')}}>添加</Button>)
-            }
-            if (this.state.authority['refreshNormalEquip']) {
-                arr.push(<Button key='refreshNormalEquip' className="refresh_equip">刷新</Button>)
+                arr.push(<Button key={'addNormalEquip'} className="assign_add" onClick={ () => {this.props.history.push('/auth/main/addNormal')}}>添加</Button>)
             }
             if (this.state.authority['assignNormalEquip']) {
                 arr.push(<Button key='assignNormalEquip' className="assign_equip">分配</Button>)
             }
 
         }
+        arr.push(<Button key='refreshNormalEquip' className="refresh_equip">刷新</Button>);
         console.log('qqqq');
         console.log(arr);
         return arr;
