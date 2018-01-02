@@ -51,7 +51,7 @@ const titles = [
     }
 ];
 const data = [];
-const fixedAuth = ['addNormalequip', 'assignNormalEquip', 'refreshNormalEquip'];
+const fixedAuth = ['addNormalEquip', 'refreshNormalEquip', 'assignNormalEquip'];
 
 const mapState = (state) => {
     return {
@@ -65,15 +65,27 @@ const mapState = (state) => {
 class NormalEquip extends Component {
     constructor (props) {
         super(props);
+        //let resAuth = getAuthority(props.authority, fixedAuth, this.props.passAuth);
         this.state = {
             titles: titles,
             tableData: [],
             authority: {}
         };
-        this.generateAuthority();
+        console.log('normal', props);
     }
     componentDidMount () {
         this.getTableData();
+        //this.generateAuthority()
+    }
+    componentWillReceiveProps (next) {
+        console.log('new props', next);
+        //在获取到相应的合适的props再触发相关更新
+        if (next.authority && next.authority.length) {
+            let resAuth = getAuthority(next.authority, fixedAuth, this.props.passAuth);
+            this.setState({
+                authority: resAuth
+            })
+        }
     }
     //根据传入的prop里面的
     getTableData () {
@@ -102,20 +114,24 @@ class NormalEquip extends Component {
 
         })
     }
-    //获取满足本组件的相关权限
-    generateAuthority () {
-        let propAuth = this.props.authority;
-        let resAuth = getAuthority(propAuth, fixedAuth, this.props.passAuth);
-        this.setState({
-            authority: resAuth
-        })
-    }
     generateButton () {
         let arr = [];
-        let authority = this.state.authority;
-        if (Object.getOwnPropertyNames(authority).length) {
-            console.log(authority)
+        // let authority = this.state.authority;
+        if (Object.getOwnPropertyNames(this.state.authority).length) {
+            console.log(this.state.authority);
+            if (this.state.authority['addNormalEquip']) {
+                arr.push(<Button key={'addNormalEquip'} className="assign_add" onClick={ () => {this.props.history.replace('/auth/main/addNormal')}}>添加</Button>)
+            }
+            if (this.state.authority['refreshNormalEquip']) {
+                arr.push(<Button key='refreshNormalEquip' className="refresh_equip">刷新</Button>)
+            }
+            if (this.state.authority['assignNormalEquip']) {
+                arr.push(<Button key='assignNormalEquip' className="assign_equip">分配</Button>)
+            }
+
         }
+        console.log('qqqq');
+        console.log(arr);
         return arr;
     }
     render () {
@@ -128,9 +144,9 @@ class NormalEquip extends Component {
         return (
             <div className="normal_render">
                 <div className="button_area">
-                    <Button className="assign_add" onClick={ () => {this.props.history.replace('/auth/main/addNormal')}}>添加</Button>
-                    <Button className="assign_equip">分配</Button>
-                    <Button className="return_equip">归还</Button>
+                    {this.generateButton()}
+                    {/*<Button className="assign_equip">分配</Button>*/}
+                    {/*<Button className="return_equip">归还</Button>*/}
                     {/*<Button className="apply_equip">申请</Button>*/}
                 </div>
                 <div className="table_area">
