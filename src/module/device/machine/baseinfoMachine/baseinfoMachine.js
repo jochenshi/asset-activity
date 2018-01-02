@@ -15,9 +15,9 @@ const { TextArea } = Input;
 const confirm = Modal.confirm;
 
 const auth = [
-    'deviceMachine',
-    'modifyMachine',
-    'address'
+    'address',
+    'addAddress',
+    'modifyAddress'
 ]
 
 class BaseinfoMachine extends Component {

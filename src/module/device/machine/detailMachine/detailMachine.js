@@ -9,6 +9,14 @@ import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
 import NormalEquip from '../../equip/normalEquip/normalEquip';
 import AddressMachineWrap from '../addressMachine/addressMachine';
 
+const auth = [
+    'deviceMachine',
+    'modifyMachine',
+    'address',
+    'addAddress',
+    'modifyAddress'
+]
+
 class DetailMachine extends Component {
     backUrl = '/auth/main/deviceMachine';
     baseTitles = [

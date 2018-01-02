@@ -7,6 +7,12 @@ import axios from 'axios'
 
 const FormItem = Form.Item;
 
+const auth = [
+    'deviceMachine',
+    'addMachine',
+    'modifyMachine'
+]
+
 class AddressMachine extends Component {
     constructor (props) {
         super(props);
