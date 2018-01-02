@@ -139,7 +139,7 @@ class DeviceMachine extends Component {
             <div className="list">
                 <div className="list_operations">
                     {this.auth['addMachine']?<Button><Link to="/auth/main/addMachine">添加</Link></Button>:''}
-                    <Button onClick={this.getMachineData.bind(this)}>刷新</Button>
+                    {this.auth['deviceMachine']?<Button onClick={this.getMachineData.bind(this)}>刷新</Button>:''}
                     <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
                 <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.machineData}/>

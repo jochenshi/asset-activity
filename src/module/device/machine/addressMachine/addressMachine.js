@@ -4,18 +4,28 @@
 import React,{ Component } from 'react'
 import { Form, Input, Button } from 'antd'
 import axios from 'axios'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../../common/methods'
 
 const FormItem = Form.Item;
 
 const auth = [
-    'deviceMachine',
-    'addMachine',
-    'modifyMachine'
+    'address',
+    'addAddress',
+    'modifyAddress'
 ]
+
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
 
 class AddressMachine extends Component {
     constructor (props) {
         super(props);
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
+        this.disabled = !this.auth['addAddress'];
         this.machineId = props.machineId;
         this.type = props.type;
         this.state = {
@@ -29,6 +39,7 @@ class AddressMachine extends Component {
             if(err){
                 return;
             }
+            if(this.disabled) return;
             values['machineId'] = this.machineId;
             values['type'] = this.type;
             if(!this.state.data.id){
@@ -61,6 +72,9 @@ class AddressMachine extends Component {
         axios.get('/am/address/?operate=adress&machineId='+this.machineId+'&type='+this.type)
             .then((res)=>{
                 if(res.data){
+                    if(res.data.id){
+                        this.disabled = !this.auth['modifyAddress'];
+                    }
                     this.setState({
                         data : res.data
                     })
@@ -94,6 +108,11 @@ class AddressMachine extends Component {
                 },
             },
         };
+        if(!this.auth['address']){
+            return (
+                <p>没有查看权限！</p>
+            )
+        }
         return (
             <div className="form">
                 <Form onSubmit={this.handleSubmit}>
@@ -107,7 +126,7 @@ class AddressMachine extends Component {
                                 { pattern: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,message:'请填写正确格式的IP地址。'}],
                             initialValue : this.state.data['address']||'',
                         })(
-                            <Input />
+                            <Input disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -120,7 +139,7 @@ class AddressMachine extends Component {
                             ],
                             initialValue : this.state.data['username'] || ''
                         })(
-                            <Input />
+                            <Input  disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -133,11 +152,11 @@ class AddressMachine extends Component {
                             ],
                             initialValue : this.state.data['password'] || ''
                         })(
-                            <Input />
+                            <Input  disabled={this.disabled}/>
                         )}
                     </FormItem>
                     <FormItem {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">确定</Button>
+                        <Button type="primary" htmlType="submit" disabled={this.disabled}>确定</Button>
                     </FormItem>
                 </Form>
             </div>
@@ -146,4 +165,4 @@ class AddressMachine extends Component {
 }
 const AddressMachineWrap = Form.create()(AddressMachine);
 
-export default AddressMachineWrap
+export default connect(mapState)(AddressMachineWrap)

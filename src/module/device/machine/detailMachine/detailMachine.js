@@ -6,16 +6,22 @@ import {Link} from 'react-router-dom'
 import Header from '../../../../common/header'
 import axios from 'axios'
 import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
-import NormalEquip from '../../equip/normalEquip/normalEquip';
-import AddressMachineWrap from '../addressMachine/addressMachine';
+import NormalEquip from '../../equip/normalEquip/normalEquip'
+import AddressMachineWrap from '../addressMachine/addressMachine'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../../common/methods'
 
 const auth = [
     'deviceMachine',
-    'modifyMachine',
     'address',
-    'addAddress',
-    'modifyAddress'
+    'deviceEquip'
 ]
+
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
 
 class DetailMachine extends Component {
     backUrl = '/auth/main/deviceMachine';
@@ -27,6 +33,7 @@ class DetailMachine extends Component {
     constructor (props) {
         super(props);
         this.id = props.match.params.id;
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
         this.state = {
             data : {}
         }
@@ -50,34 +57,34 @@ class DetailMachine extends Component {
         return (
             <div className="form-panel">
                 <Header title={'机器详情'} backUrl={this.backUrl}/>
-                <div className="form">
+                {this.auth['deviceMachine']?<div className="form">
                     <h1 className="form-field-title">基本信息</h1>
                     <ul className="detail_list">
                         {this.baseTitles.map((item)=>{
                             return <li key={item.key}><label>{item.label}<i>:</i></label><span>{this.state.data[item.key]}</span></li>
                         })}
                     </ul>
-                </div>
-                <BaseinfoMachineWrap backUrl={this.backUrl} mode="modify" data={this.state.data}/>
+                </div>:''}
+                <BaseinfoMachineWrap backUrl={this.backUrl} mode="modify" data={this.state.data} passAuth={['deviceMachine','modifyMachine']}/>
                 <hr />
                 <div className="form">
                     <h1 className="form-field-title">地址信息</h1>
                 </div>
-                <AddressMachineWrap machineId={this.id} type="ip"/>
-                <AddressMachineWrap machineId={this.id} type="ipmi"/>
+                {this.auth['address']?<AddressMachineWrap machineId={this.id} type="ip" passAuth={['address','addAddress','modifyAddress']}/>:'没有权限。'}
+                {this.auth['address']?<AddressMachineWrap machineId={this.id} type="ipmi" passAuth={['address','addAddress','modifyAddress']}/>:'没有权限。'}
                 <hr />
                 <div className="form">
                     <h1 className="form-field-title">配件信息</h1>
                 </div>
                 <h2>硬盘</h2>
-                <NormalEquip machineId={this.id} equipType={"disk"}/>
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"disk"} passAuth={['addNormalequip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
                 <h2>网卡</h2>
-                <NormalEquip machineId={this.id} equipType={"netcard"}/>
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"netcard"} passAuth={['addNormalequip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
                 <h2>内存</h2>
-                <NormalEquip machineId={this.id} equipType={"memory"}/>
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"memory"} passAuth={['addNormalequip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
             </div>
         )
     }
 }
 
-export default DetailMachine
+export default connect(mapState)(DetailMachine)

@@ -5,8 +5,10 @@ import React,{ Component } from 'react'
 import axios from 'axios'
 import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Modal } from 'antd';
 import {Link} from 'react-router-dom'
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import PropTypes from 'prop-types'
+import moment from 'moment'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../../common/methods'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -20,14 +22,20 @@ const auth = [
     'addMachine'
 ]
 
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
+
 class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
-        this.auth = {};
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
         this.backUrl = this.props.backUrl || '/auth/main/storeInfo';
         this.mode = this.props.mode;
         this.disabled = false;
-        this.disabled = this.mode==='modify' && this.auth['modifyMachine'];
+        this.disabled = this.mode==='modify' && !this.auth['modifyMachine'];
         // this.data = this.props.data || {};
         this.rdNumber = '';
         this.rdbNumber = '';
@@ -442,4 +450,4 @@ BaseinfoMachine.contextTypes = {
 
 const BaseinfoMachineWrap = Form.create()(BaseinfoMachine);
 
-export default BaseinfoMachineWrap
+export default connect(mapState)(BaseinfoMachineWrap)
