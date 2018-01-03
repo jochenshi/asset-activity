@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import NormalEquip from './normalEquip/normalEquip';
 import SupplyEquip from './supplyEquip/supplyEquip'
-import AddNormal from './normalEquip/addNormal/addNormal'
 import './equip.styl';
 import UseHistory from "../history/useHistory";
 
@@ -33,6 +32,22 @@ class DeviceEquip extends Component {
         }
         //this.props.history.replace('/auth')
     }
+    componentWillReceiveProps (aa) {
+        console.log('will',aa);
+        console.log(this.props, '==========');
+        if (this.props.location.pathname !== aa.location.pathname) {
+            let match = aa.match.path;
+            let pathname = aa.location.pathname;
+            let nowUrl = pathname.substring(match.length + 1);
+            console.log('now', nowUrl);
+            nowUrl = nowUrl === 'normalEquip' ? 'normal_equip' : 'supply_equip';
+            console.log('will', nowUrl);
+            this.setState({
+                selected: nowUrl
+            })
+        }
+    }
+
     handleTitleClick  = (e) => {
         let target = e.target.getAttribute('data-value');
         if (target !== this.state.selected) {
@@ -41,7 +56,7 @@ class DeviceEquip extends Component {
             this.setState({
                 selected: target
             });
-            this.props.history.replace('/auth/main/deviceEquip/' + des);
+            this.props.history.push('/auth/main/deviceEquip/' + des);
         }
     };
     render () {
@@ -53,6 +68,7 @@ class DeviceEquip extends Component {
                 </h1>
                 <div className="table_content">
                     <Switch>
+
                         <AuthRoute path={`${this.props.match.path}/normalEquip`} type={'all'} component={NormalEquip}/>
                         <AuthRoute path={`${this.props.match.path}/supplyEquip`} data={'all'} component={SupplyEquip}/>
                         <Redirect to={`${this.props.match.path}/normalEquip`}/>

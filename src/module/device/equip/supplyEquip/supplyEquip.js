@@ -36,8 +36,12 @@ const titles = [
         dataIndex: 'description'
     }
 ];
+const fixedAuth = ['addSupplyEquip'];
 const data =[];
 class SupplyEquip extends Component {
+    constructor (props) {
+        super(props)
+    }
     render () {
         return (
             <div>
