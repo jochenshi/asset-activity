@@ -3,6 +3,7 @@ import {withRouter} from 'react-router'
 
 import axios from "axios";
 import {Form, Input, Select, Button, DatePicker} from "antd";
+import moment from 'moment'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -13,12 +14,17 @@ import './addNormal.styl'
 class FormArea extends Component {
     constructor (props) {
         super(props);
+        let unit;
+        if (props.data && props.data.unit) {
+            unit = props.data.unit
+        }
         this.state = {
-            unit: 'GB',
+            unit: unit || 'GB',
             brand: [],
             type: [],
             model: [],
-            origin: []
+            origin: [],
+            data: props.data || {}
         };
         console.log('addnormal constructor', props)
     }
@@ -63,11 +69,21 @@ class FormArea extends Component {
             if (!err) {
                 let subData = Object.assign({}, values, {unit: this.state.unit});
                 console.log(subData);
-                axios.post('/am/equip/normalEquip?operate=addEquip',subData)
-                    .then((msg) => {
-                        this.props.history.replace('/auth/main/deviceMachine');
+                if (this.props.mode === 'modify') {
+                    subData['ascriptionId'] = this.state.data.ascriptionId;
+                    axios.put('/am/equip/normalEquip/' + this.state.data.id + '?operate=modifyEquip', subData).
+                        then((msg) => {
+                            console.log(msg)
                     })
-                    .catch()
+                } else {
+                    axios.post('/am/equip/normalEquip?operate=addEquip',subData)
+                        .then((msg) => {
+                            this.props.history.go(-1);
+                            //this.props.history.push('/auth/main/deviceEquip/normalEquip');
+                        })
+                        .catch()
+                }
+
             }
         })
     };
@@ -109,7 +125,8 @@ class FormArea extends Component {
                     {getFieldDecorator('origin',{
                         rules: [
                             {required: true, message: '来源类型不能为空'}
-                        ]
+                        ],
+                        initialValue: this.state.data['outInType'] || 'buyin'
                     })(
                         <Select>
                             {this.generateOption('origin')}
@@ -120,42 +137,52 @@ class FormArea extends Component {
                     {getFieldDecorator('time', {
                         rules: [
                             {required: true, message: '请选择时间'}
-                        ]
+                        ],
+                        initialValue: this.state.data['occurTime'] ? moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') : moment(new Date(), 'yyyy/MM/dd')
                     })(<DatePicker/>)}
                 </FormItem>
                 <FormItem {...formItemLayout} label={'源对象'}>
-                    {getFieldDecorator('originObject')(
+                    {getFieldDecorator('originObject',{
+                        initialValue: this.state.data['originObject'] || ''
+                    })(
                         <Input />
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label={'目标对象'}>
-                    {getFieldDecorator('targetObject')(
+                    {getFieldDecorator('targetObject',{
+                        initialValue: this.state.data['targetObject'] || ''
+                    })(
                         <Input/>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label='来源描述'>
-                    {getFieldDecorator('originDes')(<TextArea/>)}
+                    {getFieldDecorator('originDes', {
+                        initialValue: this.state.data['ascDesc'] || ''
+                    })(<TextArea/>)}
                 </FormItem>
                 <h1 className="form-field-title">配件信息</h1>
                 <FormItem {...formItemLayout} label='S/N号'>
                     {getFieldDecorator('serialNo',{
                         rules: [
                             {required: true, message: 'S/N号不能为空'}
-                        ]
+                        ],
+                        initialValue: this.state.data['serialNo'] || ''
                     })(<Input/>)}
                 </FormItem>
                 <FormItem {...formItemLayout} label='名称'>
                     {getFieldDecorator('name',{
                         rules: [
                             {required: true, message: '名称不能为空'}
-                        ]
+                        ],
+                        initialValue: this.state.data['name'] || ''
                     })(<Input/>)}
                 </FormItem>
                 <FormItem {...formItemLayout} label='类型'>
                     {getFieldDecorator('type',{
                         rules: [
                             {required: true, message: '类型不能为空'}
-                        ]
+                        ],
+                        initialValue: this.state.data['type'] || ''
                     })(
                         <Select>
                             {this.generateOption('type')}
@@ -166,7 +193,8 @@ class FormArea extends Component {
                     {getFieldDecorator('model',{
                         rules: [
                             {required: true, message: '型号不能为空'}
-                        ]
+                        ],
+                        initialValue: this.state.data['model'] || ''
                     })(
                         <Select mode='combobox'>
                             {this.generateOption('model')}
@@ -177,7 +205,8 @@ class FormArea extends Component {
                     {getFieldDecorator('brand',{
                         rules: [
                             {required: true, message: '品牌不能为空'}
-                        ]
+                        ],
+                        initialValue: this.state.data['brand'] || ''
                     })(
                         <Select mode='combobox'>
                             {this.generateOption('brand')}
@@ -188,13 +217,16 @@ class FormArea extends Component {
                     {getFieldDecorator('size',{
                         rules: [
                             {pattern: /^[1-9]\d*$/, message: '请输入正整数'}
-                        ]
+                        ],
+                        initialValue: this.state.data['size'] || ''
                     })(
                         <Input style={{width: 200}} addonAfter={selectUnit}/>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label='描述'>
-                    {getFieldDecorator('description')(<TextArea/>)}
+                    {getFieldDecorator('description',{
+                        initialValue: this.state.data['description'] || ''
+                    })(<TextArea/>)}
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                     <Button type='primary' htmlType='submit'>确认</Button>

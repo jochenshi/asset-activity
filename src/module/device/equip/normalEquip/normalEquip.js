@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {Link}  from 'react-router-dom'
+import {Link, withRouter}  from 'react-router-dom'
+import PropTypes from 'prop-types';
 
 import {Button, Table} from 'antd';
 import axios from 'axios';
@@ -14,7 +15,11 @@ const titles = [
         title: 'S/N号',
         dataIndex: 'serialNo',
         render: (text, record) => {
-            return <Link to={'/auth/main/deviceEquip/normalEquip/' + record.id}>{text}</Link>
+            let path = {
+                pathname: '/auth/main/deviceEquip/normalEquip/' + record.id,
+                state: record
+            };
+            return <Link to={path}>{text}</Link>
         }
     },
     {
@@ -69,7 +74,6 @@ const mapState = (state) => {
 class NormalEquip extends Component {
     constructor (props) {
         super(props);
-        //let resAuth = getAuthority(props.authority, fixedAuth, this.props.passAuth);
         this.state = {
             titles: titles,
             tableData: []
@@ -140,7 +144,7 @@ class NormalEquip extends Component {
             }
 
         }
-        arr.push(<Button key='refreshNormalEquip' className="refresh_equip">刷新</Button>);
+        arr.push(<Button key='refreshNormalEquip' className="refresh_equip" onClick={() => {this.getTableData()}}>刷新</Button>);
         console.log('qqqq');
         console.log(arr);
         return arr;
@@ -168,4 +172,8 @@ class NormalEquip extends Component {
     }
 }
 
-export default connect(mapState)(NormalEquip)
+/*NormalEquip.contextTypes = {
+    router: PropTypes.object
+};*/
+
+export default connect(mapState)(withRouter(NormalEquip))

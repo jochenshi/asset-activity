@@ -1,5 +1,10 @@
 import React, {Component} from 'react'
 import {Table, Button} from 'antd'
+import {connect} from 'react-redux'
+
+import {getAuthority} from '../../../../common/methods'
+
+import './supplyEquip.styl'
 
 
 const titles = [
@@ -36,21 +41,60 @@ const titles = [
         dataIndex: 'description'
     }
 ];
-const fixedAuth = ['addSupplyEquip'];
+const fixedAuth = ['addSupplyEquip','assignSupplyEquip','refreshSupplyEquip'];
 const data =[];
+const mapState = (state) => {
+    return {
+        loginState: state.userLoginState.isLogin,
+        authority: state.authArray.authority
+    }
+};
+
+
 class SupplyEquip extends Component {
     constructor (props) {
-        super(props)
+        super(props);
+        this.authority = getAuthority(props.authority, fixedAuth, props.passAuth);
+        this.state = {
+            titles: titles,
+            tableData: []
+        }
+    }
+    generateButton () {
+        let arr = [];
+        let authority = this.authority;
+        if (Object.getOwnPropertyNames(authority).length) {
+            console.log(authority);
+            if (authority['addSupplyEquip']) {
+                arr.push(<Button key={'addSupplyEquip'} className="assign_add" onClick={ () => {this.props.history.push('/auth/main/addSupply')}}>添加</Button>)
+            }
+            if (authority['assignSupplyEquip']) {
+                arr.push(<Button key='assignSupplyEquip' className="assign_equip">分配</Button>)
+            }
+
+        }
+        arr.push(<Button key='refreshSupplyEquip' className="refresh_equip">刷新</Button>);
+        console.log(arr);
+        return arr;
     }
     render () {
+        const rowSelection = {
+            onChange: (rowKeys, rows) => {
+                console.log('select');
+                console.log(rowKeys, rows)
+            }
+        };
         return (
-            <div>
-                <div className="tableArea">
-                    <Table columns={titles} dataSource={data}/>
+            <div className="supply_render">
+                <div className="button_area">
+                    {this.generateButton()}
+                </div>
+                <div className="table_area">
+                    <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.tableData} />
                 </div>
             </div>
         )
     }
 }
 
-export default SupplyEquip
+export default connect(mapState)(SupplyEquip)
