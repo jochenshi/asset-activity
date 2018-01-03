@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {getAuthority} from '../../../common/methods'
 
 const defaultData = [
-    {
+    /*{
         id: 1,
         serialNo : 'aaaaaa',
         name : 'aaaaaa',
@@ -20,7 +20,7 @@ const defaultData = [
         cpu : 'aaaaaa',
         useStateText : 'aaaaaa',
         healthState : 'aaaaaa',
-    }
+    }*/
 ]
 
 const titles = [
@@ -46,7 +46,8 @@ const titles = [
     },
     {
     	title: '类型',
-    	dataIndex: 'typeText'
+    	dataIndex: 'typeText',
+        display: false
     },
     {
         title: 'IP',
@@ -78,7 +79,7 @@ const titles = [
     },
     {
         title: '添加人',
-        dataIndex: 'account',
+        dataIndex: 'userName',
         display: false
     },
     {

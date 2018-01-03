@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import { Table, Button } from 'antd'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../common/methods'
+import TitleOption from '../../../common/titleOption'
 
-import AddInventory from './addInventory'
 import './style.styl'
 
 const testData = [
-    {
+    /*{
         type: '服务器1',
         serialNo: '111111111',
         rdNumber: 'RD201701',
@@ -31,29 +34,59 @@ const testData = [
         sizee: '',
         availableNum: 1,
         totalNum: 1
-    }
+    }*/
 ];
 
 const titles = [
     {
         title: '设备类型',
-        dataIndex: 'type'
+        dataIndex: 'typeText'
+    },
+    {
+        title: '名称',
+        dataIndex: 'name'
     },
     {
         title: '型号',
         dataIndex: 'model'
     },
     {
-        title: '可用数量',
-        dataIndex: 'availableNum'
+        title: '品牌',
+        dataIndex: 'brand'
     },
     {
-        title: '库存数量',
-        dataIndex: 'totalNum'
+        title: '大小',
+        dataIndex: 'size',
+        render : (text,record)=>{
+            return text || '—';
+        }
     },
     {
-        title: '故障数',
-        dataIndex: 'faultNum'
+        title: '数量',
+        dataIndex: 'number',
+        render : (text,record)=>{
+            if(text && record.unit){
+                return <span>{text+record.unit}</span>;
+            }else{
+                return '—';
+            }
+        }
+    },
+    {
+        title: '使用状态',
+        dataIndex: 'useStateText'
+    },
+    {
+        title: '来源类型',
+        dataIndex: 'outInTypeText'
+    },
+    {
+        title: '发生时间',
+        dataIndex: 'occurTime'
+    },
+    {
+        title: '描述',
+        dataIndex: 'ascriptonDesc'
     }
 ];
 
@@ -63,26 +96,56 @@ const titles = [
   }
 };*/
 
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
+const auth = ['storeInfo']
+
 class InventoryList extends Component {
     constructor (props) {
         super(props);
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
+        this.state = {
+            data : testData,
+            titles : titles
+        }
+        this.getAscriptionData();
     }
     onSelectChange () {}
+    onTreeChange = (titles)=>{
+        this.setState({
+            titles : titles
+        })
+    }
+    getAscriptionData(){
+        axios.get('/am/ascription?operate=storeInfo')
+            .then((res)=>{
+                if(res.data){
+                    this.setState({
+                        data : res.data
+                    })
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+    }
     render () {
         const rowSelection = {
             onChange: this.onSelectChange
         };
         return (
-            <div className="inventory_list">
-                <div className="table_operations">
-                    <Button>添加</Button>
-                    {/*<AddInventory/>*/}
-                    <Button>刷新</Button>
+            <div className="list">
+                <div className="list_operations">
+                    <Button onClick={this.getAscriptionData.bind(this)}>刷新</Button>
+                    <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
-                <Table rowSelection={rowSelection} columns={titles} dataSource={testData}/>
+                <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.data}/>
             </div>
         )
     }
 }
 
-export default InventoryList
+export default connect(mapState)(InventoryList)

@@ -26,7 +26,7 @@ const mapState = (state) => {
 class DetailMachine extends Component {
     backUrl = '/auth/main/deviceMachine';
     baseTitles = [
-        { label : '创建人', key : 'account'},
+        { label : '创建人', key : 'userName'},
         { label : '使用状态', key : 'useStateText'},
         { label : '创建时间', key : 'createdAt'},
     ];
