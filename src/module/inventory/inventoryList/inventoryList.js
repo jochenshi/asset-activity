@@ -56,7 +56,10 @@ const titles = [
     },
     {
         title: '大小',
-        dataIndex: 'size'
+        dataIndex: 'size',
+        render : (text,record)=>{
+            return text || '—';
+        }
     },
     {
         title: '数量',
@@ -136,7 +139,7 @@ class InventoryList extends Component {
         return (
             <div className="list">
                 <div className="list_operations">
-                    <Button>刷新</Button>
+                    <Button onClick={this.getAscriptionData.bind(this)}>刷新</Button>
                     <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
                 <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.data}/>
