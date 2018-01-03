@@ -17,6 +17,7 @@ class StoreInfo extends Component{
     constructor (props) {
         super(props);
         this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
+        console.log('storeinfo')
         this.state = {
             data : []
         }
@@ -36,7 +37,7 @@ class StoreInfo extends Component{
             })
     }
     render () {
-        if(this.auth['storeInfo']){
+        if(!this.auth['storeInfo']){
             return <p>没有查看权限！</p>
         }
         return (

@@ -29,6 +29,8 @@ class SupplyForm extends Component {
         }
         return option;
     }
+    //获取添加耗材类配件时需要提供的相关的备选项
+    getSelectOption () {}
     render () {
         const formItemLayout = {
             labelCol: {
