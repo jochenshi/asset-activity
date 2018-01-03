@@ -231,7 +231,7 @@ class BaseinfoMachine extends Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label="DatePicker"
+                        label="入库时间"
                     >
                         {getFieldDecorator('occurTime',{
                             initialValue : this.state.data['occurTime'] ? moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') : moment(new Date(), 'yyyy/MM/dd')

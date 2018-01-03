@@ -49,7 +49,7 @@ class StoreInfo extends Component{
                         /{total}
                     </div>
                 </div>
-                <InventoryList/>
+                <InventoryList passAuth={['storeInfo']}/>
                 {/*{this.props.routes.map((route, i) => (
                     <RouteWithSubRoutes key={i} {...route}/>
                 ))}*/}

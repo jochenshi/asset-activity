@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {getAuthority} from '../../../common/methods'
 
 const defaultData = [
-    {
+    /*{
         id: 1,
         serialNo : 'aaaaaa',
         name : 'aaaaaa',
@@ -20,7 +20,7 @@ const defaultData = [
         cpu : 'aaaaaa',
         useStateText : 'aaaaaa',
         healthState : 'aaaaaa',
-    }
+    }*/
 ]
 
 const titles = [
