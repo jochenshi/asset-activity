@@ -20,7 +20,7 @@ const auth = [
     'deviceMachine',
     'modifyMachine',
     'addMachine'
-]
+];
 
 const mapState = (state) => {
     return {

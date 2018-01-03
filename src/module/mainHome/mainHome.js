@@ -23,6 +23,7 @@ import OperateRecord from '../operateRecord/operateRecord'
 import OptionSet from '../setting/optionSet/optionSet'
 import AddNormal from "../device/equip/normalEquip/addNormal/addNormal";
 import DetailNormal from "../device/equip/normalEquip/detailNormal/detailNormal";
+import AddSupply from "../device/equip/supplyEquip/addSupply/addSupply";
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
@@ -136,6 +137,7 @@ class MainHome extends Component {
                                 <AuthRoute path={`${this.props.match.path}/deviceEquip/normalEquip/:id`} component={DetailNormal}/>
                                 <AuthRoute path={`${this.props.match.path}/deviceEquip`} component={DeviceEquip}/>
                                 <AuthRoute path={`${this.props.match.path}/addNormal`} component={AddNormal}/>
+                                <AuthRoute path={`${this.props.match.path}/addSupply`} component={AddSupply}/>
                                 <AuthRoute path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
                                 {/*<Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
                                 <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}
