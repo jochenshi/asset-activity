@@ -64,13 +64,13 @@ class BaseinfoMachine extends Component {
                 if(res.data){
                     let rdNumber = (res.data.rdCount+1).toString();
                     let i = 0,l = rdNumber.length;
-                    while(i<4 - l){
+                    while(i<3 - l){
                        rdNumber = '0'+ rdNumber;
                         i++;
                     }
                     let rdbNumber = (res.data.rdbCount+1).toString();
                     i = 0,l = rdbNumber.length;
-                    while(i<4 - l){
+                    while(i<3 - l){
                         rdbNumber = '0'+rdbNumber;
                         i++;
                     }
@@ -223,7 +223,7 @@ class BaseinfoMachine extends Component {
                         })(
                             <Select
                                 onChange={this.handleChange}
-                                disabled={this.disabled && this.mode!=='add'}
+                                disabled={this.disabled || this.mode!=='add'}
                             >
                                 {this.generateOption(this.state.outInType)}
                             </Select>
@@ -231,7 +231,7 @@ class BaseinfoMachine extends Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label="DatePicker"
+                        label="入库时间"
                     >
                         {getFieldDecorator('occurTime',{
                             initialValue : this.state.data['occurTime'] ? moment(new Date(this.state.data['occurTime']),'yyyy/MM/dd') : moment(new Date(), 'yyyy/MM/dd')
@@ -289,8 +289,8 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('name',{
                             rules :[
-                                { required : true, whitespace: true, message : '名称不可为空。'},
-                                { pattern : /^[0-9a-zA-Z_-]+$/, message : '名称不能输入非法字符！'}
+                                { required : true, message : '名称不可为空。'},
+                                //{ pattern : /^[0-9a-zA-Z_-]+$/, message : '名称不能输入非法字符！'}
                             ],
                             initialValue : this.state.data['name'] || ''
                         })(
@@ -320,11 +320,11 @@ class BaseinfoMachine extends Component {
                         {getFieldDecorator('rdNumber',{
                             rules :[
                                 { required : true, whitespace: true, message : '研发部编号不可为空。'},
-                                { pattern : /^[0-9]{4,}$/, message : '必须填写四位以上的数字。'}
+                                { pattern : /^[0-9]{3,}$/, message : '必须填写三位以上的数字。'}
                             ],
                             initialValue : rdNumber || (this.state.prefixRdNumber === 'RD' ? this.state.rdNumber : this.state.rdbNumber)
                         })(
-                            <Input addonBefore={this.state.prefixRdNumber} disabled={this.disabled && this.mode!=='add'}/>
+                            <Input addonBefore={this.state.prefixRdNumber} placeholder="填写后不可更改" disabled={this.disabled || this.mode!=='add'}/>
                         )}
                     </FormItem>
                     <FormItem
@@ -414,6 +414,7 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('location',{
                             rules :[
+                                { required : true, message : '位置不能为空。'},
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
                             initialValue : this.state.data['location'] || ''
