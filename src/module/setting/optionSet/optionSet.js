@@ -204,9 +204,9 @@ class OptionSet extends Component {
 						<ul>
 						{this.state.childrendata.map((post) => 
 							<li key={post.id || 'addC'}  ref={post.id ? ('select_' + post.id) : 'addC'}>
-								{ post.text ? <span contentEditable={true}>{post.text}</span> : <span contentEditable={true}></span> }
-	                			{ post.value ? <span contentEditable={true}>{post.value}</span> : <span contentEditable={true}></span> }
-                                { post.type ? <span contentEditable={true}>{post.type}</span> : <span contentEditable={true}></span> }
+								<span contentEditable={true}>{post.text||''}</span>
+								<span contentEditable={post.delable}>{post.value||''}</span>
+								<span contentEditable={post.delable}>{post.type||''}</span>
 								{ post.value ?
 									(<span><a onClick={this.updateSelectItem.bind(this,post.id)}>保存</a>
 										{ post.delable ? <i>|</i> : '' }

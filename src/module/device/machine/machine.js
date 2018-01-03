@@ -46,7 +46,8 @@ const titles = [
     },
     {
     	title: '类型',
-    	dataIndex: 'typeText'
+    	dataIndex: 'typeText',
+        display: false
     },
     {
         title: 'IP',
@@ -78,7 +79,7 @@ const titles = [
     },
     {
         title: '添加人',
-        dataIndex: 'account',
+        dataIndex: 'userName',
         display: false
     },
     {
