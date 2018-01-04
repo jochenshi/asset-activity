@@ -182,7 +182,7 @@ class FormArea extends Component {
                         rules: [
                             {required: true, message: '类型不能为空'}
                         ],
-                        initialValue: this.state.data['type'] || ''
+                        initialValue: this.state.data['type'] || 'disk'
                     })(
                         <Select>
                             {this.generateOption('type')}

@@ -48,7 +48,8 @@ class MainHome extends Component {
         this.handleClicks = this.handleClick.bind(this);
         this.state = {
             selectNav: 'storeInfo',
-            auth : false
+            auth : false,
+            name: ''
         };
 
     }
@@ -57,9 +58,19 @@ class MainHome extends Component {
     }
     componentWillMount () {
         this.getAuthority();
+        this.getUserInfo();
     }
 
-    checkLogin () {}
+    checkLogin () {
+    }
+    getUserInfo () {
+        axios.get('/am/user/userName')
+            .then((val) => {
+                this.setState({
+                    name: val.data.name
+                })
+            })
+    }
     getAuthority () {
         axios.get('/am/authority').then((val) => {
             console.log(val);
@@ -90,6 +101,12 @@ class MainHome extends Component {
     }
     componentDidMount () {
         this.props && this.changeSelect(this.props);
+    }
+    loginOut () {
+        axios.get('/am/user/loginOut')
+            .then((msg) => {
+                window.location.href = '/login'
+            })
     }
     render () {
         return (
@@ -122,8 +139,8 @@ class MainHome extends Component {
                 <Layout>
                     <Header className="main_header" style={{background: '#fff'}}>
                         <div className="header_user">
-                            admin
-                            <i className="iconfont icon-logout"></i>
+                            {this.state.name}
+                            <i className="iconfont icon-logout" onClick={this.loginOut}></i>
                         </div>
                     </Header>
                     {this.state.auth ? <Content style={{margin: '24px 16px 0', display: 'flex', alignItems: 'stretch'}}>

@@ -17,7 +17,7 @@ class StoreInfo extends Component{
     constructor (props) {
         super(props);
         this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
-        console.log('storeinfo')
+        console.log('storeinfo');
         this.state = {
             data : []
         }
