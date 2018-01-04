@@ -135,7 +135,7 @@ class BaseinfoMachine extends Component {
              }
          });
     };
-    addConfirm = (id)=>{
+     addConfirm = (id)=>{
         confirm({
             title: '想到详情页面继续添加机器的配置信息吗？',
             content: '确认进入详情页面，取消回到列表页面。通过点击列表上的机器S/N号，仍然可以进入详情页面。',
