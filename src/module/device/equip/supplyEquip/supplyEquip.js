@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Table, Button} from 'antd'
 import {connect} from 'react-redux'
+import axios from 'axios'
 
 import {getAuthority} from '../../../../common/methods'
 
@@ -14,7 +15,7 @@ const titles = [
     },
     {
         title: '类型',
-        dataIndex: 'type'
+        dataIndex: 'equipType'
     },
     {
         title: '型号',
@@ -31,6 +32,14 @@ const titles = [
     {
         title: '剩余数量',
         dataIndex: 'remainNumber'
+    },
+    {
+        title: '新增人',
+        dataIndex: 'creator'
+    },
+    {
+        title: '新增时间',
+        dataIndex: 'createTime'
     },
 /*    {
         title: '当前使用状态',
@@ -59,6 +68,20 @@ class SupplyEquip extends Component {
             titles: titles,
             tableData: []
         }
+    }
+    componentDidMount () {
+        this.getTableData();
+    }
+    getTableData () {
+        axios.get('/am/equip/supplyEquip',{
+            params: {
+                type: 'all'
+            }
+        }).then((data) => {
+            data.data.length && this.setState({
+                tableData: data.data
+            })
+        })
     }
     generateButton () {
         let arr = [];

@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {BrowserRouter as Router, Route, Link, Redirect, Switch} from 'react-router-dom'
+
 import './App.styl'
+
 import Login from './module/login/login'
 import MainHome from './module/mainHome/mainHome'
 import StoreInfo from './module/inventory/info'
@@ -14,14 +16,6 @@ import { message } from 'antd';
 
 const initAxios = () => {
     axios.interceptors.response.use(function (response) {  
-        // token 已过期，重定向到登录页面  
-        /*if (response.data.code == 4){  
-            localStorage.clear()  
-            router.replace({  
-                            path: '/signin',  
-                            query: {redirect: router.currentRoute.fullPath}  
-                        })  
-        }  */
         console.log(JSON.stringify(response));
         if(response.config.method!=='get'){
             message.success(response.data.msg);
@@ -31,6 +25,12 @@ const initAxios = () => {
         // Do something with response error
         console.log('get error',error);
         message.error(error.response.data['error']);
+        // token 已过期，重定向到登录页面
+        if (error.response.data.code === 10007){
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 500)
+        }
         return Promise.reject(error.response.data)  
     }) 
 };
