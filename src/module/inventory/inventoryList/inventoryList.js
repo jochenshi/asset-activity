@@ -47,6 +47,13 @@ const titles = [
         dataIndex: 'name'
     },
     {
+        title: 'S/N号',
+        dataIndex: 'serialNo',
+        render : (text,record)=>{
+            return text || '—';
+        }
+    },
+    {
         title: '型号',
         dataIndex: 'model'
     },

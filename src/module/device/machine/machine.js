@@ -94,7 +94,9 @@ const titles = [
 
 const auth = [
     'deviceMachine',
-    'addMachine'
+    'addMachine',
+    'assignMachine',
+    'withdrawMachine'
 ]
 
 const mapState = (state) => {
@@ -107,6 +109,23 @@ class DeviceMachine extends Component {
 	constructor (props) {
         super(props);
         this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
+        if(titles[titles.length-1]['dataIndex']!=='action'){
+            titles.push({
+                title: '操作',
+                dataIndex: 'action',
+                render: (text,record)=>{
+                    if(record.useState==='idle' && !this.auth['assignMachine']){
+                        record['relatedType'] = 'machine';
+                        let path = {
+                            pathname:'/auth/main/assign',state:record
+                        }
+                        return <Link to={path}>分配</Link>;
+                    }else if(record.useState==='using' && this.auth['withdrawMachine']){
+                        return '';
+                    }
+                }
+            });
+        }
         this.state = {
             machineData : defaultData,
             titles : titles
