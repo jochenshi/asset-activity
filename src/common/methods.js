@@ -54,4 +54,12 @@ const getAuthority = (all = [], stable = [], pass) => {
     return ret;
 };
 
-export {handleData, getCookie, getAuthority}
+const transformOption = (data) => {
+    let option = [];
+    data.forEach((val) => {
+        option.push({text: val.text, value: val.value})
+    });
+    return option;
+}
+
+export {handleData, getCookie, getAuthority, transformOption}
