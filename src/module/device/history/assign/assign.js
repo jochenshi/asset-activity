@@ -62,7 +62,7 @@ class Assign extends Component {
      * 得到分配选项信息
      */
     getAssignParam(){
-        axios.get('/am/usage/assignParam')
+        axios.get('/am/use/assignParam')
             .then((res)=>{
                 if(res.data){
                     this.setState({
@@ -83,7 +83,7 @@ class Assign extends Component {
             values['relatedId'] = record.id;
             values['relatedType'] = record.relatedType;
             let operate = record.relatedType==='machine'?'assignMachine':'assignNormalEquip';
-            axios.post('/am/usage/assign?operate=addMachine',values)
+            axios.post('/am/use/assign?operate=addMachine',values)
                 .then((res)=>{
                     this.props.history.replace(this.head.backUrl);
                 })

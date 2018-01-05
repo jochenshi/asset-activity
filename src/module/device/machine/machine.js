@@ -114,14 +114,18 @@ class DeviceMachine extends Component {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text,record)=>{
-                    if(record.useState==='idle' && !this.auth['assignMachine']){
+                    let path = {};
+                    if(record.useState==='idle' && this.auth['assignMachine']){
                         record['relatedType'] = 'machine';
-                        let path = {
+                        path = {
                             pathname:'/auth/main/assign',state:record
                         }
                         return <Link to={path}>分配</Link>;
                     }else if(record.useState==='using' && this.auth['withdrawMachine']){
-                        return '';
+                        path = {
+                            pathname:'/auth/main/assign',state:record
+                        }
+                        return <Link to={path}>收回</Link>;
                     }
                 }
             });
