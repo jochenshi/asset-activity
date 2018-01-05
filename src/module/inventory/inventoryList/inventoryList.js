@@ -72,8 +72,8 @@ const titles = [
         title: '数量',
         dataIndex: 'number',
         render : (text,record)=>{
-            if(text && record.unit){
-                return <span>{text+record.unit}</span>;
+            if(text ){
+                return <span>{text+(record.unit||'')}</span>;
             }else{
                 return '—';
             }

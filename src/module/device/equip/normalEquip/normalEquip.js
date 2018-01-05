@@ -161,9 +161,6 @@ class NormalEquip extends Component {
             if (authority['addNormalEquip']) {
                 arr.push(<Button key={'addNormalEquip'} className="assign_add" onClick={ () => {this.props.history.push('/auth/main/addNormal')}}>添加</Button>)
             }
-            if (authority['assignNormalEquip']) {
-                arr.push(<Button key='assignNormalEquip' className="assign_equip">分配</Button>)
-            }
 
         }
         arr.push(<Button key='refreshNormalEquip' className="refresh_equip" onClick={() => {this.getTableData()}}>刷新</Button>);
