@@ -25,6 +25,7 @@ import AddNormal from "../device/equip/normalEquip/addNormal/addNormal"
 import DetailNormal from "../device/equip/normalEquip/detailNormal/detailNormal"
 import AddSupply from "../device/equip/supplyEquip/addSupply/addSupply"
 import AssignWrap from "../device/history/assign/assign"
+import WithdrawWrap from "../device/history/withdraw/withdraw"
 
 const {Sider, Header, Content} = Layout;
 const {SubMenu, Item} = Menu;
@@ -157,6 +158,7 @@ class MainHome extends Component {
                                 <AuthRoute path={`${this.props.match.path}/addNormal`} component={AddNormal}/>
                                 <AuthRoute path={`${this.props.match.path}/addSupply`} component={AddSupply}/>
                                 <AuthRoute path={`${this.props.match.path}/assign`} component={AssignWrap}/>
+                                <AuthRoute path={`${this.props.match.path}/withdraw`} component={WithdrawWrap}/>
                                 <AuthRoute path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
                                 {/*<Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
                                 <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}

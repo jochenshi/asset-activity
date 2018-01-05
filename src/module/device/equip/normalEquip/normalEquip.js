@@ -60,7 +60,7 @@ const titles = [
     }
 ];
 const data = [];
-const fixedAuth = ['addNormalEquip', 'refreshNormalEquip', 'assignNormalEquip'];
+const fixedAuth = ['addNormalEquip', 'refreshNormalEquip', 'assignNormalEquip','withdrawNormalEquip'];
 
 const mapState = (state) => {
     return {
@@ -74,12 +74,34 @@ const mapState = (state) => {
 class NormalEquip extends Component {
     constructor (props) {
         super(props);
+        this.authority = this.generateAuthority();
+        if(titles[titles.length-1]['dataIndex']!=='action'){
+            titles.push({
+                title: '操作',
+                dataIndex: 'action',
+                render: (text,record)=>{
+                    let path = {};
+                    if(record.useState==='idle' && this.authority['assignNormalEquip']){
+                        record['relatedType'] = 'fitting';
+                        path = {
+                            pathname:'/auth/main/assign',state:record
+                        }
+                        return <Link to={path}>分配</Link>;
+                    }else if(record.useState==='using' && this.authority['withdrawNormalEquip']){
+                        record['relatedType'] = 'fitting';
+                        path = {
+                            pathname:'/auth/main/withdraw',state:record
+                        }
+                        return <Link to={path}>收回</Link>;
+                    }
+                }
+            });
+        }
         this.state = {
             titles: titles,
             tableData: []
             //authority: {}
         };
-        this.authority = this.generateAuthority();
         console.log('normal', props);
     }
     componentDidMount () {
