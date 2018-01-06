@@ -26,7 +26,13 @@ class FormArea extends Component {
             origin: [],
             data: props.data || {}
         };
-        console.log('addnormal constructor', props)
+        console.log('addnormal constructor', props);
+        let pathState = this.props.location.state;
+        if (pathState.type) {
+            this.equipType = pathState.type;
+        } else {
+            this.equipType = 'disk';
+        }
     }
     componentDidMount () {
         this.getSelectOption();
@@ -76,6 +82,9 @@ class FormArea extends Component {
                             console.log(msg)
                     })
                 } else {
+                    //此处判断出来为添加配件的请求，并传入机器的ID，由后台判断该ID是否存在以及是否建立关系
+                    let pathState = this.props.location.state;
+                    subData.machineId = pathState.machineId;
                     axios.post('/am/equip/normalEquip?operate=addEquip',subData)
                         .then((msg) => {
                             this.props.history.go(-1);
@@ -182,7 +191,7 @@ class FormArea extends Component {
                         rules: [
                             {required: true, message: '类型不能为空'}
                         ],
-                        initialValue: this.state.data['type'] || 'disk'
+                        initialValue: this.state.data['type'] || this.equipType
                     })(
                         <Select>
                             {this.generateOption('type')}
@@ -230,7 +239,7 @@ class FormArea extends Component {
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                     <Button type='primary' htmlType='submit'>确认</Button>
-                    <Button style={{marginLeft: 8}} onClick={() => {this.props.history.replace('/auth/main/deviceEquip/normalEquip')}}>取消</Button>
+                    <Button style={{marginLeft: 8}} onClick={() => {this.props.history.go(-1)}}>取消</Button>
                 </FormItem>
             </Form>
         )
