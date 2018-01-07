@@ -29,7 +29,7 @@ class FormArea extends Component {
         console.log('addnormal constructor', props);
         let pathState = this.props.location.state;
         if (pathState.type) {
-            this.equipType = pathState.type;
+            this.equipType = pathState.type === 'all' ? 'disk' : pathState.type;
         } else {
             this.equipType = 'disk';
         }
