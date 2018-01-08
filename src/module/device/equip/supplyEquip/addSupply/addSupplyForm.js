@@ -75,7 +75,7 @@ class SupplyForm extends Component {
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},
-                sm: {span: 2}
+                sm: {span: 6}
             },
             wrapperCol: {
                 xs: {span: 24},
@@ -90,7 +90,7 @@ class SupplyForm extends Component {
                 },
                 sm: {
                     span: 16,
-                    offset: 2
+                    offset: 6
                 }
             }
         };

@@ -103,6 +103,16 @@ class NormalEquip extends Component {
             //authority: {}
         };
         console.log('normal', props);
+        let dataType = this.props.type,
+            tArray = ['memory','disk','netcard'];
+        this.machineId = this.props.machineId;
+        console.log('equip component', dataType);
+        //根据从prop传进来的dataType来决定获取数据的类型是什么
+        if (tArray.indexOf(dataType) > -1) {
+            this.urlType = dataType
+        } else {
+            this.urlType = 'all'
+        }
     }
     componentDidMount () {
         this.getTableData();
@@ -128,22 +138,11 @@ class NormalEquip extends Component {
     }
     //根据传入的prop里面的
     getTableData () {
-        let dataType = this.props.type,
-            machineId = this.props.machineId,
-            urlType = 'all',
-            tArray = ['memory','disk','netcard'];
-        console.log('equip component', dataType);
-        //根据从prop传进来的dataType来决定获取数据的类型是什么
-        if (tArray.indexOf(dataType) > -1) {
-            urlType = dataType
-        } else {
-            urlType = 'all'
-        }
         //根据传进来的machineId来判断是获取某个机器下的配件信息还是获取全部的配件信息
         axios.get('/am/equip/normalEquip', {
             params: {
-                type: urlType,
-                machineId: machineId
+                type: this.urlType,
+                machineId: this.machineId
             }
         }).then((data) => {
             data.data.length && this.setState({
@@ -159,7 +158,14 @@ class NormalEquip extends Component {
         if (Object.getOwnPropertyNames(authority).length) {
             console.log(authority);
             if (authority['addNormalEquip']) {
-                arr.push(<Button key={'addNormalEquip'} className="assign_add" onClick={ () => {this.props.history.push('/auth/main/addNormal')}}>添加</Button>)
+                let path = {
+                    pathname: '/auth/main/addNormal',
+                    state: {
+                        machineId: this.machineId,
+                        type: this.urlType
+                    }
+                };
+                arr.push(<Button key={'addNormalEquip'} className="add_normal" onClick={ () => {this.props.history.push(path)}}>添加</Button>)
             }
 
         }
