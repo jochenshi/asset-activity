@@ -3,7 +3,7 @@
  */
 import React,{ Component } from 'react'
 import axios from 'axios'
-import { Form, Input, Select, InputNumber, Button, AutoComplete, Modal } from 'antd'
+import { Form, Input, Select, InputNumber, Button} from 'antd'
 import {Link} from 'react-router-dom'
 import Header from '../../../../common/header'
 import {connect} from 'react-redux'

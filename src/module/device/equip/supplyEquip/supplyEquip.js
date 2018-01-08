@@ -82,10 +82,10 @@ class SupplyEquip extends Component {
                         record['relatedType'] = 'part';
                         return <Link to={pathAssign}>分配</Link>;
                     }else if(record.useState==='using' && this.authority['withdrawSupplyEquip']){
-                        record['relatedType'] = 'fitting';
+                        record['relatedType'] = 'part';
                         return <Link to={pathWithdraw}>收回</Link>;
                     }else if(record.useState==='partusing'){
-                        record['relatedType'] = 'fitting';
+                        record['relatedType'] = 'part';
                         return <span>
                             {this.authority['assignSupplyEquip'] ? <Link to={pathAssign}>分配</Link>:''}
                             {this.authority['assignSupplyEquip'] ? <i className="list_action_gap">|</i>:''}
