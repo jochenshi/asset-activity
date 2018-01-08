@@ -11,6 +11,7 @@ import './normalEquip.styl'
 import {getAuthority} from '../../../../common/methods'
 import TitleOption from '../../../../common/titleOption'
 import LinkModal from './linkOperation/linkNormal'
+import ManyModal from './linkOperation/linkMany'
 
 const titles = [
     {
@@ -95,13 +96,13 @@ class NormalEquip extends Component {
                         record['relatedType'] = 'fitting';
                         path = {
                             pathname:'/auth/main/assign',state:record
-                        }
+                        };
                         return <Link to={path}>分配</Link>;
                     }else if(record.useState==='using' && this.authority['withdrawNormalEquip']){
                         record['relatedType'] = 'fitting';
                         path = {
                             pathname:'/auth/main/withdraw',state:record
-                        }
+                        };
                         return <Link to={path}>收回</Link>;
                     }
                 }
@@ -113,18 +114,19 @@ class NormalEquip extends Component {
             linkDisable: true,
             selectData: [],
             linkModalVisible: false,
+            linkManyVisible: false,
             modalMachine: [],
             selectFittingId: [],
-            page: this.props.page || 'normalList'
+            page: props.page || 'normalList',
+            singleTypeFitting: []
             //authority: {}
         };
         console.log('normal', props);
-        let dataType = this.props.type,
-            tArray = ['memory','disk','netcard'];
+        let dataType = this.props.type;
         this.machineId = this.props.machineId;
         console.log('equip component', dataType);
         //根据从prop传进来的dataType来决定获取数据的类型是什么
-        if (tArray.indexOf(dataType) > -1) {
+        if (dataType) {
             this.urlType = dataType
         } else {
             this.urlType = 'all'
@@ -171,7 +173,7 @@ class NormalEquip extends Component {
             if (authority['linkNormalEquip'] && (this.state.page === 'normalList')) {
                 arr.push(<Button key='linkNormalEquip' disabled={this.state.linkDisable} onClick={this.linkNormalEquip} className="link_equip">关联</Button>)
             }
-            if (authority['linkManyNormal'] && (this.state.page === 'detailNormal')) {
+            if (authority['linkManyNormal'] && (this.state.page === 'detailMachine')) {
                 arr.push(<Button key='linkManyNormal' onClick={this.linkManyNormal} className="link_many">批量关联</Button>)
             }
 
@@ -180,6 +182,7 @@ class NormalEquip extends Component {
         console.log(arr);
         return arr;
     }
+    //此处是在列表展示界面的关联配件的部分
     linkNormalEquip = () => {
         console.log('link normal equip');
         let selects = this.state.selectData,valid = 0,temp = [];
@@ -200,7 +203,6 @@ class NormalEquip extends Component {
             this.getMachine();
         }
     };
-    linkManyNormal = () => {};
     //设置列表展示哪些条目
     onTreeChange = (titles) => {
         this.setState({
@@ -226,10 +228,9 @@ class NormalEquip extends Component {
                 let subData = Object.assign({}, {fittingId: this.state.selectFittingId, machineId: machine, description});
                 console.log(values);
                 axios.post('/am/relate/add', subData).then((val) => {
-                    console.log(val)
+                    console.log(val);
+                    this.handleModalCancel();
                 })
-            } else {
-                return
             }
         })
     };
@@ -242,7 +243,7 @@ class NormalEquip extends Component {
                 console.log(val);
                 let machines = [];
                 val.data.length && val.data.forEach((vaule) => {
-                    machines.push({text: vaule.name, value: vaule.id})
+                    machines.push({text: vaule.name, value: vaule.id.toString()})
                 });
                 setTimeout(() => {
                     this.state.linkModalVisible && this.setState({
@@ -251,6 +252,55 @@ class NormalEquip extends Component {
                 }, 3000)
             })
     }
+    //此处是批量关联配件的部分
+    linkManyNormal = () => {
+        this.setState({
+            linkManyVisible: true
+        });
+        this.getEquip(this.urlType)
+    };
+    getEquip (type) {
+        type = type || 'all';
+        axios.get('/am/equip/normalEquip',{
+            params: {
+                type: type,
+                useState: 'idle'
+            }
+        }).then((val) => {
+            let fit = [];
+            val.data.length && val.data.forEach((value) => {
+                fit.push({text: value.name, value: value.id})
+            });
+            this.state.linkManyVisible && this.setState({
+                singleTypeFitting: fit
+            })
+        })
+    }
+    handleManyModalConfirm = () => {
+        const form = this.manyForm;
+        form.validateFields((err, values) => {
+            if (!err) {
+                console.log(values);
+                let {fitting} = values;
+                let subData = Object.assign({},{fittingId: fitting, machineId: this.machineId});
+                axios.post('/am/relate/add', subData)
+                    .then((val) => {
+                        console.log(val);
+                        this.handleManyModalCancel();
+                    })
+            }
+        })
+    };
+    handleManyModalCancel = () => {
+        this.setState({
+            linkManyVisible: false,
+            singleTypeFitting: []
+        });
+        this.manyForm.resetFields();
+    };
+    saveManyRef = (form) => {
+        this.manyForm = form
+    };
     render () {
         const rowSelection = {
             onChange: (rowKeys, rows) => {
@@ -288,6 +338,13 @@ class NormalEquip extends Component {
                     onCancel={this.handleModalCancel}
                     onConfirm={this.handleModalConfirm}
                     machineData={this.state.modalMachine}
+                />
+                <ManyModal
+                    ref={this.saveManyRef}
+                    visible={this.state.linkManyVisible}
+                    fittingData={this.state.singleTypeFitting}
+                    onConfirm={this.handleManyModalConfirm}
+                    onCancel={this.handleManyModalCancel}
                 />
             </div>
         )
