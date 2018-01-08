@@ -151,7 +151,6 @@ class BaseinfoMachine extends Component {
 
     }
     handleChange = (value) => {
-        console.log(`Selected: ${value}`);
         value = value==='borrow'?'RDB':'RD';
         this.setState({
             prefixRdNumber : value

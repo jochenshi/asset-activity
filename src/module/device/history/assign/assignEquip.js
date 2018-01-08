@@ -1,9 +1,9 @@
 /**
- * Created by admin on 2018/1/4.
+ * Created by admin on 2018/1/5.
  */
 import React,{ Component } from 'react'
 import axios from 'axios'
-import { Form, Input, DatePicker,Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Modal } from 'antd'
+import { Form, Input, Select, InputNumber, Button} from 'antd'
 import {Link} from 'react-router-dom'
 import Header from '../../../../common/header'
 import {connect} from 'react-redux'
@@ -12,13 +12,10 @@ import {withRouter} from 'react-router'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
 const { TextArea } = Input;
-const confirm = Modal.confirm;
 
 const auth = [
-    'assignMachine',
-    'assignNormalEquip'
+    'assignSupplyEquip'
 ]
 
 const mapState = (state) => {
@@ -27,38 +24,17 @@ const mapState = (state) => {
     }
 };
 
-class Assign extends Component {
+class AssignEquip extends Component {
     constructor (props) {
         super(props);
+        this.backUrl = '/auth/main/deviceEquip/supplyEquip';
+        this.record = this.props.location.state;
         this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
         this.state = {
             users : [],
             projects : []
         }
-        this.getHeader();
         this.getAssignParam();
-    }
-
-    /**
-     * 得到头部信息
-     */
-    getHeader(){
-        let title = '分配物资';
-        let backUrl = '/auth/main/storeInfo';
-        let record = this.props.location.state;
-        if(record){
-            switch(record.relatedType){
-                case 'machine':
-                    title = '分配机器';
-                    backUrl = '/auth/main/deviceMachine';
-                    break;
-                case 'fitting':
-                    title = '收回配件';
-                    backUrl = '/auth/main/deviceEquip/normalEquip';
-                    break;
-            }
-            this.head = {title: title, backUrl: backUrl}
-        }
     }
 
     /**
@@ -85,10 +61,9 @@ class Assign extends Component {
             let record = this.props.location.state;
             values['relatedId'] = record.id;
             values['relatedType'] = record.relatedType;
-            let operate = record.relatedType==='machine'?'assignMachine':'assignNormalEquip';
-            axios.post('/am/use/assign?operate='+operate,values)
+            axios.post('/am/use/assignEquip?operate=assignSupplyEquip',values)
                 .then((res)=>{
-                    this.props.history.replace(this.head.backUrl);
+                    this.props.history.replace(this.backUrl);
                 })
                 .catch((err)=>{
                     console.log(err);
@@ -124,7 +99,7 @@ class Assign extends Component {
         };
         return (
             <div className="form-panel">
-                <Header title={this.head.title} backUrl={this.head.backUrl}/>
+                <Header title={'分配耗材'} backUrl={this.backUrl}/>
                 <div className="form">
                     <Form onSubmit={this.handleSubmit}>
                         <h1 className="form-field-title"></h1>
@@ -148,6 +123,20 @@ class Assign extends Component {
                                 rules: [{ required : true, message : '必须填写使用用途。' }]
                             })(
                                 <Input />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            {...formItemLayout}
+                            label="使用个数"
+                        >
+                            {getFieldDecorator('lendNumber',{
+                                initialValue : 1,
+                                rules: [
+                                    { required : true, message : '必须填写使用个数。' },
+                                    { pattern: /^[1-9]\d*$/, message: '请输入正整数。' }
+                                ]
+                            })(
+                                <InputNumber min={1} max={this.record.remainNumber}/>
                             )}
                         </FormItem>
                         <FormItem
@@ -177,7 +166,7 @@ class Assign extends Component {
                         </FormItem>
                         <FormItem {...tailFormItemLayout}>
                             <Button type="primary" htmlType="submit">确定</Button>
-                            <Button><Link to={this.head.backUrl}>取消</Link></Button>
+                            <Button><Link to={this.backUrl}>取消</Link></Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -185,6 +174,6 @@ class Assign extends Component {
         )
     }
 }
-let AssignWrap = Form.create()(Assign);
-AssignWrap = withRouter(AssignWrap)
-export default connect(mapState)(AssignWrap)
+let AssignEquipWrap = Form.create()(AssignEquip);
+AssignEquipWrap = withRouter(AssignEquipWrap)
+export default connect(mapState)(AssignEquipWrap)
