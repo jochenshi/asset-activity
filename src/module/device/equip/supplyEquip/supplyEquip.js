@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Table, Button} from 'antd'
+import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import axios from 'axios'
 
@@ -51,7 +52,9 @@ const titles = [
         dataIndex: 'description'
     }
 ];
-const fixedAuth = ['addSupplyEquip','assignSupplyEquip','refreshSupplyEquip'];
+const fixedAuth = ['addSupplyEquip','assignSupplyEquip','refreshSupplyEquip',
+    'withdrawSupplyEquip'
+];
 const data =[];
 const mapState = (state) => {
     return {
@@ -65,6 +68,34 @@ class SupplyEquip extends Component {
     constructor (props) {
         super(props);
         this.authority = getAuthority(props.authority, fixedAuth, props.passAuth);
+        if(titles[titles.length-1]['dataIndex']!=='action'){
+            titles.push({
+                title: '操作',
+                dataIndex: 'action',
+                render: (text,record)=>{
+                    let pathAssign = {
+                        pathname:'/auth/main/assignEquip',state:record
+                    };
+                    let pathWithdraw = {
+                        pathname:'/auth/main/withdrawEquip',state:record
+                    };
+                    if(record.useState==='idle' && this.authority['assignSupplyEquip']){
+                        record['relatedType'] = 'part';
+                        return <Link to={pathAssign}>分配</Link>;
+                    }else if(record.useState==='using' && this.authority['withdrawSupplyEquip']){
+                        record['relatedType'] = 'part';
+                        return <Link to={pathWithdraw}>收回</Link>;
+                    }else if(record.useState==='partusing'){
+                        record['relatedType'] = 'part';
+                        return <span>
+                            {this.authority['assignSupplyEquip'] ? <Link to={pathAssign}>分配</Link>:''}
+                            {this.authority['assignSupplyEquip'] ? <i className="list_action_gap">|</i>:''}
+                            {this.authority['withdrawSupplyEquip'] ? <Link to={pathWithdraw}>收回</Link>:''}
+                            </span>;
+                    }
+                }
+            });
+        }
         this.state = {
             titles: titles,
             tableData: []
@@ -91,9 +122,6 @@ class SupplyEquip extends Component {
             console.log(authority);
             if (authority['addSupplyEquip']) {
                 arr.push(<Button key={'addSupplyEquip'} className="assign_add" onClick={ () => {this.props.history.push('/auth/main/addSupply')}}>添加</Button>)
-            }
-            if (authority['assignSupplyEquip']) {
-                arr.push(<Button key='assignSupplyEquip' className="assign_equip">分配</Button>)
             }
 
         }

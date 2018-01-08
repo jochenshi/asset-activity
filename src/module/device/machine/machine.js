@@ -122,8 +122,9 @@ class DeviceMachine extends Component {
                         }
                         return <Link to={path}>分配</Link>;
                     }else if(record.useState==='using' && this.auth['withdrawMachine']){
+                        record['relatedType'] = 'machine';
                         path = {
-                            pathname:'/auth/main/assign',state:record
+                            pathname:'/auth/main/withdraw',state:record
                         }
                         return <Link to={path}>收回</Link>;
                     }

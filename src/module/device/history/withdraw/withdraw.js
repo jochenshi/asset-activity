@@ -1,5 +1,5 @@
 /**
- * Created by admin on 2018/1/4.
+ * Created by admin on 2018/1/5.
  */
 import React,{ Component } from 'react'
 import axios from 'axios'
@@ -17,8 +17,8 @@ const { TextArea } = Input;
 const confirm = Modal.confirm;
 
 const auth = [
-    'assignMachine',
-    'assignNormalEquip'
+    'withdrawMachine',
+    'withdrawNormalEquip'
 ]
 
 const mapState = (state) => {
@@ -27,29 +27,24 @@ const mapState = (state) => {
     }
 };
 
-class Assign extends Component {
+class Withdraw extends Component {
     constructor (props) {
         super(props);
         this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
-        this.state = {
-            users : [],
-            projects : []
-        }
         this.getHeader();
-        this.getAssignParam();
     }
 
     /**
      * 得到头部信息
      */
     getHeader(){
-        let title = '分配物资';
+        let title = '收回物资';
         let backUrl = '/auth/main/storeInfo';
         let record = this.props.location.state;
         if(record){
             switch(record.relatedType){
                 case 'machine':
-                    title = '分配机器';
+                    title = '收回机器';
                     backUrl = '/auth/main/deviceMachine';
                     break;
                 case 'fitting':
@@ -61,20 +56,6 @@ class Assign extends Component {
         }
     }
 
-    /**
-     * 得到分配选项信息
-     */
-    getAssignParam(){
-        axios.get('/am/use/assignParam')
-            .then((res)=>{
-                if(res.data){
-                    this.setState({
-                        projects : res.data['projects'],
-                        users : res.data['users']
-                    });
-                }
-            })
-    }
     handleSubmit = (e)=>{
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -85,8 +66,8 @@ class Assign extends Component {
             let record = this.props.location.state;
             values['relatedId'] = record.id;
             values['relatedType'] = record.relatedType;
-            let operate = record.relatedType==='machine'?'assignMachine':'assignNormalEquip';
-            axios.post('/am/use/assign?operate='+operate,values)
+            let operate = record.relatedType==='machine'?'withdrawMachine':'withdrawNormalEquip';
+            axios.put('/am/use/withdraw?operate='+operate,values)
                 .then((res)=>{
                     this.props.history.replace(this.head.backUrl);
                 })
@@ -94,9 +75,6 @@ class Assign extends Component {
                     console.log(err);
                 });
         });
-    }
-    generateOption(arr){
-        return arr.map((item)=><Option key={item.value} value={item.value}>{item.text}</Option>);
     }
     render () {
         const { getFieldDecorator } = this.props.form;
@@ -130,44 +108,9 @@ class Assign extends Component {
                         <h1 className="form-field-title"></h1>
                         <FormItem
                             {...formItemLayout}
-                            label="使用者"
+                            label="归还备注"
                         >
-                            {getFieldDecorator('userId',{
-                                rules: [{ required : true, message : '必须选择使用者。' }]
-                            })(
-                                <Select>
-                                    {this.generateOption(this.state.users)}
-                                </Select>
-                            )}
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="使用用途"
-                        >
-                            {getFieldDecorator('purpose',{
-                                rules: [{ required : true, message : '必须填写使用用途。' }]
-                            })(
-                                <Input />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="归属项目"
-                        >
-                            {getFieldDecorator('project',{
-                            })(
-                                <Select
-                                    mode="combobox"
-                                >
-                                    {this.generateOption(this.state.projects)}
-                                </Select>
-                            )}
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="描述"
-                        >
-                            {getFieldDecorator('lendDetail',{
+                            {getFieldDecorator('returnDetail',{
                                 rules :[
                                     { pattern : /^\S*$/, message : '不能输入非法字符。' }
                                 ]
@@ -185,6 +128,6 @@ class Assign extends Component {
         )
     }
 }
-let AssignWrap = Form.create()(Assign);
-AssignWrap = withRouter(AssignWrap)
-export default connect(mapState)(AssignWrap)
+let WithdrawWrap = Form.create()(Withdraw);
+WithdrawWrap = withRouter(WithdrawWrap)
+export default connect(mapState)(WithdrawWrap)

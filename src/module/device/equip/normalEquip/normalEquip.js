@@ -68,7 +68,8 @@ const fixedAuth = [
     'assignNormalEquip',
     'linkNormalEquip',
     'unLinkNormalEquip',
-    'linkManyNormal'
+    'linkManyNormal',
+    'withdrawNormalEquip'
 ];
 
 const mapState = (state) => {
@@ -83,6 +84,29 @@ const mapState = (state) => {
 class NormalEquip extends Component {
     constructor (props) {
         super(props);
+        this.authority = this.generateAuthority();
+        if(titles[titles.length-1]['dataIndex']!=='action'){
+            titles.push({
+                title: '操作',
+                dataIndex: 'action',
+                render: (text,record)=>{
+                    let path = {};
+                    if(record.useState==='idle' && this.authority['assignNormalEquip']){
+                        record['relatedType'] = 'fitting';
+                        path = {
+                            pathname:'/auth/main/assign',state:record
+                        }
+                        return <Link to={path}>分配</Link>;
+                    }else if(record.useState==='using' && this.authority['withdrawNormalEquip']){
+                        record['relatedType'] = 'fitting';
+                        path = {
+                            pathname:'/auth/main/withdraw',state:record
+                        }
+                        return <Link to={path}>收回</Link>;
+                    }
+                }
+            });
+        }
         this.state = {
             titles: titles,
             tableData: [],
@@ -94,7 +118,6 @@ class NormalEquip extends Component {
             page: this.props.page || 'normalList'
             //authority: {}
         };
-        this.authority = this.generateAuthority();
         console.log('normal', props);
         let dataType = this.props.type,
             tArray = ['memory','disk','netcard'];
@@ -151,6 +174,7 @@ class NormalEquip extends Component {
             if (authority['linkManyNormal'] && (this.state.page === 'detailNormal')) {
                 arr.push(<Button key='linkManyNormal' onClick={this.linkManyNormal} className="link_many">批量关联</Button>)
             }
+
         }
         arr.push(<Button key='refreshNormalEquip' className="refresh_equip" onClick={() => {this.getTableData()}}>刷新</Button>);
         console.log(arr);
