@@ -4,7 +4,8 @@ import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import axios from 'axios'
 
-import {getAuthority} from '../../../../common/methods'
+import {getAuthority} from '../../../../common/methods';
+import TitleOption from '../../../../common/titleOption';
 
 import './supplyEquip.styl'
 
@@ -128,6 +129,11 @@ class SupplyEquip extends Component {
         console.log(arr);
         return arr;
     }
+    onTreeChange = (titles) => {
+        this.setState({
+            titles : titles
+        })
+    };
     render () {
         const rowSelection = {
             onChange: (rowKeys, rows) => {
@@ -136,9 +142,10 @@ class SupplyEquip extends Component {
             }
         };
         return (
-            <div className="supply_render">
-                <div className="button_area">
+            <div className="supply_render list">
+                <div className="button_area list_operations">
                     {this.generateButton()}
+                    <TitleOption data={this.state.titles} onChange={this.onTreeChange}/>
                 </div>
                 <div className="table_area">
                     <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.tableData} />

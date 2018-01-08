@@ -14,6 +14,8 @@ class SupplyForm extends Component {
     constructor (props) {
         super(props);
         this.state = {
+            originObject: [],
+            targetObject: [],
             type: [],
             model: [],
             brand: [],
@@ -122,14 +124,18 @@ class SupplyForm extends Component {
                     {getFieldDecorator('originObject',{
                         initialValue: this.state.data['originObject'] || ''
                     })(
-                        <Input/>
+                        <Select mode='combobox'>
+                            {this.generateOption('originObject')}
+                        </Select>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label={'目标对象'}>
                     {getFieldDecorator('targetObject',{
                         initialValue: this.state.data['targetObject'] || ''
                     })(
-                        <Input/>
+                        <Select mode='combobox'>
+                            {this.generateOption('targetObject')}
+                        </Select>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label={'来源描述'}>

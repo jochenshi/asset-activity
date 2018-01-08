@@ -77,11 +77,11 @@ class DetailMachine extends Component {
                     <h1 className="form-field-title">配件信息</h1>
                 </div>
                 <h2>硬盘</h2>
-                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"disk"} passAuth={['addNormalEquip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"disk"} page={'detailMachine'} passAuth={['addNormalEquip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
                 <h2>网卡</h2>
-                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"netcard"} passAuth={['addNormalEquip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"netcard"} page={'detailMachine'} passAuth={['addNormalEquip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
                 <h2>内存</h2>
-                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"memory"} passAuth={['addNormalEquip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"memory"} page={'detailMachine'} passAuth={['addNormalEquip','linkNormalEquip','unlinkNormalEquip']}/>:'没有权限。'}
             </div>
         )
     }
