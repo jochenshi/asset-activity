@@ -11,11 +11,13 @@ class LinkForm extends Component {
         //this.visible = this.props.visible;
         console.log('link constructor');
     }
-    generateOption (val) {
+    generateOption (visible, val) {
         let arr = [];
-        val.forEach((value) => {
-            arr.push(<Option value={value.value} key={value.value}>{value.text}</Option>)
-        });
+        if (visible) {
+            val.forEach((value) => {
+                arr.push(<Option value={value.value} key={value.value}>{value.text}</Option>)
+            });
+        }
         return arr
     }
     render () {
@@ -39,7 +41,7 @@ class LinkForm extends Component {
                             ]
                         })(
                             <Select>
-                                {visible && this.generateOption(machineData)}
+                                {this.generateOption(visible, machineData)}
                             </Select>
                         )}
                     </FormItem>
