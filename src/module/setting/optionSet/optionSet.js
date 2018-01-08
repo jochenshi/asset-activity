@@ -1,6 +1,19 @@
 import React, {Component} from 'react'
 import './optionSet.styl'
 import axios from 'axios'
+import {connect} from 'react-redux'
+import {getAuthority} from '../../../common/methods'
+
+
+const auth = [
+    'optionSet'
+]
+
+const mapState = (state) => {
+    return {
+        authority: state.authArray.authority
+    }
+};
 
 class OptionSet extends Component {
 	curCode = '';
@@ -8,6 +21,7 @@ class OptionSet extends Component {
 	selectedClass = 'select-selected';
 	constructor (props) {
 		super(props);
+        this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
 		this.state = {
 			childrendata: [
 			],
@@ -171,6 +185,9 @@ class OptionSet extends Component {
 	}
 
     render () {
+		if(!this.auth['optionSet']){
+			return <p>没有查看权限！</p>
+		}
         return (
             <div className="select-manager">
             	<h1>选项管理</h1>
@@ -224,4 +241,4 @@ class OptionSet extends Component {
     }
 }
 
-export default OptionSet
+export default connect(mapState)(OptionSet)
