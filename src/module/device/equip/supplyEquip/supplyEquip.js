@@ -115,6 +115,10 @@ class SupplyEquip extends Component {
             })
         })
     }
+    //刷新列表
+    refreshTable = () => {
+        this.getTableData();
+    };
     generateButton () {
         let arr = [];
         let authority = this.authority;
@@ -125,7 +129,7 @@ class SupplyEquip extends Component {
             }
 
         }
-        arr.push(<Button key='refreshSupplyEquip' className="refresh_equip">刷新</Button>);
+        arr.push(<Button key='refreshSupplyEquip' className="refresh_equip" onClick={this.refreshTable}>刷新</Button>);
         console.log(arr);
         return arr;
     }

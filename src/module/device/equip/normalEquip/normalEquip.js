@@ -3,8 +3,9 @@ import {connect} from 'react-redux'
 import {Link, withRouter}  from 'react-router-dom'
 import PropTypes from 'prop-types';
 
-import {Button, Table, Modal} from 'antd';
+import {Button, Table, Modal, Divider} from 'antd';
 import axios from 'axios';
+const confirm = Modal.confirm;
 
 import './normalEquip.styl'
 
@@ -50,6 +51,13 @@ const titles = [
         dataIndex: 'equipUseState'
     },
     {
+        title: '是否关联',
+        dataIndex: 'linkState',
+        render: (text, recort) => {
+            return text ? '是' : '否'
+        }
+    },
+    {
         title: '新增人',
         dataIndex: 'creator'
     },
@@ -91,19 +99,24 @@ class NormalEquip extends Component {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text,record)=>{
-                    let path = {};
+                    let path = {},assigin;
                     if(record.useState==='idle' && this.authority['assignNormalEquip']){
                         record['relatedType'] = 'fitting';
                         path = {
                             pathname:'/auth/main/assign',state:record
                         };
-                        return <Link to={path}>分配</Link>;
+                        assigin = <Link to={path}>分配</Link>;
                     }else if(record.useState==='using' && this.authority['withdrawNormalEquip']){
                         record['relatedType'] = 'fitting';
                         path = {
                             pathname:'/auth/main/withdraw',state:record
                         };
-                        return <Link to={path}>收回</Link>;
+                        assigin =  <Link to={path}>收回</Link>;
+                    }
+                    if (record.linkState) {
+                        return <span>{assigin}<Divider type={'vertical'}/><a onClick={this.unlinkNormal.bind(this, record)}>取消关联</a></span>
+                    } else {
+                        return assigin
                     }
                 }
             });
@@ -118,7 +131,8 @@ class NormalEquip extends Component {
             modalMachine: [],
             selectFittingId: [],
             page: props.page || 'normalList',
-            singleTypeFitting: []
+            singleTypeFitting: [],
+            loadingStatus: false
             //authority: {}
         };
         console.log('normal', props);
@@ -139,22 +153,56 @@ class NormalEquip extends Component {
         let resAuth = getAuthority(this.props.authority, fixedAuth, this.props.passAuth);
         return resAuth
     }
+    //取消关联的方法
+    unlinkNormal (record) {
+        console.log(record);
+        let that = this;
+        confirm({
+            title: '确认将该配件取消关联吗？',
+            onOk () {
+                axios.put('/am/relate/delete',{
+                    target: 'fitting',
+                    data: record.id
+                }).then((val) => {
+                    that.refreshTable();
+                }).catch((err) => {
+                    that.refreshTable();
+                })
+            }
+
+        })
+    }
     //根据传入的prop里面的
     getTableData () {
         //根据传进来的machineId来判断是获取某个机器下的配件信息还是获取全部的配件信息
+        this.setState({
+            loadingStatus: true
+        });
         axios.get('/am/equip/normalEquip', {
             params: {
                 type: this.urlType,
                 machineId: this.machineId
             }
         }).then((data) => {
+            this.setState({
+                loadingStatus: false
+            });
             data.data.length && this.setState({
                 tableData: data.data
             })
         }).catch((err) => {
-
+            this.setState({
+                loadingStatus: false
+            });
         })
     }
+    refreshTable = () => {
+        this.getTableData();
+        /*this.setState({
+            selectData: []
+        })*/
+    };
+    //生成列表的按钮
     generateButton () {
         let arr = [];
         let authority = this.authority;
@@ -178,7 +226,7 @@ class NormalEquip extends Component {
             }
 
         }
-        arr.push(<Button key='refreshNormalEquip' className="refresh_equip" onClick={() => {this.getTableData()}}>刷新</Button>);
+        arr.push(<Button key='refreshNormalEquip' className="refresh_equip" onClick={this.refreshTable}>刷新</Button>);
         console.log(arr);
         return arr;
     }
@@ -187,13 +235,13 @@ class NormalEquip extends Component {
         console.log('link normal equip');
         let selects = this.state.selectData,valid = 0,temp = [];
         selects.length && selects.forEach((val) => {
-            val.useState === 'idle' && valid ++;
+            val.linkState && valid ++;
             temp.push(val.id);
         });
         if (valid !== selects.length) {
             Modal.warning({
                 title: '提示',
-                content: '只能关联状态为库存中的配件'
+                content: '已关联的配件不能再次关联'
             })
         } else {
             this.setState({
@@ -230,6 +278,7 @@ class NormalEquip extends Component {
                 axios.post('/am/relate/add', subData).then((val) => {
                     console.log(val);
                     this.handleModalCancel();
+                    this.refreshTable();
                 })
             }
         })
@@ -264,7 +313,8 @@ class NormalEquip extends Component {
         axios.get('/am/equip/normalEquip',{
             params: {
                 type: type,
-                useState: 'idle'
+                useState: 'idle',
+                linkState: false
             }
         }).then((val) => {
             let fit = [];
@@ -287,6 +337,7 @@ class NormalEquip extends Component {
                     .then((val) => {
                         console.log(val);
                         this.handleManyModalCancel();
+                        this.refreshTable();
                     })
             }
         })
@@ -324,13 +375,10 @@ class NormalEquip extends Component {
             <div className="normal_render list">
                 <div className="button_area list_operations">
                     {this.generateButton()}
-                    {/*<Button className="assign_equip">分配</Button>*/}
-                    {/*<Button className="return_equip">归还</Button>*/}
-                    {/*<Button className="apply_equip">申请</Button>*/}
                     <TitleOption data={this.state.titles} onChange={this.onTreeChange}/>
                 </div>
                 <div className="table_area">
-                    <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.tableData} />
+                    <Table rowSelection={rowSelection} loading={this.state.loadingStatus} columns={this.state.titles} dataSource={this.state.tableData} />
                 </div>
                 <LinkModal
                     ref={this.saveFormRef}

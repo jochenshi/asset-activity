@@ -24,12 +24,19 @@ const initAxios = () => {
     }, function (error) {  
         // Do something with response error
         console.log('get error',error);
-        message.error(error.response.data['error']);
+        //error.response.data['error'] && message.error(error.response.data['error']);
         // token 已过期，重定向到登录页面
         if (error.response.data.code === 10007){
+            message.error(error.response.data['error']);
             setTimeout(() => {
                 window.location.href = '/login';
             }, 500)
+        } else if ((error.message === 'Request failed with status code 404')) {
+            message.error('服务连接中断，请稍后重试')
+        } else if (error.response.data['error']) {
+            message.error(error.response.data['error']);
+        } else {
+            message.error('系统连接出错')
         }
         return Promise.reject(error.response.data)  
     }) 
