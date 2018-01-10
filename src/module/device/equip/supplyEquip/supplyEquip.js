@@ -36,6 +36,13 @@ const titles = [
         dataIndex: 'remainNumber'
     },
     {
+        title: '使用者',
+        dataIndex: 'user',
+        render : (text,record) =>{
+            return text || '—';
+        }
+    },
+    {
         title: '新增人',
         dataIndex: 'creator'
     },
