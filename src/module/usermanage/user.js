@@ -1,6 +1,7 @@
 import React,{ Component } from 'react'
 import {Table, Button} from 'antd'
 import {connect} from 'react-redux'
+import axios from 'axios'
 
 import TitleOption from '../../common/titleOption'
 import {getAuthority} from '../../common/methods'
@@ -29,8 +30,8 @@ const titles = [
         dataIndex: 'email'
     },
     {
-        title: '新增人',
-        dataIndex: 'createUser'
+        title: '创建人',
+        dataIndex: 'creator'
     },
     {
         title: '新增时间',
@@ -56,8 +57,12 @@ class UserManage extends Component {
         this.authority = getAuthority(this.props.authority, fixedAuth, this.props.passAuth);
         this.state = {
             titles: titles,
-            tableData: []
+            tableData: [],
+            loading: false
         }
+    }
+    componentDidMount () {
+        this.getTableData();
     }
     generateButton () {
         let arr = [];
@@ -72,12 +77,34 @@ class UserManage extends Component {
             }
 
         }
-        arr.push(<Button key='refreshUser' className="refresh_user" onClick={() => {this.getTableData()}}>刷新</Button>);
+        arr.push(<Button key='refreshUser' className="refresh_user" onClick={() => {this.refreshTable()}}>刷新</Button>);
         console.log('qqqq');
         console.log(arr);
         return arr;
     }
-    getTableData () {}
+    getTableData () {
+        this.setState({
+            loading: true
+        });
+        axios.get('/am/user/all')
+            .then((val) => {
+                console.log(val);
+                val.data.length && this.setState({
+                    tableData: val.data
+                });
+                this.setState({
+                    loading: false
+                })
+            })
+            .catch(() => {
+                this.setState({
+                    loading: false
+                })
+            })
+    }
+    refreshTable = () => {
+        this.getTableData();
+    };
     onTreeChange = (titles) => {
         this.setState({
             titles : titles
@@ -91,7 +118,7 @@ class UserManage extends Component {
                     <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
                 <div className={'table_content'}>
-                    <Table columns={this.state.titles} dataSource={this.state.tableData}/>
+                    <Table columns={this.state.titles} loading={this.state.loading} dataSource={this.state.tableData}/>
                 </div>
             </div>
         )
