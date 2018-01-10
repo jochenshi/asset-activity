@@ -61,7 +61,8 @@ const titles = [
         title: '使用者',
         dataIndex: 'user',
         render : (text,record) =>{
-            return text || '—';
+            let tt = text.length ? text.join() : '—';
+            return tt;
         }
     },
     {
@@ -301,11 +302,9 @@ class NormalEquip extends Component {
                 val.data.length && val.data.forEach((vaule) => {
                     machines.push({text: vaule.name, value: vaule.id.toString()})
                 });
-                setTimeout(() => {
-                    this.state.linkModalVisible && this.setState({
-                        modalMachine: machines
-                    })
-                }, 3000)
+                this.state.linkModalVisible && this.setState({
+                    modalMachine: machines
+                });
             })
     }
     //此处是批量关联配件的部分

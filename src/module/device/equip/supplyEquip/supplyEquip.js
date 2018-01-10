@@ -28,7 +28,7 @@ const titles = [
         dataIndex: 'brand'
     },
     {
-        title: '数量',
+        title: '总数量',
         dataIndex: 'number'
     },
     {
@@ -39,7 +39,9 @@ const titles = [
         title: '使用者',
         dataIndex: 'user',
         render : (text,record) =>{
-            return text || '—';
+            console.log(text);
+            let tt = text.length ? text.join() : '—';
+            return tt;
         }
     },
     {
@@ -105,13 +107,17 @@ class SupplyEquip extends Component {
         }
         this.state = {
             titles: titles,
-            tableData: []
+            tableData: [],
+            loadingStatus: false
         }
     }
     componentDidMount () {
         this.getTableData();
     }
     getTableData () {
+        this.setState({
+            loadingStatus: true
+        });
         axios.get('/am/equip/supplyEquip',{
             params: {
                 type: 'all'
@@ -119,8 +125,16 @@ class SupplyEquip extends Component {
         }).then((data) => {
             data.data.length && this.setState({
                 tableData: data.data
-            })
+            });
+            this.setState({
+                loadingStatus: false
+            });
         })
+            .catch(err => {
+                this.setState({
+                    loadingStatus: false
+                });
+            })
     }
     //刷新列表
     refreshTable = () => {
@@ -159,7 +173,7 @@ class SupplyEquip extends Component {
                     <TitleOption data={this.state.titles} onChange={this.onTreeChange}/>
                 </div>
                 <div className="table_area">
-                    <Table rowSelection={rowSelection} columns={this.state.titles} dataSource={this.state.tableData} />
+                    <Table rowSelection={rowSelection} loading={this.state.loadingStatus} columns={this.state.titles} dataSource={this.state.tableData} />
                 </div>
             </div>
         )
