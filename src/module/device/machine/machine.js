@@ -71,6 +71,13 @@ const titles = [
         dataIndex: 'useStateText'
     },
     {
+        title: '使用者',
+        dataIndex: 'user',
+        render : (text,record) =>{
+            return text || '—';
+        }
+    },
+    {
         title: '健康状态',
         dataIndex: 'healthState',
         render : (text,record) =>{
