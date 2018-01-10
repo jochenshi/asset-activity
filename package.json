@@ -11,7 +11,7 @@
   "author": "jochenshi",
   "license": "ISC",
   "dependencies": {
-    "antd": "^2.13.7",
+    "antd": "^3.1.1",
     "axios": "^0.17.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

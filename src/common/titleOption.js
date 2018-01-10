@@ -50,7 +50,7 @@ class TitleOption extends Component {
             searchPlaceholder: '请选择',
             dropdownMatchSelectWidth : false,
             style: {
-                width: 80,
+                width: 87,
             },
         };
         return<div className="list_title">

@@ -20,6 +20,8 @@ class FormArea extends Component {
         }
         this.state = {
             unit: unit || 'GB',
+            originObject: [],
+            targetObject: [],
             brand: [],
             type: [],
             model: [],
@@ -154,14 +156,18 @@ class FormArea extends Component {
                     {getFieldDecorator('originObject',{
                         initialValue: this.state.data['originObject'] || ''
                     })(
-                        <Input />
+                        <Select mode='combobox'>
+                            {this.generateOption('originObject')}
+                        </Select>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label={'目标对象'}>
                     {getFieldDecorator('targetObject',{
                         initialValue: this.state.data['targetObject'] || ''
                     })(
-                        <Input/>
+                        <Select mode='combobox'>
+                            {this.generateOption('targetObject')}
+                        </Select>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label='来源描述'>
