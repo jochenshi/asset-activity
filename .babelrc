@@ -1,6 +1,3 @@
 {
-  "presets": ["react", "env", "stage-3"],
-  "plugins": [
-    ["import", {"libraryName": "antd", "librarydirectory": "es", "style": "css"}]
-  ]
+  "presets": ["react", "env", "stage-3"]
 }
