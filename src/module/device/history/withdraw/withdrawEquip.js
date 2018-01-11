@@ -32,7 +32,7 @@ class WithdrawEquip extends Component {
         this.auth = getAuthority(this.props.authority, auth, this.props.passAuth);
         this.state = {
             useRecord : []
-        }
+        };
         this.getNoReturn();
     }
 
@@ -56,6 +56,7 @@ class WithdrawEquip extends Component {
                 return;
             }
             console.log(values);
+            values.record = JSON.parse(values.record);
             axios.put('/am/use/withdrawEquip?operate=withdrawSupplyEquip',values)
                 .then((res)=>{
                     this.props.history.replace(this.backUrl);
@@ -64,14 +65,27 @@ class WithdrawEquip extends Component {
                     console.log(err);
                 });
         });
-    }
+    };
     handleChange = (value)=>{
+        value = JSON.parse(value);
         this.setState({
             returnMax : value.lendNumber - (value.returnNumber||0)
         });
-    }
-    generateOption(arr){
-        return arr.map((item)=><Option key={item.name} value={item.name}>{item.name}</Option>);
+    };
+    generateOption(){
+        let arr = [],record = this.state.useRecord;
+        if (record.length) {
+            record.forEach((val) => {
+                let project = '';
+                if (val.project) {
+                    project = '--(' + val.project + ')--'
+                } else {
+                    project = '--';
+                }
+                arr.push(<Option key={val.id.toString()} value={JSON.stringify(val)}>{val.name + project + (val.returnNumber||0) + '/' + val.lendNumber}</Option>)
+            });
+        }
+        return arr
     }
     render () {
         const { getFieldDecorator } = this.props.form;
@@ -113,7 +127,7 @@ class WithdrawEquip extends Component {
                                 <Select
                                     onChange={this.handleChange}
                                 >
-                                    {this.state.useRecord.map((item)=><Option key={item.id} value={item}>{item.name+'('+item.project+')'+(item.returnNumber||0)+'/'+item.lendNumber}</Option>)}
+                                    {this.generateOption()}
                                 </Select>
                             )}
                         </FormItem>

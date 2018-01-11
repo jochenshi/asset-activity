@@ -195,7 +195,7 @@ class NormalEquip extends Component {
             this.setState({
                 loadingStatus: false
             });
-            data.data.length && this.setState({
+            this.setState({
                 tableData: data.data
             })
         }).catch((err) => {
@@ -246,7 +246,7 @@ class NormalEquip extends Component {
             val.linkState && valid ++;
             temp.push(val.id);
         });
-        if (valid !== selects.length) {
+        if (valid > 1) {
             Modal.warning({
                 title: '提示',
                 content: '已关联的配件不能再次关联'
