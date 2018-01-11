@@ -122,8 +122,9 @@ class SupplyEquip extends Component {
             params: {
                 type: 'all'
             }
-        }).then((data) => {
-            data.data.length && this.setState({
+        })
+            .then((data) => {
+            this.setState({
                 tableData: data.data
             });
             this.setState({
