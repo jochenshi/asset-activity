@@ -30,6 +30,20 @@ const titles = [
         dataIndex: 'email'
     },
     {
+        title: '是否有效',
+        dataIndex: 'isValid',
+        render: (text, record) => {
+            return text ? '是' : '否';
+        }
+    },
+    {
+        title: '是否可登录',
+        dataIndex: 'canLogin',
+        render: (text, record) => {
+            return text ? '是' : '否';
+        }
+    },
+    {
         title: '创建人',
         dataIndex: 'creator'
     },
