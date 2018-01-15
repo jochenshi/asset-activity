@@ -4,56 +4,70 @@ import {connect} from 'react-redux'
 import axios from 'axios'
 
 import TitleOption from '../../common/titleOption'
-import {getAuthority} from '../../common/methods'
+import {dateFormat, getAuthority} from '../../common/methods'
 
 import './user.styl'
 
 const titles = [
     {
         title: '用户名',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        width: 150
     },
     {
         title: '账号',
-        dataIndex: 'account'
+        dataIndex: 'account',
+        width: 200
     },
     {
         title: '角色',
-        dataIndex: 'role'
+        dataIndex: 'role',
+        width: 150
     },
     {
         title: '电话',
-        dataIndex: 'phone'
+        dataIndex: 'phone',
+        width: 150
     },
     {
         title: '邮箱',
-        dataIndex: 'email'
+        dataIndex: 'email',
+        width: 150
     },
     {
-        title: '是否有效',
+        title: '有效性',
         dataIndex: 'isValid',
+        width: 90,
         render: (text, record) => {
             return text ? '是' : '否';
         }
     },
     {
-        title: '是否可登录',
+        title: '能否登录',
         dataIndex: 'canLogin',
+        width: 100,
         render: (text, record) => {
             return text ? '是' : '否';
         }
     },
     {
         title: '创建人',
-        dataIndex: 'creator'
+        dataIndex: 'creator',
+        width: 150
     },
     {
         title: '新增时间',
-        dataIndex: 'createTime'
+        dataIndex: 'createTime',
+        width: 180,
+        render: (text, record) => {
+            let time = dateFormat('YYYY-MM-DD hh:mm', text);
+            return time
+        }
     },
     {
         title: '描述',
-        dataIndex: 'description'
+        dataIndex: 'description',
+        width: 150
     },
 ];
 const fixedAuth = ['addUser'];
@@ -125,6 +139,9 @@ class UserManage extends Component {
         })
     };
     render () {
+        const rowSelection = {
+            onChange: () => {}
+        };
         return (
             <div className={'list'}>
                 <div className={'list_operations'}>
@@ -132,7 +149,7 @@ class UserManage extends Component {
                     <TitleOption data={titles} onChange={this.onTreeChange}/>
                 </div>
                 <div className={'table_content'}>
-                    <Table columns={this.state.titles} loading={this.state.loading} dataSource={this.state.tableData}/>
+                    <Table columns={this.state.titles} rowSelection={rowSelection} loading={this.state.loading} dataSource={this.state.tableData}/>
                 </div>
             </div>
         )
