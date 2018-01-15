@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import axios from 'axios'
 import TitleOption from '../../../common/titleOption'
 import {connect} from 'react-redux'
-import {getAuthority} from '../../../common/methods'
+import {dateFormat, getAuthority} from '../../../common/methods'
 
 const defaultData = [
     /*{
@@ -91,7 +91,11 @@ const titles = [
     },
     {
         title: '添加时间',
-        dataIndex: 'createdAt'
+        dataIndex: 'createdAt',
+        render: (text, record) => {
+            let time = dateFormat('YYYY-MM-DD hh:mm', text);
+            return time
+        }
     },
     {
         title: '描述',

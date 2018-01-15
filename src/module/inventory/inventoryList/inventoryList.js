@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Table, Button } from 'antd'
 import {connect} from 'react-redux'
-import {getAuthority} from '../../../common/methods'
+import {dateFormat, getAuthority} from '../../../common/methods'
 import TitleOption from '../../../common/titleOption'
 
 import './style.styl'
@@ -89,7 +89,11 @@ const titles = [
     },
     {
         title: '发生时间',
-        dataIndex: 'occurTime'
+        dataIndex: 'occurTime',
+        render: (text, record) => {
+            let time = dateFormat('YYYY-MM-DD hh:mm', text);
+            return time
+        }
     },
     {
         title: '描述',
