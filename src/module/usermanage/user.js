@@ -2,6 +2,7 @@ import React,{ Component } from 'react'
 import {Table, Button} from 'antd'
 import {connect} from 'react-redux'
 import axios from 'axios'
+import {Link} from 'react-router-dom'
 
 import TitleOption from '../../common/titleOption'
 import {dateFormat, getAuthority} from '../../common/methods'
@@ -12,7 +13,14 @@ const titles = [
     {
         title: '用户名',
         dataIndex: 'name',
-        width: 150
+        width: 150,
+        render: (text, record) => {
+            let path = {
+                pathname: '/auth/main/detailUser/' + record.account,
+                state: record
+            };
+            return <Link to={path}>{text}</Link>;
+        }
     },
     {
         title: '账号',

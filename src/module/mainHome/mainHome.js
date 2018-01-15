@@ -19,6 +19,7 @@ import DeviceEquip from '../device/equip/equip'
 import UseHistory from '../device/history/useHistory'
 import UserManage from '../usermanage/user'
 import AddUser from '../usermanage/addUser/addUser'
+import DetailUser from '../usermanage/detailUser/detailUser'
 import HealthRecord from '../healthRecord/healthRecord'
 import OperateRecord from '../operateRecord/operateRecord'
 import OptionSet from '../setting/optionSet/optionSet'
@@ -168,6 +169,7 @@ class MainHome extends Component {
                                 {/*<Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
                                 <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}
                                 <AuthRoute path={`${this.props.match.path}/userManage`} component={UserManage}/>
+                                <AuthRoute path={`${this.props.match.path}/detailUser/:account`} component={DetailUser}/>
                                 <AuthRoute path={`${this.props.match.path}/addUser`} component={AddUser}/>
                                 <AuthRoute path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>
                                 <AuthRoute path={`${this.props.match.path}/operateRecord`} component={OperateRecord}/>

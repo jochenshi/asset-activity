@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import axios from 'axios'
 
-import {getAuthority} from '../../../../common/methods';
+import {dateFormat, getAuthority} from '../../../../common/methods';
 import TitleOption from '../../../../common/titleOption';
 
 import './supplyEquip.styl'
@@ -50,7 +50,11 @@ const titles = [
     },
     {
         title: '新增时间',
-        dataIndex: 'createTime'
+        dataIndex: 'createTime',
+        render: (text, record) => {
+            let time = dateFormat('YYYY-MM-DD hh:mm', text);
+            return time
+        }
     },
 /*    {
         title: '当前使用状态',

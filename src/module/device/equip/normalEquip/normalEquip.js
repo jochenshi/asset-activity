@@ -9,7 +9,7 @@ const confirm = Modal.confirm;
 
 import './normalEquip.styl'
 
-import {getAuthority} from '../../../../common/methods'
+import {dateFormat, getAuthority} from '../../../../common/methods'
 import TitleOption from '../../../../common/titleOption'
 import LinkModal from './linkOperation/linkNormal'
 import ManyModal from './linkOperation/linkMany'
@@ -71,7 +71,11 @@ const titles = [
     },
     {
         title: '新增时间',
-        dataIndex: 'createTime'
+        dataIndex: 'createTime',
+        render: (text, record) => {
+            let time = dateFormat('YYYY-MM-DD hh:mm', text);
+            return time
+        }
     },
     {
         title: '描述',
@@ -133,7 +137,8 @@ class NormalEquip extends Component {
             titles: titles,
             tableData: [],
             linkDisable: true,
-            selectData: [],
+            //selectData: [],
+            selectedRowKeys: [],
             linkModalVisible: false,
             linkManyVisible: false,
             modalMachine: [],
@@ -241,7 +246,7 @@ class NormalEquip extends Component {
     //此处是在列表展示界面的关联配件的部分
     linkNormalEquip = () => {
         console.log('link normal equip');
-        let selects = this.state.selectData,valid = 0,temp = [];
+        let selects = this.state.selectedRowKeys,valid = 0,temp = [];
         selects.length && selects.forEach((val) => {
             val.linkState && valid ++;
             temp.push(val.id);
@@ -287,6 +292,9 @@ class NormalEquip extends Component {
                     console.log(val);
                     this.handleModalCancel();
                     this.refreshTable();
+                    this.setState({
+                        selectedRowKeys: []
+                    })
                 })
             }
         })
@@ -359,7 +367,9 @@ class NormalEquip extends Component {
         this.manyForm = form
     };
     render () {
+        const {selectedRowKeys} = this.state;
         const rowSelection = {
+            selectedRowKeys,
             onChange: (rowKeys, rows) => {
                 console.log('select');
                 console.log(rowKeys, rows);
@@ -373,7 +383,7 @@ class NormalEquip extends Component {
                 }
                 this.setState({
                     linkDisable: flag,
-                    selectData: selected
+                    selectedRowKeys: selected
                 })
             }
         };
