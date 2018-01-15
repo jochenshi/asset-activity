@@ -104,7 +104,7 @@ const auth = [
     'addMachine',
     'assignMachine',
     'withdrawMachine'
-]
+];
 
 const mapState = (state) => {
     return {
