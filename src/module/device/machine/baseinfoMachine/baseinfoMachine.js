@@ -345,7 +345,6 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('serialNo',{
                             rules :[
-                                { required: true, message: 'S/N号不能为空。'},
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
                             initialValue : this.state.data['serialNo'] || ''

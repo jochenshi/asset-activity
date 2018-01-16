@@ -178,9 +178,6 @@ class FormArea extends Component {
                 <h1 className="form-field-title">配件信息</h1>
                 <FormItem {...formItemLayout} label='S/N号'>
                     {getFieldDecorator('serialNo',{
-                        rules: [
-                            {required: true, message: 'S/N号不能为空'}
-                        ],
                         initialValue: this.state.data['serialNo'] || ''
                     })(<Input/>)}
                 </FormItem>
