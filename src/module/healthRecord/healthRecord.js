@@ -6,49 +6,12 @@ import TitleOption from '../../common/titleOption'
 
 const titles = [
     {
-        title: 'S/N号',
-        dataIndex: 'serialNo',
-        render : (text,record) =>{
-            return <Link to={"/auth/main/deviceMachine/"+record.id}>{text}</Link>
-        }
-    },
-    {
         title: '名称',
         dataIndex: 'name'
     },
     {
-        title: '研发部编号',
-        dataIndex: 'rdNumber'
-    },
-    {
-        title: '固定资产编号',
-        dataIndex: 'fixedNumber',
-        display: false
-    },
-    {
         title: '类型',
         dataIndex: 'typeText'
-    },
-    {
-        title: 'IP',
-        dataIndex: 'ip',
-        display: false
-    },
-    {
-        title: '型号',
-        dataIndex: 'model'
-    },
-    {
-        title: '品牌',
-        dataIndex: 'brand',
-    },
-    {
-        title: 'CPU',
-        dataIndex: 'cpu'
-    },
-    {
-        title: '使用状态',
-        dataIndex: 'useStateText'
     },
     {
         title: '健康状态',
@@ -67,16 +30,40 @@ const titles = [
         dataIndex: 'createdAt'
     },
     {
+        title: '是否存在',
+        dataIndex: 'exist'
+    },
+    {
         title: '描述',
         dataIndex: 'description'
     }
-]
+];
 
 class HealthRecord extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            tableData: [],
+            titles: titles,
+            loading: false
+        }
+    }
+    refreshTable = () => {};
+    onTreeChange = (titles) => {
+        this.setState({
+            titles : titles
+        })
+    };
     render () {
         return (
-            <div>
-                <h1>This is Health record page</h1>
+            <div className={'list'}>
+                <div className={'list_operations'}>
+                    <Button onClick={this.refreshTable} className={'refresh_health'}>刷新</Button>
+                    <TitleOption data={titles} onChange={this.onTreeChange}/>
+                </div>
+                <div className={'table_content'}>
+                    <Table columns={this.state.titles} dataSource={this.state.tableData} loading={this.state.loading}/>
+                </div>
             </div>
         )
     }

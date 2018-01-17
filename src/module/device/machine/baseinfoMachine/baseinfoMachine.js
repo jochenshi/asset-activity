@@ -10,6 +10,8 @@ import moment from 'moment'
 import {connect} from 'react-redux'
 import {getAuthority} from '../../../../common/methods'
 
+import '../machine.styl'
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
@@ -28,6 +30,7 @@ const mapState = (state) => {
     }
 };
 
+let uuid = 0;
 class BaseinfoMachine extends Component {
     constructor (props){
         super(props);
@@ -135,7 +138,7 @@ class BaseinfoMachine extends Component {
              }
          });
     };
-     addConfirm = (id)=>{
+    addConfirm = (id)=>{
         confirm({
             title: '想到详情页面继续添加机器的配置信息吗？',
             content: '确认进入详情页面，取消回到列表页面。通过点击列表上的机器S/N号，仍然可以进入详情页面。',
@@ -149,7 +152,7 @@ class BaseinfoMachine extends Component {
             },
         });
 
-    }
+    };
     handleChange = (value) => {
         value = value==='borrow'?'RDB':'RD';
         this.setState({
@@ -173,7 +176,7 @@ class BaseinfoMachine extends Component {
         }*/
     }
     render () {
-        const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator, getFieldValue } = this.props.form;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -195,6 +198,12 @@ class BaseinfoMachine extends Component {
                     offset: 8,
                 },
             },
+        };
+        const formWithoutLabel = {
+            wrapperCol: {
+                xs: {span: 26, offset: 0},
+                sm: {span: 16, offset: 8}
+            }
         };
         let rdNumber = this.state.data ? this.state.data['rdNumber'] : '';
         rdNumber = rdNumber && rdNumber.match(/\d+/g)[0];
@@ -345,7 +354,6 @@ class BaseinfoMachine extends Component {
                     >
                         {getFieldDecorator('serialNo',{
                             rules :[
-                                { required: true, message: 'S/N号不能为空。'},
                                 { pattern : /^\S*$/, message : '不能输入非法字符。' }
                             ],
                             initialValue : this.state.data['serialNo'] || ''

@@ -36,6 +36,10 @@ const titles = [
         dataIndex: 'remainNumber'
     },
     {
+        title: '规格',
+        dataIndex: 'format'
+    },
+    {
         title: '使用者',
         dataIndex: 'user',
         render : (text,record) =>{
@@ -112,6 +116,7 @@ class SupplyEquip extends Component {
         this.state = {
             titles: titles,
             tableData: [],
+            selectedRowKeys: [],
             loadingStatus: false
         }
     }
@@ -144,6 +149,10 @@ class SupplyEquip extends Component {
     //刷新列表
     refreshTable = () => {
         this.getTableData();
+        this.setState({
+            selectedRowKeys: [],
+            selectData: []
+        })
     };
     generateButton () {
         let arr = [];
@@ -165,10 +174,16 @@ class SupplyEquip extends Component {
         })
     };
     render () {
+        const {selectedRowKeys} = this.state
         const rowSelection = {
+            selectedRowKeys,
             onChange: (rowKeys, rows) => {
                 console.log('select');
-                console.log(rowKeys, rows)
+                console.log(rowKeys, rows);
+                this.setState({
+                    selectedRowKeys: rowKeys,
+                    selectData: rows
+                })
             }
         };
         return (

@@ -25,15 +25,18 @@ const defaultData = [
 
 const titles = [
     {
-        title: 'S/N号',
-        dataIndex: 'serialNo',
-        render : (text,record) =>{
+        title: '名称',
+        dataIndex: 'name',
+        render: (text, record) => {
             return <Link to={"/auth/main/deviceMachine/"+record.id}>{text}</Link>
         }
     },
     {
-        title: '名称',
-        dataIndex: 'name'
+        title: 'S/N号',
+        dataIndex: 'serialNo',
+        render : (text,record) =>{
+            return text ? text : '-'
+        }
     },
     {
         title: '研发部编号',

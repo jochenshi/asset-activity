@@ -16,8 +16,8 @@ import ManyModal from './linkOperation/linkMany'
 
 const titles = [
     {
-        title: 'S/N号',
-        dataIndex: 'serialNo',
+        title: '名称',
+        dataIndex: 'name',
         render: (text, record) => {
             let path = {
                 pathname: '/auth/main/deviceEquip/normalEquip/' + record.id,
@@ -27,8 +27,9 @@ const titles = [
         }
     },
     {
-        title: '名称',
-        dataIndex: 'name'
+        title: 'S/N号',
+        dataIndex: 'serialNo'
+
     },
     {
         title: '类型',
@@ -42,10 +43,10 @@ const titles = [
         title: '品牌',
         dataIndex: 'brand'
     },
-    // {
-    //     title: '大小',
-    //     dataIndex: 'size'
-    // },
+    {
+        title: '规格',
+        dataIndex: 'format'
+    },
     {
         title: '当前使用状态',
         dataIndex: 'equipUseState'
@@ -137,7 +138,7 @@ class NormalEquip extends Component {
             titles: titles,
             tableData: [],
             linkDisable: true,
-            //selectData: [],
+            selectData: [],
             selectedRowKeys: [],
             linkModalVisible: false,
             linkManyVisible: false,
@@ -211,9 +212,10 @@ class NormalEquip extends Component {
     }
     refreshTable = () => {
         this.getTableData();
-        /*this.setState({
-            selectData: []
-        })*/
+        this.setState({
+            selectData: [],
+            selectedRowKeys: []
+        })
     };
     //生成列表的按钮
     generateButton () {
@@ -246,7 +248,7 @@ class NormalEquip extends Component {
     //此处是在列表展示界面的关联配件的部分
     linkNormalEquip = () => {
         console.log('link normal equip');
-        let selects = this.state.selectedRowKeys,valid = 0,temp = [];
+        let selects = this.state.selectData,valid = 0,temp = [];
         selects.length && selects.forEach((val) => {
             val.linkState && valid ++;
             temp.push(val.id);
@@ -292,9 +294,6 @@ class NormalEquip extends Component {
                     console.log(val);
                     this.handleModalCancel();
                     this.refreshTable();
-                    this.setState({
-                        selectedRowKeys: []
-                    })
                 })
             }
         })
@@ -383,7 +382,8 @@ class NormalEquip extends Component {
                 }
                 this.setState({
                     linkDisable: flag,
-                    selectedRowKeys: selected
+                    selectData: selected,
+                    selectedRowKeys: rowKeys
                 })
             }
         };

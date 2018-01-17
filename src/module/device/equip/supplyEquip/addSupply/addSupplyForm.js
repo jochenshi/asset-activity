@@ -190,6 +190,11 @@ class SupplyForm extends Component {
                         </Select>
                     )}
                 </FormItem>
+                <FormItem {...formItemLayout} label={'规格'}>
+                    {getFieldDecorator('format')(
+                        <Input/>
+                    )}
+                </FormItem>
                 <FormItem {...formItemLayout} label='数量'>
                     {getFieldDecorator('number',{
                         rules: [

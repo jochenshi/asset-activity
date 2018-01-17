@@ -13,7 +13,6 @@ const titles = [
     {
         title: '用户名',
         dataIndex: 'name',
-        width: 150,
         render: (text, record) => {
             let path = {
                 pathname: '/auth/main/detailUser/' + record.account,
@@ -24,28 +23,23 @@ const titles = [
     },
     {
         title: '账号',
-        dataIndex: 'account',
-        width: 200
+        dataIndex: 'account'
     },
     {
         title: '角色',
-        dataIndex: 'role',
-        width: 150
+        dataIndex: 'role'
     },
     {
         title: '电话',
-        dataIndex: 'phone',
-        width: 150
+        dataIndex: 'phone'
     },
     {
         title: '邮箱',
-        dataIndex: 'email',
-        width: 150
+        dataIndex: 'email'
     },
     {
         title: '有效性',
         dataIndex: 'isValid',
-        width: 90,
         render: (text, record) => {
             return text ? '是' : '否';
         }
@@ -53,20 +47,17 @@ const titles = [
     {
         title: '能否登录',
         dataIndex: 'canLogin',
-        width: 100,
         render: (text, record) => {
             return text ? '是' : '否';
         }
     },
     {
         title: '创建人',
-        dataIndex: 'creator',
-        width: 150
+        dataIndex: 'creator'
     },
     {
         title: '新增时间',
         dataIndex: 'createTime',
-        width: 180,
         render: (text, record) => {
             let time = dateFormat('YYYY-MM-DD hh:mm', text);
             return time
@@ -74,8 +65,7 @@ const titles = [
     },
     {
         title: '描述',
-        dataIndex: 'description',
-        width: 150
+        dataIndex: 'description'
     },
 ];
 const fixedAuth = ['addUser'];

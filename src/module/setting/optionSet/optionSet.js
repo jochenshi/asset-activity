@@ -190,7 +190,7 @@ class OptionSet extends Component {
 		}
         return (
             <div className="select-manager">
-            	<h1>选项管理</h1>
+            	<h1 className={'select_title'}>选项管理</h1>
             	<aside className="select-parent">
             		<header>
 						<span>代号</span>

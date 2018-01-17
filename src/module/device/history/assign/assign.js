@@ -53,7 +53,7 @@ class Assign extends Component {
                     backUrl = '/auth/main/deviceMachine';
                     break;
                 case 'fitting':
-                    title = '收回配件';
+                    title = '分配配件';
                     backUrl = '/auth/main/deviceEquip/normalEquip';
                     break;
             }
@@ -144,9 +144,7 @@ class Assign extends Component {
                             {...formItemLayout}
                             label="使用用途"
                         >
-                            {getFieldDecorator('purpose',{
-                                rules: [{ required : true, message : '必须填写使用用途。' }]
-                            })(
+                            {getFieldDecorator('purpose')(
                                 <Input />
                             )}
                         </FormItem>
@@ -155,6 +153,7 @@ class Assign extends Component {
                             label="归属项目"
                         >
                             {getFieldDecorator('project',{
+                                rules: [{ required : true, message : '必须填写归属项目。' }]
                             })(
                                 <Select
                                     mode="combobox"
