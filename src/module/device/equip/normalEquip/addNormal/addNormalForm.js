@@ -15,11 +15,7 @@ class FormArea extends Component {
     constructor (props) {
         super(props);
         let unit;
-        if (props.data && props.data.unit) {
-            unit = props.data.unit
-        }
         this.state = {
-            unit: unit || 'GB',
             originObject: [],
             targetObject: [],
             brand: [],
@@ -102,7 +98,7 @@ class FormArea extends Component {
         const formItemLayout = {
             labelCol: {
                 xs: {span: 24},
-                sm: {span: 2}
+                sm: {span: 6}
             },
             wrapperCol: {
                 xs: {span: 24},
@@ -117,18 +113,11 @@ class FormArea extends Component {
                 },
                 sm: {
                     span: 16,
-                    offset: 2
+                    offset: 6
                 }
             }
         };
         const {getFieldDecorator} = this.props.form;
-        const selectUnit = (
-            <Select defaultValue={this.state.unit} onChange={(val) => {this.setState({unit: val})}}>
-                <Option value='GB'>GB</Option>
-                <Option value='TB'>TB</Option>
-            </Select>
-        );
-        console.log('rerender');
         return (
             <Form className='add_normal_form' onSubmit={this.handleSubmit}>
                 <h1 className="form-field-title">来源信息</h1>
@@ -225,14 +214,11 @@ class FormArea extends Component {
                         </Select>
                     )}
                 </FormItem>
-                <FormItem {...formItemLayout} label='大小'>
-                    {getFieldDecorator('size',{
-                        rules: [
-                            {pattern: /^[1-9]\d*$/, message: '请输入正整数'}
-                        ],
-                        initialValue: this.state.data['size'] || ''
+                <FormItem {...formItemLayout} label='规格'>
+                    {getFieldDecorator('format',{
+                        initialValue: this.state.data['format'] || ''
                     })(
-                        <Input style={{width: 200}} addonAfter={selectUnit}/>
+                        <Input/>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label='描述'>

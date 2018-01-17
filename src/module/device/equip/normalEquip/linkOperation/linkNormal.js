@@ -29,6 +29,7 @@ class LinkForm extends Component {
                 visible={visible}
                 title={'关联配件'}
                 okText={'确定'}
+                cancelText={'取消'}
                 onCancel={onCancel}
                 onOk={onConfirm}
                 maskClosable={false}

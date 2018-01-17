@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 
 import Header from '../../../../../common/header'
-import {getAuthority} from '../../../../../common/methods'
+import {getAuthority,dateFormat} from '../../../../../common/methods'
 import NormalForm from '../addNormal/addNormalForm'
 
 const mapState = (state) => {
@@ -16,7 +16,7 @@ class DetailNormal extends Component {
     baseTitles = [
         {label: '新增人', key: 'creator'},
         {label: '当前使用状态', key: 'equipUseState'},
-        {label: '新增时间', key: 'createTime'}
+        {label: '新增时间', key: 'createTime',formatter: (value) => {return dateFormat('YYYY-MM-DD hh:mm', value)}}
     ];
     constructor (props) {
         super(props);
@@ -38,7 +38,16 @@ class DetailNormal extends Component {
                             <h1 className={'form-field-title'}>基本信息</h1>
                             <ul className={'detail_list'}>
                                 {this.baseTitles.map((item) => {
-                                    return <li key={item.key}><label>{item.label}<i>:</i></label><span>{this.props.location.state[item.key]}</span></li>
+                                    let txt = '-';
+                                    let val = this.props.location.state[item.key];
+                                    if (val) {
+                                        if (item.formatter) {
+                                            txt = item.formatter(val)
+                                        } else {
+                                            txt = val
+                                        }
+                                    }
+                                    return <li key={item.key}><label>{item.label}<i>:</i></label><span>{txt}</span></li>
                                 })}
                             </ul>
                         </div> :

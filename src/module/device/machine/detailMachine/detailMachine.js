@@ -5,11 +5,13 @@ import React,{ Component } from 'react'
 import {Link} from 'react-router-dom'
 import Header from '../../../../common/header'
 import axios from 'axios'
+
 import BaseinfoMachineWrap from '../baseinfoMachine/baseinfoMachine'
 import NormalEquip from '../../equip/normalEquip/normalEquip'
 import AddressMachineWrap from '../addressMachine/addressMachine'
 import {connect} from 'react-redux'
 import {getAuthority} from '../../../../common/methods'
+import MachineExtra from '../machineExtra/machineExtra'
 
 const auth = [
     'deviceMachine',
@@ -74,14 +76,13 @@ class DetailMachine extends Component {
                 {this.auth['address']?<AddressMachineWrap machineId={this.id} type="ipmi" passAuth={['address','addAddress','modifyAddress']}/>:'没有权限。'}
                 <hr />
                 <div className="form">
+                    <h1 className="form-field-title">附加设备信息</h1>
+                </div>
+                <MachineExtra/>
+                <div className="form">
                     <h1 className="form-field-title">配件信息</h1>
                 </div>
-                <h2>硬盘</h2>
-                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"disk"} page={'detailMachine'} passAuth={['addNormalEquip','linkManyNormal','unlinkNormalEquip']}/>:'没有权限。'}
-                <h2>网卡</h2>
-                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"netcard"} page={'detailMachine'} passAuth={['addNormalEquip','linkManyNormal','unlinkNormalEquip']}/>:'没有权限。'}
-                <h2>内存</h2>
-                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} type={"memory"} page={'detailMachine'} passAuth={['addNormalEquip','linkManyNormal','unlinkNormalEquip']}/>:'没有权限。'}
+                {this.auth['deviceEquip']?<NormalEquip machineId={this.id} page={'detailMachine'} passAuth={['addNormalEquip','linkManyNormal','unlinkNormalEquip']}/>:'没有权限。'}
             </div>
         )
     }
