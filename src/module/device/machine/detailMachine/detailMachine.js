@@ -78,7 +78,7 @@ class DetailMachine extends Component {
                 <div className="form">
                     <h1 className="form-field-title">附加设备信息</h1>
                 </div>
-                <MachineExtra/>
+                <MachineExtra targetId={this.id} type={'machine'}/>
                 <div className="form">
                     <h1 className="form-field-title">配件信息</h1>
                 </div>
