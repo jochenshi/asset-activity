@@ -14,7 +14,7 @@ const mapState = (state) => {
 class DetailUser extends Component {
     baseTitles = [
         {label: '新增人', key: 'creator'},
-        {label: '新增时间', key: 'createTime', formatter: (value) => {return dateFormat('YYYY-MM-DD hh-mm', value)}}
+        {label: '新增时间', key: 'createTime', formatter: (value) => {return dateFormat('YYYY-MM-DD hh:mm', value)}}
     ];
     constructor (props) {
         super(props);
@@ -40,7 +40,10 @@ class DetailUser extends Component {
                             return <li key={item.key}><label>{item.label}<i>:</i></label><span>{txt}</span></li>
                         })}
                     </ul>
-                    <h1 className={'form-field-title'}>基本信息</h1>
+                    <div>
+                        <h1 className={'form-field-title'}>基本信息</h1>
+                        <h1 className={'form-field-title'}>密码修改</h1>
+                    </div>
                 </div>
             </div>
         )

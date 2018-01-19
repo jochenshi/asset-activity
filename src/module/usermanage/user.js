@@ -15,7 +15,7 @@ const titles = [
         dataIndex: 'name',
         render: (text, record) => {
             let path = {
-                pathname: '/auth/main/detailUser/' + record.account,
+                pathname: '/auth/main/userManage/' + record.account,
                 state: record
             };
             return <Link to={path}>{text}</Link>;
