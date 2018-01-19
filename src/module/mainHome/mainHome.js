@@ -168,8 +168,8 @@ class MainHome extends Component {
                                 <AuthRoute path={`${this.props.match.path}/deviceUseHistory`} component={UseHistory}/>
                                 {/*<Route path={`${this.props.match.path}/userManage`} component={UserManage}/>
                                 <Route path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>*/}
+                                <AuthRoute path={`${this.props.match.path}/userManage/:account`} component={DetailUser}/>
                                 <AuthRoute path={`${this.props.match.path}/userManage`} component={UserManage}/>
-                                <AuthRoute path={`${this.props.match.path}/detailUser/:account`} component={DetailUser}/>
                                 <AuthRoute path={`${this.props.match.path}/addUser`} component={AddUser}/>
                                 <AuthRoute path={`${this.props.match.path}/healthRecord`} component={HealthRecord}/>
                                 <AuthRoute path={`${this.props.match.path}/operateRecord`} component={OperateRecord}/>
