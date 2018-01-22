@@ -135,7 +135,12 @@ class MachineExtra extends Component {
         this.setState({
             loading: true
         });
-        axios.get('/am/extra')
+        axios.get('/am/extra', {
+            params: {
+                relatedId: this.props.targetId,
+                type: this.props.type
+            }
+        })
             .then((msg) => {
                 this.setState({
                     tableData: msg.data,
